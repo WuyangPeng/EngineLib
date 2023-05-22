@@ -88,8 +88,12 @@ echo ActiveMQInclude = %ActiveMQInclude%
 echo  %cd%
 setx  ActiveMQInclude "%cd%\..\activemq\src\main"  
 
+echo MongocxxInclude = %MongocxxInclude%
+echo  %cd%
+setx  MongocxxInclude "%cd%\..\mongo-cxx-driver\src\mongocxx"  
+
 echo LibsEnvironmentInclude = %LibsEnvironmentInclude%
 echo %cd%
-setx LibsEnvironmentInclude "%GSLInclude%;%BoostInclude%;%StlSoftInclude%;%ACEInclude%;%MysqlInclude%;%MysqlConnectorInclude%;%MysqlConnectorMqsqlxInclude%;%FreeglutInclude%;%VisualLeakDetectorInclude%;%OpenSSLInclude%;%OpenALSoftInclude%;%ZlibInclude%;%FreetypeInclude%;%LuaInclude%;%OpenglInclude%;%OpengEGLlInclude%;%OpenXLSXInclude%;%PugiXmlInclude%;%MinizInclude%;%ProtobufInclude%;%AbseilInclude%;%ActiveMQInclude%;" 
+setx LibsEnvironmentInclude "%GSLInclude%;%BoostInclude%;%StlSoftInclude%;%ACEInclude%;%MysqlInclude%;%MysqlConnectorInclude%;%MysqlConnectorMqsqlxInclude%;%FreeglutInclude%;%VisualLeakDetectorInclude%;%OpenSSLInclude%;%OpenALSoftInclude%;%ZlibInclude%;%FreetypeInclude%;%LuaInclude%;%OpenglInclude%;%OpengEGLlInclude%;%OpenXLSXInclude%;%PugiXmlInclude%;%MinizInclude%;%ProtobufInclude%;%AbseilInclude%;%ActiveMQInclude%;%MongocxxInclude%" 
 
 pause
