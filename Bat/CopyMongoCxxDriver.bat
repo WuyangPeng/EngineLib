@@ -1,5 +1,5 @@
 @echo on
 
-xcopy "%MongocxxInclude%\*.hpp" "../mongo-cxx-driver/src/mongocxx/" /F /Y /E   
+xcopy "%MongocxxInclude%/*.hpp" "../mongo-cxx-driver/src/mongocxx/" /F /Y /E   
 
 pause
