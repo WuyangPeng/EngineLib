@@ -252,28 +252,44 @@ echo MongoCxxDriverX64ReleaseLib = %MongoCxxDriverX64ReleaseLib%
 echo  %cd%
 setx  MongoCxxDriverX64ReleaseLib "%cd%\..\mongo-cxx-driver\BuildX64\src\mongocxx\Release"
 
+echo HiredisWin32DebugLib = %HiredisWin32DebugLib%
+echo  %cd%
+setx  HiredisWin32DebugLib "%cd%\..\hiredis\BuildWin32\Debug"
+
+echo HiredisWin32ReleaseLib = %HiredisWin32ReleaseLib%
+echo  %cd%
+setx  HiredisWin32ReleaseLib "%cd%\..\hiredis\BuildWin32\Release"
+
+echo HiredisX64DebugLib = %HiredisX64DebugLib%
+echo  %cd%
+setx  HiredisX64DebugLib "%cd%\..\hiredis\BuildX64\Debug"
+
+echo HiredisX64ReleaseLib = %HiredisX64ReleaseLib%
+echo  %cd%
+setx  HiredisX64ReleaseLib "%cd%\..\hiredis\BuildX64\Release"
+
 echo LibsEnvironmentWin32Lib = %LibsEnvironmentWin32Lib%
 echo %cd%
-setx LibsEnvironmentWin32Lib "$(ProjectDir)..\..\..\$(Platform)\$(Configuration)Windows\;%BoostLib%;%ACEWin32Lib%;%OpenSSLWin32Lib%;" 
+setx LibsEnvironmentWin32Lib "%BoostLib%;%ACEWin32Lib%;%OpenSSLWin32Lib%;" 
 
 echo LibsEnvironmentWin32DebugLib = %LibsEnvironmentWin32DebugLib%
 echo %cd%
-setx LibsEnvironmentWin32DebugLib "%LibsEnvironmentWin32Lib%;%MySqlWin32DebugLib%;%MySqlConnectorWin32DebugLib%;%VisualLeakDetectorWin32Lib%;%FreeglutWin32DebugLib%;%OpenALSoftWin32DebugLib%;%ZlibWin32DebugLib%;%FreetypeWin32DebugLib%;%LuaWin32DebugLib%;%OpenXLSXWin32DebugLib%;%MinizWin32DebugLib%;%ProtobufWin32DebugLib%;%ActiveMQWin32DebugLib%;%AprWin32DebugLib%;%MongoCxxDriverWin32DebugLib%;" 
+setx LibsEnvironmentWin32DebugLib "%MySqlWin32DebugLib%;%MySqlConnectorWin32DebugLib%;%VisualLeakDetectorWin32Lib%;%FreeglutWin32DebugLib%;%OpenALSoftWin32DebugLib%;%ZlibWin32DebugLib%;%FreetypeWin32DebugLib%;%LuaWin32DebugLib%;%OpenXLSXWin32DebugLib%;%MinizWin32DebugLib%;%ProtobufWin32DebugLib%;%ActiveMQWin32DebugLib%;%AprWin32DebugLib%;%MongoCxxDriverWin32DebugLib%;%HiredisWin32DebugLib%;" 
 
 echo LibsEnvironmentWin32ReleaseLib = %LibsEnvironmentWin32ReleaseLib%
 echo %cd%
-setx LibsEnvironmentWin32ReleaseLib "%LibsEnvironmentWin32Lib%;%MySqlWin32ReleaseLib%;%MySqlConnectorWin32ReleaseLib%;%FreeglutWin32ReleaseLib%;%OpenALSoftWin32ReleaseLib%;%ZlibWin32ReleaseLib%;%FreetypeWin32ReleaseLib%;%LuaWin32ReleaseLib%;%OpenXLSXWin32ReleaseLib%;%MinizWin32ReleaseLib%;%ProtobufWin32ReleaseLib%;%ActiveMQWin32ReleaseLib%;%AprWin32ReleaseLib%;%MongoCxxDriverWin32ReleaseLib%;" 
+setx LibsEnvironmentWin32ReleaseLib "%MySqlWin32ReleaseLib%;%MySqlConnectorWin32ReleaseLib%;%FreeglutWin32ReleaseLib%;%OpenALSoftWin32ReleaseLib%;%ZlibWin32ReleaseLib%;%FreetypeWin32ReleaseLib%;%LuaWin32ReleaseLib%;%OpenXLSXWin32ReleaseLib%;%MinizWin32ReleaseLib%;%ProtobufWin32ReleaseLib%;%ActiveMQWin32ReleaseLib%;%AprWin32ReleaseLib%;%MongoCxxDriverWin32ReleaseLib%;%HiredisWin32ReleaseLib%;" 
 
 echo LibsEnvironmentX64Lib = %LibsEnvironmentX64Lib%
-echo %cd%
-setx LibsEnvironmentX64Lib "$(ProjectDir)..\..\..\$(Platform)\$(Configuration)Windows\;%BoostLib%;%ACEX64Lib%;%OpenSSLX64Lib%;" 
+echo %cd% 
+setx LibsEnvironmentX64Lib "%BoostLib%;%ACEX64Lib%;%OpenSSLX64Lib%;" 
 
 echo LibsEnvironmentX64DebugLib = %LibsEnvironmentX64DebugLib%
 echo %cd%
-setx LibsEnvironmentX64DebugLib "%LibsEnvironmentX64Lib%;%MySqlX64DebugLib%;%MySqlConnectorX64DebugLib%;%VisualLeakDetectorX64Lib%;%FreeglutX64DebugLib%;%OpenALSoftX64DebugLib%;%ZlibX64DebugLib%;%FreetypeX64DebugLib%;%LuaX64DebugLib%;%OpenXLSXX64DebugLib%;%MinizX64DebugLib%;%ProtobufX64DebugLib%;%ActiveMQX64DebugLib%;%AprX64DebugLib%;%MongoCxxDriverX64DebugLib%;" 
+setx LibsEnvironmentX64DebugLib "%MySqlX64DebugLib%;%MySqlConnectorX64DebugLib%;%VisualLeakDetectorX64Lib%;%FreeglutX64DebugLib%;%OpenALSoftX64DebugLib%;%ZlibX64DebugLib%;%FreetypeX64DebugLib%;%LuaX64DebugLib%;%OpenXLSXX64DebugLib%;%MinizX64DebugLib%;%ProtobufX64DebugLib%;%ActiveMQX64DebugLib%;%AprX64DebugLib%;%MongoCxxDriverX64DebugLib%;%HiredisX64DebugLib%;" 
 
 echo LibsEnvironmentX64ReleaseLib = %LibsEnvironmentX64ReleaseLib%
 echo %cd%
-setx LibsEnvironmentX64ReleaseLib "%LibsEnvironmentX64Lib%;%MySqlX64ReleaseLib%;%MySqlConnectorX64ReleaseLib%;%FreeglutX64ReleaseLib%;%OpenALSoftX64ReleaseLib%;%ZlibX64ReleaseLib%;%FreetypeX64ReleaseLib%;%LuaX64ReleaseLib%;%OpenXLSXX64ReleaseLib%;%MinizX64ReleaseLib%;%ProtobufX64ReleaseLib%;%ActiveMQX64ReleaseLib%;%AprX64ReleaseLib%;%MongoCxxDriverX64ReleaseLib%;" 
+setx LibsEnvironmentX64ReleaseLib "%MySqlX64ReleaseLib%;%MySqlConnectorX64ReleaseLib%;%FreeglutX64ReleaseLib%;%OpenALSoftX64ReleaseLib%;%ZlibX64ReleaseLib%;%FreetypeX64ReleaseLib%;%LuaX64ReleaseLib%;%OpenXLSXX64ReleaseLib%;%MinizX64ReleaseLib%;%ProtobufX64ReleaseLib%;%ActiveMQX64ReleaseLib%;%AprX64ReleaseLib%;%MongoCxxDriverX64ReleaseLib%;%HiredisX64ReleaseLib%;" 
 
 pause
