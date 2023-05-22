@@ -92,8 +92,16 @@ echo MongocxxInclude = %MongocxxInclude%
 echo  %cd%
 setx  MongocxxInclude "%cd%\..\mongo-cxx-driver\src\mongocxx"  
 
-echo LibsEnvironmentInclude = %LibsEnvironmentInclude%
+echo HiredisInclude = %HiredisInclude%
+echo  %cd%
+setx  HiredisInclude "%cd%\..\hiredis"  
+
+echo LibsEnvironmentBaseInclude = %LibsEnvironmentBaseInclude%
 echo %cd%
-setx LibsEnvironmentInclude "%GSLInclude%;%BoostInclude%;%StlSoftInclude%;%ACEInclude%;%MysqlInclude%;%MysqlConnectorInclude%;%MysqlConnectorMqsqlxInclude%;%FreeglutInclude%;%VisualLeakDetectorInclude%;%OpenSSLInclude%;%OpenALSoftInclude%;%ZlibInclude%;%FreetypeInclude%;%LuaInclude%;%OpenglInclude%;%OpengEGLlInclude%;%OpenXLSXInclude%;%PugiXmlInclude%;%MinizInclude%;%ProtobufInclude%;%AbseilInclude%;%ActiveMQInclude%;%MongocxxInclude%" 
+setx LibsEnvironmentBaseInclude "%GSLInclude%;%BoostInclude%;%StlSoftInclude%;%ACEInclude%;%ZlibInclude%;%FreetypeInclude%;%OpenglInclude%;%OpengEGLlInclude%;" 
+
+echo LibsEnvironmentExtendInclude = %LibsEnvironmentExtendInclude%
+echo %cd%
+setx LibsEnvironmentExtendInclude "%MysqlInclude%;%MysqlConnectorInclude%;%MysqlConnectorMqsqlxInclude%;%FreeglutInclude%;%VisualLeakDetectorInclude%;%OpenSSLInclude%;%OpenALSoftInclude%;%LuaInclude%;%OpenXLSXInclude%;%PugiXmlInclude%;%MinizInclude%;%ProtobufInclude%;%AbseilInclude%;%ActiveMQInclude%;%MongocxxInclude%;%HiredisInclude%;" 
 
 pause
