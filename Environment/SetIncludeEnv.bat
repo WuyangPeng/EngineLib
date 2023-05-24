@@ -90,11 +90,11 @@ setx  ActiveMQInclude "%cd%\..\activemq\src\main"
 
 echo MongocxxInclude = %MongocxxInclude%
 echo  %cd%
-setx  MongocxxInclude "%cd%\..\mongo-cxx-driver\src\mongocxx"  
+setx  MongocxxInclude "%cd%\..\mongo-cxx-driver\src"  
 
 echo HiredisInclude = %HiredisInclude%
 echo  %cd%
-setx  HiredisInclude "%cd%\..\hiredis"  
+setx  HiredisInclude "%cd%\..\hiredis"
 
 echo LibsEnvironmentBaseInclude = %LibsEnvironmentBaseInclude%
 echo %cd%
