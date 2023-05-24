@@ -92,6 +92,10 @@ echo MongocxxInclude = %MongocxxInclude%
 echo  %cd%
 setx  MongocxxInclude "%cd%\..\mongo-cxx-driver\src"  
 
+echo MongocxxConfigInclude = %MongocxxConfigInclude%
+echo  %cd%
+setx  MongocxxConfigInclude "%cd%\..\mongo-cxx-driver\BuildX64\src"  
+
 echo HiredisInclude = %HiredisInclude%
 echo  %cd%
 setx  HiredisInclude "%cd%\..\hiredis"
@@ -102,6 +106,6 @@ setx LibsEnvironmentBaseInclude "%GSLInclude%;%BoostInclude%;%StlSoftInclude%;%A
 
 echo LibsEnvironmentExtendInclude = %LibsEnvironmentExtendInclude%
 echo %cd%
-setx LibsEnvironmentExtendInclude "%MysqlInclude%;%MysqlConnectorInclude%;%MysqlConnectorMqsqlxInclude%;%FreeglutInclude%;%VisualLeakDetectorInclude%;%OpenSSLInclude%;%OpenALSoftInclude%;%LuaInclude%;%OpenXLSXInclude%;%PugiXmlInclude%;%MinizInclude%;%ProtobufInclude%;%AbseilInclude%;%ActiveMQInclude%;%MongocxxInclude%;%HiredisInclude%;" 
+setx LibsEnvironmentExtendInclude "%MysqlInclude%;%MysqlConnectorInclude%;%MysqlConnectorMqsqlxInclude%;%FreeglutInclude%;%VisualLeakDetectorInclude%;%OpenSSLInclude%;%OpenALSoftInclude%;%LuaInclude%;%OpenXLSXInclude%;%PugiXmlInclude%;%MinizInclude%;%ProtobufInclude%;%AbseilInclude%;%ActiveMQInclude%;%MongocxxInclude%;%MongocxxConfigInclude%;%HiredisInclude%;" 
 
 pause
