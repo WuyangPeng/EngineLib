@@ -14,4 +14,8 @@ xcopy "%MongoCxxDriverX64ReleaseLib%/*.dll" "../mongo-cxx-driver/BuildX64/src/mo
 xcopy "%MongocxxInclude%/../BuildX64/mongo-c-driver/*.dll" "../mongo-cxx-driver/BuildX64/mongo-c-driver/" /F /Y /E 
 xcopy "%MongocxxInclude%/../BuildWin32/mongo-c-driver/*.dll" "../mongo-cxx-driver/BuildWin32/mongo-c-driver/" /F /Y /E 
 
+xcopy "%MongocxxInclude%/../BuildX64/src/*.hpp" "../mongo-cxx-driver/BuildX64/src/" /F /Y /E 
+xcopy "%MongocxxInclude%/../BuildWin32/src/*.hpp" "../mongo-cxx-driver/BuildWin32/src/" /F /Y /E 
+
+
 pause
