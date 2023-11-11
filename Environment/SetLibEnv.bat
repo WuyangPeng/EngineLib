@@ -86,11 +86,11 @@ setx  FreeglutX64ReleaseBin "%cd%\..\FreeGLUT\BuildX64\bin\Release"
 
 echo VisualLeakDetectorWin32Lib = %VisualLeakDetectorWin32Lib%
 echo  %cd%
-setx  VisualLeakDetectorWin32Lib "%cd%\..\vld\src\bin\Win32\Release-v142"
+setx  VisualLeakDetectorWin32Lib "%cd%\..\vld\src\bin\Win32\Release-v143"
 
 echo VisualLeakDetectorX64Lib = %VisualLeakDetectorX64Lib%
 echo  %cd%
-setx  VisualLeakDetectorX64Lib "%cd%\..\vld\src\bin\x64\Release-v142"
+setx  VisualLeakDetectorX64Lib "%cd%\..\vld\src\bin\x64\Release-v143"
 
 echo OpenALSoftWin32DebugLib = %OpenALSoftWin32DebugLib%
 echo  %cd%
