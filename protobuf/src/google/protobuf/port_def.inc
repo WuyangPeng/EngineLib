@@ -961,5 +961,5 @@
 #endif
 
 #ifdef NETWORK_USE_PROTO_BUF
-#include "System/Helper/PragmaWarning/ProtoBuf.h"
+#include "System/Helper/PragmaWarning/ProtoBuf.inl"
 #endif
