@@ -960,8 +960,8 @@
 #  undef PROTOBUF_has_builtin_DEFINED_
 #endif
 
-#ifdef NETWORK_USE_PROTO_BUF
+#ifdef PROTO_BUF_PRAGMA_WARNING
 
     #include "System/Helper/PragmaWarning/ProtoBuf.inl"
 
-#endif // NETWORK_USE_PROTO_BUF
+#endif // PROTO_BUF_PRAGMA_WARNING
