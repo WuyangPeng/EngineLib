@@ -565,7 +565,7 @@
 # define STLSOFT_COMPILER_LABEL_STRING          "GNU C/C++"
 # if __GNUC__ != 2 && \
      __GNUC__ != 3 && \
-     __GNUC__ != 4
+     __GNUC__ < 4
 #  error GNU C/C++ compilers whose major version is not 2, 3 or 4 are not currently supported by the STLSoft libraries
 # elif __GNUC__ == 2
 #  if __GNUC_MINOR__ < 95
@@ -587,7 +587,7 @@
 #  else /* ? __GNUC_MINOR__ */
 #   define STLSOFT_COMPILER_VERSION_STRING      "GNU C/C++ >3.4 - you should be aware that this version may not be supported correctly"
 #  endif /* __GNUC_MINOR__  */
-# elif __GNUC__ == 0
+# elif __GNUC__ >= 4
 #  if __GNUC_MINOR__ == 0
 #   define STLSOFT_COMPILER_VERSION_STRING      "GNU C/C++ 4.0"
 #  else /* ? __GNUC_MINOR__ */
