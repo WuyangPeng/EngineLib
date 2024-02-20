@@ -14,10 +14,11 @@
  *              basic_reg_value_sequence).
  *
  * Created:     19th January 2002
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2002-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -30,9 +31,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -63,7 +65,7 @@
 # define WINSTL_VER_WINSTL_REGISTRY_HPP_REG_VALUE_SEQUENCE_MAJOR    3
 # define WINSTL_VER_WINSTL_REGISTRY_HPP_REG_VALUE_SEQUENCE_MINOR    7
 # define WINSTL_VER_WINSTL_REGISTRY_HPP_REG_VALUE_SEQUENCE_REVISION 12
-# define WINSTL_VER_WINSTL_REGISTRY_HPP_REG_VALUE_SEQUENCE_EDIT     143
+# define WINSTL_VER_WINSTL_REGISTRY_HPP_REG_VALUE_SEQUENCE_EDIT     146
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -169,7 +171,7 @@ public:
     typedef T                                                                   traits_type;
     /// The allocator type
     typedef A                                                                   allocator_type;
-    /// The current parameterisation of the type
+    /// The current specialisation of the type
     typedef basic_reg_value_sequence<C, T, A>                                   class_type;
     /// The value type
     typedef basic_reg_value<C, T, A>                                            value_type;
@@ -402,7 +404,7 @@ public:
     typedef V                                                           value_type;
     /// The allocator type
     typedef A                                                           allocator_type;
-    /// The current parameterisation of the type
+    /// The current specialisation of the type
     typedef basic_reg_value_sequence_iterator<C, T, V, A>               class_type;
     /// The size type
     typedef ss_typename_type_k traits_type::size_type                   size_type;
@@ -518,12 +520,12 @@ basic_reg_value_sequence<C, T, A>::create_shared_handle_(
     registry_util::shared_handle*   handle  =   NULL;
     hkey_type                       hkey2   =   traits_type::key_dup(m_hkey, m_accessMask, &res);
 
-    if(NULL == hkey2)
+    if (NULL == hkey2)
     {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
         static const char message[] = "could not duplicate key";
 
-        if(ERROR_ACCESS_DENIED == res)
+        if (ERROR_ACCESS_DENIED == res)
         {
             STLSOFT_THROW_X(access_denied_exception(message, res));
         }
@@ -542,13 +544,13 @@ basic_reg_value_sequence<C, T, A>::create_shared_handle_(
 
         handle = registry_util::create_shared_handle(hkey2, m_bMonitorExternalInvalidation, REG_NOTIFY_CHANGE_LAST_SET);
 
-        if(NULL == handle)
+        if (NULL == handle)
         {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
             static const char   message[]   =   "could not create shared enumeration context";
             DWORD const         err         =   WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();
 
-            if(ERROR_ACCESS_DENIED == err)
+            if (ERROR_ACCESS_DENIED == err)
             {
                 STLSOFT_THROW_X(access_denied_exception(message, err));
             }
@@ -570,7 +572,7 @@ basic_reg_value_sequence<C, T, A>::create_shared_handle_(
 template <ss_typename_param_k C, ss_typename_param_k T, ss_typename_param_k A>
 inline /* static */ REGSAM basic_reg_value_sequence<C, T, A>::validate_access_mask_(REGSAM accessMask, ss_typename_type_k basic_reg_value_sequence<C, T, A>::bool_type bMonitorExternalInvalidation)
 {
-    if(bMonitorExternalInvalidation)
+    if (bMonitorExternalInvalidation)
     {
         return accessMask | KEY_NOTIFY;
     }
@@ -586,12 +588,12 @@ inline /* static */ ss_typename_type_ret_k basic_reg_value_sequence<C, T, A>::hk
     result_type res;
     HKEY        hkeyDup =   traits_type::key_dup(hkey, accessMask, &res);
 
-    if(ERROR_SUCCESS != res)
+    if (ERROR_SUCCESS != res)
     {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
         static const char message[] = "could not duplicate key";
 
-        if(ERROR_ACCESS_DENIED == res)
+        if (ERROR_ACCESS_DENIED == res)
         {
             STLSOFT_THROW_X(access_denied_exception(message, res));
         }
@@ -617,12 +619,12 @@ inline basic_reg_value_sequence<C, T, A>::basic_reg_value_sequence( ss_typename_
 {
     result_type res;
 
-    if(ERROR_SUCCESS != (res = traits_type::reg_open_key(hkey, subKeyName, &m_hkey, accessMask)))
+    if (ERROR_SUCCESS != (res = traits_type::reg_open_key(hkey, subKeyName, &m_hkey, accessMask)))
     {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
         static const char message[] = "could not open key";
 
-        if(ERROR_ACCESS_DENIED == res)
+        if (ERROR_ACCESS_DENIED == res)
         {
             STLSOFT_THROW_X(access_denied_exception(message, res));
         }
@@ -647,12 +649,12 @@ inline basic_reg_value_sequence<C, T, A>::basic_reg_value_sequence( ss_typename_
 {
     result_type res;
 
-    if(ERROR_SUCCESS != (res = traits_type::reg_open_key(hkey, subKeyName, &m_hkey, accessMask)))
+    if (ERROR_SUCCESS != (res = traits_type::reg_open_key(hkey, subKeyName, &m_hkey, accessMask)))
     {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
         static const char message[] = "could not open key";
 
-        if(ERROR_ACCESS_DENIED == res)
+        if (ERROR_ACCESS_DENIED == res)
         {
             STLSOFT_THROW_X(access_denied_exception(message, res));
         }
@@ -673,7 +675,7 @@ inline basic_reg_value_sequence<C, T, A>::basic_reg_value_sequence(ss_typename_t
     , m_bMonitorExternalInvalidation(0 != (KEY_NOTIFY & key.get_access_mask()))
 {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
-    if(NULL == m_hkey)
+    if (NULL == m_hkey)
     {
         STLSOFT_THROW_X(registry_exception("failed to take duplicate of key", WINSTL_API_EXTERNAL_ErrorHandling_GetLastError()));
     }
@@ -688,7 +690,7 @@ inline basic_reg_value_sequence<C, T, A>::basic_reg_value_sequence( ss_typename_
     , m_bMonitorExternalInvalidation(0 != (KEY_NOTIFY & accessMask))
 {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
-    if(NULL == m_hkey)
+    if (NULL == m_hkey)
     {
         STLSOFT_THROW_X(registry_exception("failed to take duplicate of key", WINSTL_API_EXTERNAL_ErrorHandling_GetLastError()));
     }
@@ -704,7 +706,7 @@ inline basic_reg_value_sequence<C, T, A>::basic_reg_value_sequence( ss_typename_
     , m_bMonitorExternalInvalidation(bMonitorExternalInvalidation)
 {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
-    if(NULL == m_hkey)
+    if (NULL == m_hkey)
     {
         STLSOFT_THROW_X(registry_exception("failed to take duplicate of key", WINSTL_API_EXTERNAL_ErrorHandling_GetLastError()));
     }
@@ -714,7 +716,7 @@ inline basic_reg_value_sequence<C, T, A>::basic_reg_value_sequence( ss_typename_
 template <ss_typename_param_k C, ss_typename_param_k T, ss_typename_param_k A>
 inline basic_reg_value_sequence<C, T, A>::~basic_reg_value_sequence() STLSOFT_NOEXCEPT
 {
-    if(m_hkey != NULL)
+    if (m_hkey != NULL)
     {
         WINSTL_API_EXTERNAL_Registry_RegCloseKey(m_hkey);
     }
@@ -739,12 +741,12 @@ inline ss_typename_type_ret_k basic_reg_value_sequence<C, T, A>::iterator basic_
     ws_uint32_t numEntries  =   0;
     result_type res         =   traits_type::reg_query_info(m_hkey, NULL, NULL, NULL, NULL, NULL, &numEntries, &cchName, NULL, NULL, NULL);
 
-    if(ERROR_SUCCESS != res)
+    if (ERROR_SUCCESS != res)
     {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
         static const char message[] = "could not elicit value information";
 
-        if(ERROR_ACCESS_DENIED == res)
+        if (ERROR_ACCESS_DENIED == res)
         {
             STLSOFT_THROW_X(access_denied_exception(message, res));
         }
@@ -758,18 +760,18 @@ inline ss_typename_type_ret_k basic_reg_value_sequence<C, T, A>::iterator basic_
     }
     else
     {
-        if(0 != numEntries)
+        if (0 != numEntries)
         {
             // 2. Duplicate the registry key handle & create the shared handle
             registry_util::shared_handle    *handle =   create_shared_handle_(res);
             ws_sint32_t                     index   =   0;
 
-            if(NULL == handle)
+            if (NULL == handle)
             {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
                 static const char message[] = "could not create shared enumeration context";
 
-                if(ERROR_ACCESS_DENIED == res)
+                if (ERROR_ACCESS_DENIED == res)
                 {
                     STLSOFT_THROW_X(access_denied_exception(message, res));
                 }
@@ -788,15 +790,15 @@ inline ss_typename_type_ret_k basic_reg_value_sequence<C, T, A>::iterator basic_
                 // 4. Loop to get the full name
                 buffer_type_ buffer(++cchName); // This is increased so that the call to reg_enum_value is likely to succeed
 
-                for(; !buffer.empty(); )    // Need to loop because sub-keys can change, when we're not monitoring
+                for (; !buffer.empty(); )    // Need to loop because sub-keys can change, when we're not monitoring
                 {
                     cchName = buffer.size();
 
                     res = traits_type::reg_enum_value(m_hkey, 0, &buffer[0], &cchName);
 
-                    if(ERROR_MORE_DATA == res)
+                    if (ERROR_MORE_DATA == res)
                     {
-                        if(!buffer.resize(2 * buffer.size())) // Throws, or returns false
+                        if (!buffer.resize(2 * buffer.size())) // Throws, or returns false
                         {
                             cchName =   0;
                             index   =   const_iterator::sentinel_();
@@ -805,12 +807,12 @@ inline ss_typename_type_ret_k basic_reg_value_sequence<C, T, A>::iterator basic_
 
                         continue; // "Let's go round again"
                     }
-                    else if(ERROR_SUCCESS != res)
+                    else if (ERROR_SUCCESS != res)
                     {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
                         static const char message[] = "could not enumerate values";
 
-                        if(ERROR_ACCESS_DENIED == res)
+                        if (ERROR_ACCESS_DENIED == res)
                         {
                             STLSOFT_THROW_X(access_denied_exception(message, res));
                         }
@@ -847,7 +849,7 @@ inline ss_typename_type_ret_k basic_reg_value_sequence<C, T, A>::iterator basic_
     ref_ptr<registry_util::shared_handle>   ref(handle, false); // Eat the reference here. The iterator will take another
     ws_sint32_t                             index   =   const_iterator::sentinel_();
 
-    if(NULL == handle)
+    if (NULL == handle)
     {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
         STLSOFT_THROW_X(registry_exception("failed to take duplicate of key", static_cast<DWORD>(res)));
@@ -885,12 +887,12 @@ inline ss_typename_type_ret_k basic_reg_value_sequence<C, T, A>::size_type basic
     ws_uint32_t numEntries;
     result_type res         =   traits_type::reg_query_info(m_hkey, NULL, NULL, NULL, NULL, NULL, &numEntries, NULL, NULL, NULL, NULL);
 
-    if(ERROR_SUCCESS != res)
+    if (ERROR_SUCCESS != res)
     {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
         static const char message[] = "could not elicit number of values";
 
-        if(ERROR_ACCESS_DENIED == res)
+        if (ERROR_ACCESS_DENIED == res)
         {
             STLSOFT_THROW_X(access_denied_exception(message, res));
         }
@@ -947,7 +949,7 @@ inline basic_reg_value_sequence_iterator<C, T, V, A>::basic_reg_value_sequence_i
     , m_name(rhs.m_name)
     , m_accessMask(rhs.m_accessMask)
 {
-    if(NULL != m_handle)
+    if (NULL != m_handle)
     {
         m_handle->AddRef();
     }
@@ -965,12 +967,12 @@ inline ss_typename_type_ret_k basic_reg_value_sequence_iterator<C, T, V, A>::cla
     m_handle        =   rhs.m_handle;
     m_accessMask    =   rhs.m_accessMask;
 
-    if(NULL != m_handle)
+    if (NULL != m_handle)
     {
         m_handle->AddRef();
     }
 
-    if(NULL != this_handle)
+    if (NULL != this_handle)
     {
         this_handle->Release();
     }
@@ -981,7 +983,7 @@ inline ss_typename_type_ret_k basic_reg_value_sequence_iterator<C, T, V, A>::cla
 template <ss_typename_param_k C, ss_typename_param_k T, ss_typename_param_k V, ss_typename_param_k A>
 inline basic_reg_value_sequence_iterator<C, T, V, A>::~basic_reg_value_sequence_iterator() STLSOFT_NOEXCEPT
 {
-    if(NULL != m_handle)
+    if (NULL != m_handle)
     {
         m_handle->Release();
     }
@@ -1003,12 +1005,12 @@ inline ss_typename_type_ret_k basic_reg_value_sequence_iterator<C, T, V, A>::cla
     size_type   cchName =   0;
     result_type res     =   traits_type::reg_query_info(m_handle->m_hkey, NULL, NULL, NULL, NULL, NULL, NULL, &cchName, NULL, NULL, NULL);
 
-    if(ERROR_SUCCESS != res)
+    if (ERROR_SUCCESS != res)
     {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
         static const char message[] = "could not elicit value information";
 
-        if(ERROR_ACCESS_DENIED == res)
+        if (ERROR_ACCESS_DENIED == res)
         {
             STLSOFT_THROW_X(access_denied_exception(message, res));
         }
@@ -1024,27 +1026,27 @@ inline ss_typename_type_ret_k basic_reg_value_sequence_iterator<C, T, V, A>::cla
     {
         buffer_type_    buffer(++cchName);   // This is increased so that the call to reg_enum_value is likely to succeed
 
-        for(; !buffer.empty(); buffer.resize(2 * buffer.size()))    // Need to loop because values can change, when we're not monitoring
+        for (; !buffer.empty(); buffer.resize(2 * buffer.size()))    // Need to loop because values can change, when we're not monitoring
         {
             cchName  =   buffer.size();
 
             res = traits_type::reg_enum_value(m_handle->m_hkey, static_cast<ws_dword_t>(1 + m_index), &buffer[0], &cchName);
 
-            if(ERROR_MORE_DATA == res)
+            if (ERROR_MORE_DATA == res)
             {
                 continue; // "Let's go round again"
             }
-            else if(ERROR_NO_MORE_ITEMS == res)
+            else if (ERROR_NO_MORE_ITEMS == res)
             {
                 m_index = sentinel_();
                 break;
             }
-            else if(ERROR_SUCCESS != res)
+            else if (ERROR_SUCCESS != res)
             {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
                 static const char message[] = "could not enumerate values";
 
-                if(ERROR_ACCESS_DENIED == res)
+                if (ERROR_ACCESS_DENIED == res)
                 {
                     STLSOFT_THROW_X(access_denied_exception(message, res));
                 }
@@ -1083,12 +1085,12 @@ inline ss_typename_type_ret_k basic_reg_value_sequence_iterator<C, T, V, A>::cla
     ws_uint32_t numEntries      =   0;
     result_type res             =   traits_type::reg_query_info(m_handle->m_hkey, NULL, NULL, NULL, NULL, NULL, &numEntries, &cchName, NULL, NULL, NULL);
 
-    if(ERROR_SUCCESS != res)
+    if (ERROR_SUCCESS != res)
     {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
         static const char message[] = "could not elicit value information";
 
-        if(ERROR_ACCESS_DENIED == res)
+        if (ERROR_ACCESS_DENIED == res)
         {
             STLSOFT_THROW_X(access_denied_exception(message, res));
         }
@@ -1106,7 +1108,7 @@ inline ss_typename_type_ret_k basic_reg_value_sequence_iterator<C, T, V, A>::cla
         ws_dword_t      index;
 
         // If the iterator is currently at the "end()", ...
-        if(m_index == sentinel_())
+        if (m_index == sentinel_())
         {
             // ... then set the index to be one past the end
             index = numEntries - 1;
@@ -1117,22 +1119,22 @@ inline ss_typename_type_ret_k basic_reg_value_sequence_iterator<C, T, V, A>::cla
             index = m_index - 1;
         }
 
-        for(; !buffer.empty(); buffer.resize(2 * buffer.size()))    // Need to loop because values can change, when we're not monitoring
+        for (; !buffer.empty(); buffer.resize(2 * buffer.size()))    // Need to loop because values can change, when we're not monitoring
         {
             cchName = buffer.size();
 
             res = traits_type::reg_enum_value(m_handle->m_hkey, index, &buffer[0], &cchName);
 
-            if(ERROR_MORE_DATA == res)
+            if (ERROR_MORE_DATA == res)
             {
                 continue; // "Let's go round again"
             }
-            else if(ERROR_SUCCESS != res)
+            else if (ERROR_SUCCESS != res)
             {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
                 static const char message[] = "could not elicit value information";
 
-                if(ERROR_ACCESS_DENIED == res)
+                if (ERROR_ACCESS_DENIED == res)
                 {
                     STLSOFT_THROW_X(access_denied_exception(message, res));
                 }

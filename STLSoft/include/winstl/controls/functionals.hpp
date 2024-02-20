@@ -4,10 +4,11 @@
  * Purpose:     Functionals for application to controls.
  *
  * Created:     8th October 2002
- * Updated:     2nd February 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2002-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,8 +53,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define WINSTL_VER_WINSTL_CONTROL_HPP_FUNCTIONALS_MAJOR    4
 # define WINSTL_VER_WINSTL_CONTROL_HPP_FUNCTIONALS_MINOR    2
-# define WINSTL_VER_WINSTL_CONTROL_HPP_FUNCTIONALS_REVISION 8
-# define WINSTL_VER_WINSTL_CONTROL_HPP_FUNCTIONALS_EDIT     91
+# define WINSTL_VER_WINSTL_CONTROL_HPP_FUNCTIONALS_REVISION 9
+# define WINSTL_VER_WINSTL_CONTROL_HPP_FUNCTIONALS_EDIT     94
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -100,6 +102,10 @@
 #ifndef STLSOFT_INCL_STLSOFT_API_external_h_string
 # include <stlsoft/api/external/string.h>
 #endif /* !STLSOFT_INCL_STLSOFT_API_external_h_string */
+
+#ifndef STLSOFT_INCL_STLSOFT_API_internal_h_memfns
+# include <stlsoft/api/internal/memfns.h>
+#endif /* !STLSOFT_INCL_STLSOFT_API_internal_h_memfns */
 
 #ifndef _WINSTL_CONTROL_FUNCTIONALS_NO_STD
 # include <functional>
@@ -215,7 +221,7 @@ private:
     {
         int nCheck  =   static_cast<int>(::SendMessage(hwnd, BM_GETCHECK, 0, 0L));
 
-        if(-1 == m_nCheckType)
+        if (-1 == m_nCheckType)
         {
             return nCheck;
         }
@@ -257,7 +263,7 @@ public:
 
         WINSTL_ASSERT(cchClass < STLSOFT_NUM_ELEMENTS(m_name.sza));
 
-        ::memcpy(&m_name.sza[0], windowClass, cchClass);
+        STLSOFT_API_INTERNAL_memfns_memcpy(&m_name.sza[0], windowClass, cchClass);
         m_name.sza[cchClass] = '\0';
     }
     ss_explicit_k is_class(ws_char_w_t const* windowClass)
@@ -271,7 +277,7 @@ public:
 
         WINSTL_ASSERT(cchClass < STLSOFT_NUM_ELEMENTS(m_name.szw));
 
-        ::memcpy(&m_name.szw[0], windowClass, cchClass);
+        STLSOFT_API_INTERNAL_memfns_memcpy(&m_name.szw[0], windowClass, cchClass);
         m_name.szw[cchClass] = '\0';
     }
 
@@ -368,7 +374,7 @@ public:
 private:
     void insert(ws_char_a_t const* s)
     {
-        if(m_bUnicode)
+        if (m_bUnicode)
         {
             listbox_insertstring_w(m_hwndListbox, a2w(s), 0);
         }
@@ -379,7 +385,7 @@ private:
     }
     void insert(ws_char_w_t const* s)
     {
-        if(m_bUnicode)
+        if (m_bUnicode)
         {
             listbox_insertstring_w(m_hwndListbox, s, 0);
         }
@@ -444,7 +450,7 @@ public:
 private:
     void add(ws_char_a_t const* s)
     {
-        if(m_bUnicode)
+        if (m_bUnicode)
         {
             listbox_addstring_w(m_hwndListbox, a2w(s));
         }
@@ -455,7 +461,7 @@ private:
     }
     void add(ws_char_w_t const* s)
     {
-        if(m_bUnicode)
+        if (m_bUnicode)
         {
             listbox_addstring_w(m_hwndListbox, s);
         }
@@ -520,7 +526,7 @@ public:
 private:
     void insert(ws_char_a_t const* s)
     {
-        if(m_bUnicode)
+        if (m_bUnicode)
         {
             listbox_insertstring_w(m_hwndListbox, a2w(s), -1);
         }
@@ -531,7 +537,7 @@ private:
     }
     void insert(ws_char_w_t const* s)
     {
-        if(m_bUnicode)
+        if (m_bUnicode)
         {
             listbox_insertstring_w(m_hwndListbox, s, -1);
         }
@@ -598,7 +604,7 @@ public:
 private:
     void insert(ws_char_a_t const* s)
     {
-        if(m_bUnicode)
+        if (m_bUnicode)
         {
             combobox_insertstring_w(m_hwndListbox, a2w(s), 0);
         }
@@ -609,7 +615,7 @@ private:
     }
     void insert(ws_char_w_t const* s)
     {
-        if(m_bUnicode)
+        if (m_bUnicode)
         {
             combobox_insertstring_w(m_hwndListbox, s, 0);
         }
@@ -674,7 +680,7 @@ public:
 private:
     void add(ws_char_a_t const* s)
     {
-        if(m_bUnicode)
+        if (m_bUnicode)
         {
             combobox_addstring_w(m_hwndListbox, a2w(s));
         }
@@ -685,7 +691,7 @@ private:
     }
     void add(ws_char_w_t const* s)
     {
-        if(m_bUnicode)
+        if (m_bUnicode)
         {
             combobox_addstring_w(m_hwndListbox, s);
         }
@@ -750,7 +756,7 @@ public:
 private:
     void insert(ws_char_a_t const* s)
     {
-        if(m_bUnicode)
+        if (m_bUnicode)
         {
             combobox_insertstring_w(m_hwndListbox, a2w(s), -1);
         }
@@ -761,7 +767,7 @@ private:
     }
     void insert(ws_char_w_t const* s)
     {
-        if(m_bUnicode)
+        if (m_bUnicode)
         {
             combobox_insertstring_w(m_hwndListbox, s, -1);
         }

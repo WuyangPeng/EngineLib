@@ -4,10 +4,11 @@
  * Purpose:     File  functions.
  *
  * Created:     7th November 2014
- * Updated:     16th April 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2014-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,8 +53,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define WINSTL_VER_WINSTL_H_FILE_INFORMATION_FUNCTIONS_MAJOR       2
 # define WINSTL_VER_WINSTL_H_FILE_INFORMATION_FUNCTIONS_MINOR       0
-# define WINSTL_VER_WINSTL_H_FILE_INFORMATION_FUNCTIONS_REVISION    1
-# define WINSTL_VER_WINSTL_H_FILE_INFORMATION_FUNCTIONS_EDIT        5
+# define WINSTL_VER_WINSTL_H_FILE_INFORMATION_FUNCTIONS_REVISION    4
+# define WINSTL_VER_WINSTL_H_FILE_INFORMATION_FUNCTIONS_EDIT        9
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -65,6 +67,13 @@
 #ifdef STLSOFT_TRACE_INCLUDE
 # pragma message(__FILE__)
 #endif /* STLSOFT_TRACE_INCLUDE */
+
+#ifndef WINSTL_INCL_WINSTL_API_external_h_Authorization
+# include <winstl/api/external/Authorization.h>
+#endif /* !WINSTL_INCL_WINSTL_API_external_h_Authorization */
+#ifndef WINSTL_INCL_WINSTL_API_external_h_ErrorHandling
+# include <winstl/api/external/ErrorHandling.h>
+#endif /* !WINSTL_INCL_WINSTL_API_external_h_ErrorHandling */
 
 /* /////////////////////////////////////////////////////////////////////////
  * namespace
@@ -139,18 +148,18 @@ WinSTL_C_FileInformation_get_SECURITY_DESCRIPTOR_a(
     WINSTL_ASSERT(NULL != path);
     WINSTL_ASSERT(NULL != ppsd);
 
-    if(NULL == pcbsd)
+    if (NULL == pcbsd)
     {
         pcbsd = &dummy;
     }
 
-    STLSOFT_NS_GLOBAL(GetFileSecurity)(path, si, NULL, dwSize, &dwSize);
+    WINSTL_API_EXTERNAL_Authorization_GetFileSecurityA(path, si, NULL, dwSize, &dwSize);
 
-    for(*ppsd = NULL;;)
+    for (*ppsd = NULL;;)
     {
-        DWORD const e = STLSOFT_NS_GLOBAL(GetLastError)();
+        DWORD const e = WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();
 
-        switch(e)
+        switch (e)
         {
             case    ERROR_INSUFFICIENT_BUFFER:
             case    ERROR_MORE_DATA:
@@ -161,12 +170,12 @@ WinSTL_C_FileInformation_get_SECURITY_DESCRIPTOR_a(
 
         *ppsd = WinSTL_C_FileInformation_alloc_(dwSize);
 
-        if(NULL == *ppsd)
+        if (NULL == *ppsd)
         {
             break;
         }
 
-        if(STLSOFT_NS_GLOBAL(GetFileSecurity)(path, si, *ppsd, dwSize, &dwSize))
+        if (WINSTL_API_EXTERNAL_Authorization_GetFileSecurityA(path, si, *ppsd, dwSize, &dwSize))
         {
             *pcbsd = dwSize;
 
@@ -189,7 +198,54 @@ WinSTL_C_FileInformation_get_SECURITY_DESCRIPTOR_w(
 ,   SECURITY_DESCRIPTOR**   ppsd
 ,   ws_size_t*              pcbsd
 )
-;
+{
+    DWORD       dwSize = 0;
+    ws_size_t   dummy;
+
+    WINSTL_ASSERT(NULL != path);
+    WINSTL_ASSERT(NULL != ppsd);
+
+    if (NULL == pcbsd)
+    {
+        pcbsd = &dummy;
+    }
+
+    WINSTL_API_EXTERNAL_Authorization_GetFileSecurityW(path, si, NULL, dwSize, &dwSize);
+
+    for (*ppsd = NULL;;)
+    {
+        DWORD const e = WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();
+
+        switch (e)
+        {
+            case    ERROR_INSUFFICIENT_BUFFER:
+            case    ERROR_MORE_DATA:
+                break;
+            default:
+                return FALSE;
+        }
+
+        *ppsd = WinSTL_C_FileInformation_alloc_(dwSize);
+
+        if (NULL == *ppsd)
+        {
+            break;
+        }
+
+        if (WINSTL_API_EXTERNAL_Authorization_GetFileSecurityW(path, si, *ppsd, dwSize, &dwSize))
+        {
+            *pcbsd = dwSize;
+
+            return TRUE;
+        }
+
+        WinSTL_C_FileInformation_free_(*ppsd);
+
+        *pcbsd = 0;
+    }
+
+    return FALSE;
+}
 
 /* /////////////////////////////////////////////////////////////////////////
  * namespace

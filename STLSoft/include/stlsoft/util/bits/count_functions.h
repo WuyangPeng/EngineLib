@@ -4,10 +4,11 @@
  * Purpose:     Bit count functions.
  *
  * Created:     2nd June 2010
- * Updated:     13th October 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2010-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -52,7 +54,7 @@
 # define STLSOFT_VER_STLSOFT_UTIL_BITS_H_COUNT_FUNCTIONS_MAJOR    1
 # define STLSOFT_VER_STLSOFT_UTIL_BITS_H_COUNT_FUNCTIONS_MINOR    3
 # define STLSOFT_VER_STLSOFT_UTIL_BITS_H_COUNT_FUNCTIONS_REVISION 1
-# define STLSOFT_VER_STLSOFT_UTIL_BITS_H_COUNT_FUNCTIONS_EDIT     15
+# define STLSOFT_VER_STLSOFT_UTIL_BITS_H_COUNT_FUNCTIONS_EDIT     18
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -386,7 +388,7 @@ stlsoft_C_count_bits_in_32bit_unsigned_integer_by_Kernighan_method(
 
     STLSOFT_COVER_MARK_LINE();
 
-    for(; 0 != v; ++n)
+    for (; 0 != v; ++n)
     {
         STLSOFT_COVER_MARK_LINE();
 
@@ -565,29 +567,28 @@ count_bits(
 template <size_t N_bytes>
 unsigned
 count_bits_int_(
-	int v
+    int v
 );
 
 STLSOFT_TEMPLATE_SPECIALISATION
 inline
 unsigned
 count_bits_int_<4>(
-	int v
+    int v
 )
 {
-	return count_bits(static_cast<ss_uint32_t>(v));
+    return count_bits(static_cast<ss_uint32_t>(v));
 }
 
 STLSOFT_TEMPLATE_SPECIALISATION
 inline
 unsigned
 count_bits_int_<8>(
-	int v
+    int v
 )
 {
-	return count_bits(static_cast<ss_uint64_t>(v));
+    return count_bits(static_cast<ss_uint64_t>(v));
 }
-
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /** Counts the number of bits in an integer
@@ -599,10 +600,10 @@ count_bits_int_<8>(
 inline
 unsigned
 count_bits(
-	int v
+    int v
 )
 {
-	return count_bits_int_<sizeof(int)>(v);
+    return count_bits_int_<sizeof(int)>(v);
 }
 #endif /* __cplusplus */
 
@@ -613,7 +614,7 @@ count_bits(
 #endif /* STLSOFT_NO_NAMESPACE */
 
 /* /////////////////////////////////////////////////////////////////////////
- * inclusion
+ * inclusion control
  */
 
 #ifdef STLSOFT_CF_PRAGMA_ONCE_SUPPORT

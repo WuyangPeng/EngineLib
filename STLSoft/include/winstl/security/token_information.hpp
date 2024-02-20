@@ -4,10 +4,11 @@
  * Purpose:     Helper for accessing token information.
  *
  * Created:     20th June 2003
- * Updated:     13th September 2019
+ * Updated:     16th February 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2003-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,8 +53,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define WINSTL_VER_WINSTL_SECURITY_HPP_TOKEN_INFORMATION_MAJOR     4
 # define WINSTL_VER_WINSTL_SECURITY_HPP_TOKEN_INFORMATION_MINOR     4
-# define WINSTL_VER_WINSTL_SECURITY_HPP_TOKEN_INFORMATION_REVISION  4
-# define WINSTL_VER_WINSTL_SECURITY_HPP_TOKEN_INFORMATION_EDIT      74
+# define WINSTL_VER_WINSTL_SECURITY_HPP_TOKEN_INFORMATION_REVISION  6
+# define WINSTL_VER_WINSTL_SECURITY_HPP_TOKEN_INFORMATION_EDIT      78
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -221,7 +223,14 @@ WINSTL_SEC_T_I_SPECIALISE_TIT_(TokenRestrictedSids, TOKEN_GROUPS);
 
 WINSTL_SEC_T_I_SPECIALISE_TIT_(TokenSessionId, DWORD);
 
+#  if 0
+#  elif !defined(__MINGW32_) && \
+        !defined(__MINGW64_)
+
+#  else
+
 WINSTL_SEC_T_I_SPECIALISE_TIT_(TokenGroupsAndPrivileges, TOKEN_GROUPS_AND_PRIVILEGES);
+#  endif
 
 WINSTL_SEC_T_I_SPECIALISE_TIT_(TokenSandBoxInert, DWORD);
 
@@ -233,7 +242,14 @@ WINSTL_SEC_T_I_SPECIALISE_TIT_(TokenSandBoxInert, DWORD);
 
 # if WINSTL_WIN32_WINNT >= 0x0502
 
+#  if 0
+#  elif !defined(__MINGW32_) && \
+        !defined(__MINGW64_)
+
+#  else
+
 WINSTL_SEC_T_I_SPECIALISE_TIT_(TokenOrigin, TOKEN_ORIGIN);
+#  endif
 
 # endif /* Svr03+ */
 
@@ -361,7 +377,7 @@ public:
 /// @}
 private:
     typedef allocator_type                                      raw_allocator_type_;
-    typedef ss_typename_param_k raw_allocator_type_::pointer    raw_pointer_type_;
+    typedef ss_typename_type_k raw_allocator_type_::pointer     raw_pointer_type_;
     typedef std::pair<
         pointer
     ,   size_type
@@ -392,7 +408,7 @@ private:
 
         ::GetTokenInformation(hToken, C, NULL, 0, &cbRequired);
         dwError = WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();
-        if(ERROR_INSUFFICIENT_BUFFER != dwError)
+        if (ERROR_INSUFFICIENT_BUFFER != dwError)
         {
             // Report error
             exception_thrower_type()(dwError);
@@ -402,7 +418,7 @@ private:
             raw_pointer_type_ const raw     =   raw_allocator_type_().allocate(cbRequired);
             pointer const           data    =   static_cast<pointer>(static_cast<void*>(raw));
 
-            if(NULL == data)
+            if (NULL == data)
             {
                 // Report error
                 exception_thrower_type()(ERROR_NOT_ENOUGH_MEMORY);
@@ -412,7 +428,7 @@ private:
             }
             else
             {
-                if(!::GetTokenInformation(hToken, C, data, cbRequired, &cbRequired))
+                if (!::GetTokenInformation(hToken, C, data, cbRequired, &cbRequired))
                 {
                     // Scope the last error, in case the client code is not using exception reporting
                     last_error_scope scope;
@@ -517,7 +533,7 @@ private:
 #endif /* !WINSTL_NO_NAMESPACE */
 
 /* /////////////////////////////////////////////////////////////////////////
- * inclusion
+ * inclusion control
  */
 
 #ifdef STLSOFT_CF_PRAGMA_ONCE_SUPPORT

@@ -4,10 +4,11 @@
  * Purpose:     Runtime checking for numeric conversions.
  *
  * Created:     10th August 2006
- * Updated:     13th September 2019
+ * Updated:     16th February 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2006-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,8 +53,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define STLSOFT_VER_STLSOFT_CONVERSION_HPP_TRUNCATION_TEST_MAJOR      1
 # define STLSOFT_VER_STLSOFT_CONVERSION_HPP_TRUNCATION_TEST_MINOR      1
-# define STLSOFT_VER_STLSOFT_CONVERSION_HPP_TRUNCATION_TEST_REVISION   10
-# define STLSOFT_VER_STLSOFT_CONVERSION_HPP_TRUNCATION_TEST_EDIT       65
+# define STLSOFT_VER_STLSOFT_CONVERSION_HPP_TRUNCATION_TEST_REVISION   11
+# define STLSOFT_VER_STLSOFT_CONVERSION_HPP_TRUNCATION_TEST_EDIT       68
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -157,12 +159,12 @@ public:
  * The strategy is as follows:
  *
 
-if( signof(FROM) == signof(TO) &&       // Compile-time test 1
+if (signof(FROM) == signof(TO) &&       // Compile-time test 1
     sizeof(FROM) <= sizeof(TO))
 {
     return true;
 }
-else if(unsigned == signof(FROM) &&     // Compile-time test 2
+else if (unsigned == signof(FROM) &&     // Compile-time test 2
         sizeof(FROM) < sizeof(TO))
 {
     return true;
@@ -230,7 +232,7 @@ truncation_test_helper_runtime_test_different_sign_FROM_is_signed_FROM_largertha
 
     T_from toMax = static_cast<T_from>(integral_limits<T_to>::maximum());
 
-    if(from > toMax)
+    if (from > toMax)
     {
         return false;
     }
@@ -271,7 +273,7 @@ truncation_test_helper_runtime_test_different_sign_FROM_is_signed_FROM_largertha
 
     T_to const toMax = integral_limits<T_to>::maximum();
 
-    if(toMax < static_cast<T_to>(from))
+    if (toMax < static_cast<T_to>(from))
     {
         return false;
     }
@@ -348,7 +350,7 @@ truncation_test_helper_runtime_test_different_sign_FROM_is_signed_FROM_smallerth
     STLSOFT_SUPPRESS_UNUSED(sizeofFROM);
     STLSOFT_SUPPRESS_UNUSED(sizeofTO);
 
-    typedef ss_typename_param_k value_to_yesno_type<sizeofTO < sizeofFROM>::type  FROM_largerthan_TO_yesno_t;
+    typedef ss_typename_type_k value_to_yesno_type<sizeofTO < sizeofFROM>::type FROM_largerthan_TO_yesno_t;
 
     return truncation_test_helper_runtime_test_different_sign_FROM_is_signed_FROM_largerthan_TO(from, FROM_largerthan_TO_yesno_t(), T_to());
 }
@@ -397,12 +399,12 @@ truncation_test_helper_runtime_test_different_sign_FROM_is_signed(
     // - from > toMax
     // - from
 
-    if(from < 0)
+    if (from < 0)
     {
         return false;
     }
 
-    typedef ss_typename_param_k value_to_yesno_type<sizeofFROM < sizeofTO>::type  FROM_smallerthan_TO_yesno_t;
+    typedef ss_typename_type_k value_to_yesno_type<sizeofFROM < sizeofTO>::type FROM_smallerthan_TO_yesno_t;
 
     return truncation_test_helper_runtime_test_different_sign_FROM_is_signed_FROM_smallerthan_TO(from, FROM_smallerthan_TO_yesno_t(), T_to());
 }
@@ -449,7 +451,7 @@ truncation_test_helper_runtime_test_different_sign_FROM_is_signed(
 
     T_from const toMax = static_cast<T_from>(integral_limits<T_to>::maximum());
 
-    if(from > toMax)
+    if (from > toMax)
     {
         return false;
     }
@@ -496,7 +498,7 @@ truncation_test_helper_runtime_test_same_sign(
     T_from const    toMax   =   static_cast<T_from>(integral_limits<T_to>::maximum());
     T_from const    toMin   =   static_cast<T_from>(integral_limits<T_to>::minimum());
 
-    if( from < toMin ||
+    if (from < toMin ||
         from > toMax)
     {
         return false;
@@ -540,7 +542,7 @@ truncation_test_helper_runtime_test_same_sign(
 
     STLSOFT_STATIC_ASSERT((0 == int(TO_is_signed)) != (0 == int(FROM_is_signed)));
 
-    typedef ss_typename_param_k value_to_yesno_type<FROM_is_signed>::type  same_sign_yesno_t;
+    typedef ss_typename_type_k value_to_yesno_type<FROM_is_signed>::type    same_sign_yesno_t;
 
     return truncation_test_helper_runtime_test_different_sign_FROM_is_signed<T_to>(from, same_sign_yesno_t(), T_to());
 }
@@ -584,7 +586,7 @@ truncation_test_helper_runtime_test(
     STLSOFT_SUPPRESS_UNUSED(sizeofTO);
     STLSOFT_SUPPRESS_UNUSED(sizeofFROM);
 
-    typedef ss_typename_param_k value_to_yesno_type<types_have_same_sign>::type  same_sign_yesno_t;
+    typedef ss_typename_type_k value_to_yesno_type<types_have_same_sign>::type  same_sign_yesno_t;
 
     return truncation_test_helper_runtime_test_same_sign<T_to>(from, same_sign_yesno_t(), T_to());
 }
@@ -658,7 +660,7 @@ truncation_test_(
                                                 (   !FROM_is_signed &&
                                                     sizeofFROM < sizeofTO)  };
 
-    typedef ss_typename_param_k value_to_yesno_type<types_are_statically_compatible>::type  yesno_t;
+    typedef ss_typename_type_k value_to_yesno_type<types_are_statically_compatible>::type   yesno_t;
 
 # if defined(STLSOFT_COMPILER_IS_MSVC) && \
      defined(_Wp64) && \

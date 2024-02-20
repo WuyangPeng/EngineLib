@@ -4,10 +4,11 @@
  * Purpose:     Modification functions for Windows time structures.
  *
  * Created:     2nd February 2011
- * Updated:     2nd February 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2011-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -52,7 +54,7 @@
 # define WINSTL_VER_WINSTL_TIME_H_MODIFICATION_FUNCTIONS_MAJOR    2
 # define WINSTL_VER_WINSTL_TIME_H_MODIFICATION_FUNCTIONS_MINOR    0
 # define WINSTL_VER_WINSTL_TIME_H_MODIFICATION_FUNCTIONS_REVISION 1
-# define WINSTL_VER_WINSTL_TIME_H_MODIFICATION_FUNCTIONS_EDIT     10
+# define WINSTL_VER_WINSTL_TIME_H_MODIFICATION_FUNCTIONS_EDIT     12
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -139,23 +141,23 @@ winstl_C_increment_FILETIME_us(
 
     puliResult->QuadPart = puliOrigin->QuadPart;
 
-    if(0 != microseconds)
+    if (0 != microseconds)
     {
         puliResult->QuadPart += stlsoft_static_cast(ULONGLONG, 10) * microseconds;
     }
-    if(0 != seconds)
+    if (0 != seconds)
     {
         puliResult->QuadPart += stlsoft_static_cast(ULONGLONG, 10000) * 1000 * seconds;
     }
-    if(0 != minutes)
+    if (0 != minutes)
     {
         puliResult->QuadPart += stlsoft_static_cast(ULONGLONG, 10000) * 1000 * 60 * minutes;
     }
-    if(0 != hours)
+    if (0 != hours)
     {
         puliResult->QuadPart += stlsoft_static_cast(ULONGLONG, 10000) * 1000 * 60 * 60 * hours;
     }
-    if(0 != days)
+    if (0 != days)
     {
         puliResult->QuadPart += stlsoft_static_cast(ULONGLONG, 10000) * 1000 * 60 * 60 * 24 * days;
     }
@@ -221,7 +223,7 @@ winstl_C_increment_SYSTEMTIME(
 {
     FILETIME ftOrigin;
 
-    if(STLSOFT_NS_GLOBAL(SystemTimeToFileTime(origin, &ftOrigin)))
+    if (STLSOFT_NS_GLOBAL(SystemTimeToFileTime(origin, &ftOrigin)))
     {
         FILETIME ftResult;
 
@@ -235,7 +237,7 @@ winstl_C_increment_SYSTEMTIME(
         ,   milliseconds
         );
 
-        if(STLSOFT_NS_GLOBAL(FileTimeToSystemTime(&ftResult, result)))
+        if (STLSOFT_NS_GLOBAL(FileTimeToSystemTime(&ftResult, result)))
         {
             return TRUE;
         }
@@ -368,7 +370,7 @@ increment_SYSTEMTIME(
 #endif /* !WINSTL_NO_NAMESPACE */
 
 /* /////////////////////////////////////////////////////////////////////////
- * inclusion
+ * inclusion control
  */
 
 #ifdef STLSOFT_CF_PRAGMA_ONCE_SUPPORT

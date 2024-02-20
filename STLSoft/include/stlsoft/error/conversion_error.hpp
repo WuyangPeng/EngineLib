@@ -4,10 +4,11 @@
  * Purpose:     Definition of the stlsoft::conversion_error exception class.
  *
  * Created:     15th December 2006
- * Updated:     13th September 2019
+ * Updated:     26th January 2021
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2021, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2007-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -52,8 +54,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define STLSOFT_VER_STLSOFT_ERROR_HPP_CONVERSION_ERROR_MAJOR       1
 # define STLSOFT_VER_STLSOFT_ERROR_HPP_CONVERSION_ERROR_MINOR       0
-# define STLSOFT_VER_STLSOFT_ERROR_HPP_CONVERSION_ERROR_REVISION    10
-# define STLSOFT_VER_STLSOFT_ERROR_HPP_CONVERSION_ERROR_EDIT        21
+# define STLSOFT_VER_STLSOFT_ERROR_HPP_CONVERSION_ERROR_REVISION    11
+# define STLSOFT_VER_STLSOFT_ERROR_HPP_CONVERSION_ERROR_EDIT        23
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -121,9 +123,10 @@ protected:
     {}
 #if !defined(STLSOFT_COMPILER_IS_MSVC) || \
     _MSC_VER > 1200
+
     // There's a defect in the VC++ 6 compiler that causes the throwing of
     // any derived class to cause an ICE
-    virtual ~conversion_error_base() STLSOFT_NOEXCEPT = 0;
+    virtual ~conversion_error_base() STLSOFT_NOEXCEPT_STDOVR = 0;
 #endif /* compiler */
 /// @}
 };
@@ -171,7 +174,7 @@ public:
         : parent_class_type(rhs)
         , m_statusCode(rhs.m_statusCode)
     {}
-    virtual ~conversion_error() STLSOFT_NOEXCEPT
+    virtual ~conversion_error() STLSOFT_NOEXCEPT_STDOVR
     {}
 private:
     class_type& operator =(class_type const&);  // copy-assignment proscribed
@@ -207,7 +210,7 @@ private:
 
 # if !defined(STLSOFT_COMPILER_IS_MSVC) || \
     _MSC_VER > 1200
-inline /* virtual */ conversion_error_base::~conversion_error_base() STLSOFT_NOEXCEPT
+inline /* virtual */ conversion_error_base::~conversion_error_base() STLSOFT_NOEXCEPT_STDOVR
 {}
 # endif /* compiler */
 

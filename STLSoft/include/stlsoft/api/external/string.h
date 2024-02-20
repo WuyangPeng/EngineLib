@@ -4,10 +4,11 @@
  * Purpose:     External preprocessor aliases for string functions.
  *
  * Created:     15th November 2002
- * Updated:     13th September 2019
+ * Updated:     25th December 2020
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2020, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2002-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -47,7 +49,7 @@
 #define STLSOFT_INCL_STLSOFT_API_external_h_string
 
 /* /////////////////////////////////////////////////////////////////////////
- * includes
+ * includes - 1
  */
 
 #ifndef STLSOFT_INCL_STLSOFT_H_STLSOFT
@@ -61,6 +63,17 @@
 # define STLSOFT_INCL_H_STRING
 # include <string.h>
 #endif /* !STLSOFT_INCL_H_STRING */
+
+#if 0 ||\
+    defined(__MINGW32__)||\
+    defined(__MINGW64__)||\
+    0
+# ifndef STLSOFT_INCL_H_STRINGS
+#  define STLSOFT_INCL_H_STRINGS
+#  include <strings.h>
+# endif /* !STLSOFT_INCL_H_STRINGS */
+#endif
+
 #if 0 ||\
     defined(STLSOFT_COMPILER_IS_BORLAND)||\
     0
@@ -68,6 +81,7 @@
 #  include <tchar.h>
 # endif /* !STLSOFT_INCL_H_TCHAR */
 #endif /* compiler */
+
 #ifndef STLSOFT_INCL_H_WCHAR
 # define STLSOFT_INCL_H_WCHAR
 # include <wchar.h>
@@ -92,14 +106,17 @@
 
 # if 0
 # elif defined(__STDC__)
+
 #  define STLSOFT_API_EXTERNAL_string_USE_MSVC_COMPILER_EXTENSION_FORMS_
-# elif 1&&\
+# elif 1 &&\
        _MSC_VER >= 1500 &&\
        !defined(_CRT_SECURE_NO_WARNINGS) &&\
        !defined(_CRT_NONSTDC_NO_WARNINGS) &&\
        1
+
 #  define STLSOFT_API_EXTERNAL_string_USE_MSVC_COMPILER_EXTENSION_FORMS_
 # else
+
 # endif
 
 #else
@@ -109,68 +126,6 @@
 /* /////////////////////////////////////////////////////////////////////////
  * string functions
  */
-
-/*
-
- * from winstl/system/system_traits.hpp
-
-#if defined(STLSOFT_COMPILER_IS_BORLAND)
-# if !defined(__STDC__)
-#  define WINSTL_SYSTEM_TRAITS_HAS_strnicmp_
-# endif
-# if !defined(__MFC_COMPAT__)
-#  define WINSTL_SYSTEM_TRAITS_HAS__strnicmp_
-# endif
-#elif defined(STLSOFT_COMPILER_IS_DMC)
-# define WINSTL_SYSTEM_TRAITS_HAS__strnicmp_
-#elif defined(STLSOFT_COMPILER_IS_GCC)
-# if !defined(__STRICT_ANSI__)
-#  define WINSTL_SYSTEM_TRAITS_HAS__strnicmp_
-# endif
-#elif defined(STLSOFT_COMPILER_IS_INTEL) || \
-      defined(STLSOFT_COMPILER_IS_MSVC)
-# if !defined(__STDC__) && \
-     !defined(STLSOFT_USING_SAFE_STR_FUNCTIONS)
-#  define WINSTL_SYSTEM_TRAITS_HAS_strnicmp_
-# endif
-# define WINSTL_SYSTEM_TRAITS_HAS__strnicmp_
-#elif defined(STLSOFT_COMPILER_IS_MWERKS)
-# define WINSTL_SYSTEM_TRAITS_HAS_strnicmp_
-# define WINSTL_SYSTEM_TRAITS_HAS__strnicmp_
-#elif defined(STLSOFT_COMPILER_IS_WATCOM)
-# define WINSTL_SYSTEM_TRAITS_HAS__strnicmp_
-#endif
-
-
-
-#if defined(STLSOFT_COMPILER_IS_BORLAND)
-# if !defined(__STDC__)
-#  define WINSTL_SYSTEM_TRAITS_HAS_wcsnicmp_
-# endif
-# if !defined(__MFC_COMPAT__)
-#  define WINSTL_SYSTEM_TRAITS_HAS__wcsnicmp_
-# endif
-#elif defined(STLSOFT_COMPILER_IS_DMC)
-# define WINSTL_SYSTEM_TRAITS_HAS__wcsnicmp_
-#elif defined(STLSOFT_COMPILER_IS_GCC)
-# if !defined(__STRICT_ANSI__)
-#  define WINSTL_SYSTEM_TRAITS_HAS__wcsnicmp_
-# endif
-#elif defined(STLSOFT_COMPILER_IS_INTEL) || \
-      defined(STLSOFT_COMPILER_IS_MSVC)
-# if !defined(__STDC__)
-#  define WINSTL_SYSTEM_TRAITS_HAS_wcsnicmp_
-# endif
-# define WINSTL_SYSTEM_TRAITS_HAS__wcsnicmp_
-#elif defined(STLSOFT_COMPILER_IS_MWERKS)
-# define WINSTL_SYSTEM_TRAITS_HAS_wcsnicmp_
-# define WINSTL_SYSTEM_TRAITS_HAS__wcsnicmp_
-#elif defined(STLSOFT_COMPILER_IS_WATCOM)
-# define WINSTL_SYSTEM_TRAITS_HAS__wcsnicmp_
-#endif
-
- */
-
 
 /* *************************************
  * stricmp
@@ -184,22 +139,22 @@
 
 #  if 0
 #  elif !defined(__STDC__)
-#   define STLSOFT_API_EXTERNAL_string_stricmp                              STLSOFT_NS_GLOBAL_(stricmp)
+#   define STLSOFT_API_EXTERNAL_string_stricmp              STLSOFT_NS_GLOBAL_(stricmp)
 #  elif !defined(__MFC_COMPAT__)
-#   define STLSOFT_API_EXTERNAL_string_stricmp                              STLSOFT_NS_GLOBAL_(_stricmp)
+#   define STLSOFT_API_EXTERNAL_string_stricmp              STLSOFT_NS_GLOBAL_(_stricmp)
 #  endif
 
   /* Digital Mars */
 # elif defined(STLSOFT_COMPILER_IS_DMC)
 
-#  define STLSOFT_API_EXTERNAL_string_stricmp                               STLSOFT_NS_GLOBAL_(stricmp)
+#  define STLSOFT_API_EXTERNAL_string_stricmp               STLSOFT_NS_GLOBAL_(stricmp)
 
   /* GCC */
 # elif defined(STLSOFT_COMPILER_IS_GCC)
 
 #  if 0
 #  elif !defined(__STRICT_ANSI__)
-#   define STLSOFT_API_EXTERNAL_string_stricmp                              STLSOFT_NS_GLOBAL_(_stricmp)
+#   define STLSOFT_API_EXTERNAL_string_stricmp              STLSOFT_NS_GLOBAL_(_stricmp)
 #  endif
 
   /* Intel */
@@ -208,9 +163,9 @@
 
 #  if 0
 #  elif !defined(__STDC__)
-#   define STLSOFT_API_EXTERNAL_string_stricmp                              STLSOFT_NS_GLOBAL_(stricmp)
+#   define STLSOFT_API_EXTERNAL_string_stricmp              STLSOFT_NS_GLOBAL_(stricmp)
 #  else
-#   define STLSOFT_API_EXTERNAL_string_stricmp                              STLSOFT_NS_GLOBAL_(_stricmp)
+#   define STLSOFT_API_EXTERNAL_string_stricmp              STLSOFT_NS_GLOBAL_(_stricmp)
 #  endif
 
   /* Microsoft Visual C++ */
@@ -218,26 +173,26 @@
 
 #  if 0
 #  elif !defined(STLSOFT_API_EXTERNAL_string_USE_MSVC_COMPILER_EXTENSION_FORMS_)
-#   define STLSOFT_API_EXTERNAL_string_stricmp                              STLSOFT_NS_GLOBAL_(stricmp)
+#   define STLSOFT_API_EXTERNAL_string_stricmp              STLSOFT_NS_GLOBAL_(stricmp)
 #  else
-#   define STLSOFT_API_EXTERNAL_string_stricmp                              STLSOFT_NS_GLOBAL_(_stricmp)
+#   define STLSOFT_API_EXTERNAL_string_stricmp              STLSOFT_NS_GLOBAL_(_stricmp)
 #  endif
 
   /* Metrowerks CodeWarrior */
 # elif defined(STLSOFT_COMPILER_IS_MWERKS)
 
-#  define STLSOFT_API_EXTERNAL_string_stricmp                               STLSOFT_NS_GLOBAL_(stricmp)
+#  define STLSOFT_API_EXTERNAL_string_stricmp               STLSOFT_NS_GLOBAL_(stricmp)
 
   /* Watcom */
 # elif defined(STLSOFT_COMPILER_IS_WATCOM)
 
-#  define STLSOFT_API_EXTERNAL_string_stricmp                               STLSOFT_NS_GLOBAL_(_stricmp)
+#  define STLSOFT_API_EXTERNAL_string_stricmp               STLSOFT_NS_GLOBAL_(_stricmp)
 # endif
 #endif /* !STLSOFT_API_EXTERNAL_string_stricmp */
 
 #ifndef STLSOFT_API_EXTERNAL_string_stricmp
 # ifdef _WIN32
-#  define STLSOFT_API_EXTERNAL_string_stricmp                               STLSOFT_NS_GLOBAL_(lstrcmpiA)
+#  define STLSOFT_API_EXTERNAL_string_stricmp               STLSOFT_NS_GLOBAL_(lstrcmpiA)
 # endif
 #endif /* !STLSOFT_API_EXTERNAL_string_stricmp */
 
@@ -254,24 +209,24 @@
 
 #  if 0
 #  elif (0x0620 == (__BORLANDC__ & 0xfff0))
-#   define STLSOFT_API_EXTERNAL_string_wcsicmp                              STLSOFT_NS_GLOBAL(_wcsicmp)
+#   define STLSOFT_API_EXTERNAL_string_wcsicmp              STLSOFT_NS_GLOBAL(_wcsicmp)
 #  elif !defined(__STDC__)
-#   define STLSOFT_API_EXTERNAL_string_wcsicmp                              STLSOFT_NS_GLOBAL_(wcsicmp)
+#   define STLSOFT_API_EXTERNAL_string_wcsicmp              STLSOFT_NS_GLOBAL_(wcsicmp)
 #  elif !defined(__MFC_COMPAT__)
-#   define STLSOFT_API_EXTERNAL_string_wcsicmp                              STLSOFT_NS_GLOBAL_(_wcsicmp)
+#   define STLSOFT_API_EXTERNAL_string_wcsicmp              STLSOFT_NS_GLOBAL_(_wcsicmp)
 #  endif
 
   /* Digital Mars */
 # elif defined(STLSOFT_COMPILER_IS_DMC)
 
-#  define STLSOFT_API_EXTERNAL_string_wcsicmp                               STLSOFT_NS_GLOBAL_(wcsicmp)
+#  define STLSOFT_API_EXTERNAL_string_wcsicmp               STLSOFT_NS_GLOBAL_(wcsicmp)
 
   /* GCC */
 # elif defined(STLSOFT_COMPILER_IS_GCC)
 
 #  if 0
 #  elif !defined(__STRICT_ANSI__)
-#   define STLSOFT_API_EXTERNAL_string_wcsicmp                              STLSOFT_NS_GLOBAL_(_wcsicmp)
+#   define STLSOFT_API_EXTERNAL_string_wcsicmp              STLSOFT_NS_GLOBAL_(_wcsicmp)
 #  endif
 
   /* Intel */
@@ -280,9 +235,9 @@
 
 #  if 0
 #  elif !defined(__STDC__)
-#   define STLSOFT_API_EXTERNAL_string_wcsicmp                              STLSOFT_NS_GLOBAL_(wcsicmp)
+#   define STLSOFT_API_EXTERNAL_string_wcsicmp              STLSOFT_NS_GLOBAL_(wcsicmp)
 #  else
-#   define STLSOFT_API_EXTERNAL_string_wcsicmp                              STLSOFT_NS_GLOBAL_(_wcsicmp)
+#   define STLSOFT_API_EXTERNAL_string_wcsicmp              STLSOFT_NS_GLOBAL_(_wcsicmp)
 #  endif
 
   /* Microsoft Visual C++ */
@@ -290,26 +245,26 @@
 
 #  if 0
 #  elif !defined(STLSOFT_API_EXTERNAL_string_USE_MSVC_COMPILER_EXTENSION_FORMS_)
-#   define STLSOFT_API_EXTERNAL_string_wcsicmp                              STLSOFT_NS_GLOBAL_(wcsicmp)
+#   define STLSOFT_API_EXTERNAL_string_wcsicmp              STLSOFT_NS_GLOBAL_(wcsicmp)
 #  else
-#   define STLSOFT_API_EXTERNAL_string_wcsicmp                              STLSOFT_NS_GLOBAL_(_wcsicmp)
+#   define STLSOFT_API_EXTERNAL_string_wcsicmp              STLSOFT_NS_GLOBAL_(_wcsicmp)
 #  endif
 
   /* Metrowerks CodeWarrior */
 # elif defined(STLSOFT_COMPILER_IS_MWERKS)
 
-#  define STLSOFT_API_EXTERNAL_string_wcsicmp                               STLSOFT_NS_GLOBAL_(wcsicmp)
+#  define STLSOFT_API_EXTERNAL_string_wcsicmp               STLSOFT_NS_GLOBAL_(wcsicmp)
 
   /* Watcom */
 # elif defined(STLSOFT_COMPILER_IS_WATCOM)
 
-#  define STLSOFT_API_EXTERNAL_string_wcsicmp                               STLSOFT_NS_GLOBAL_(_wcsicmp)
+#  define STLSOFT_API_EXTERNAL_string_wcsicmp               STLSOFT_NS_GLOBAL_(_wcsicmp)
 # endif
 #endif /* !STLSOFT_API_EXTERNAL_string_wcsicmp */
 
 #ifndef STLSOFT_API_EXTERNAL_string_wcsicmp
 # ifdef _WIN32
-#  define STLSOFT_API_EXTERNAL_string_wcsicmp                               STLSOFT_NS_GLOBAL_(lstrcmpiW)
+#  define STLSOFT_API_EXTERNAL_string_wcsicmp               STLSOFT_NS_GLOBAL_(lstrcmpiW)
 # endif
 #endif /* !STLSOFT_API_EXTERNAL_string_wcsicmp */
 
@@ -326,22 +281,27 @@
 
 #  if 0
 #  elif !defined(__STDC__)
-#   define STLSOFT_API_EXTERNAL_string_strnicmp                             STLSOFT_NS_GLOBAL_(strnicmp)
+#   define STLSOFT_API_EXTERNAL_string_strnicmp             STLSOFT_NS_GLOBAL_(strnicmp)
 #  elif !defined(__MFC_COMPAT__)
-#   define STLSOFT_API_EXTERNAL_string_strnicmp                             STLSOFT_NS_GLOBAL_(_strnicmp)
+#   define STLSOFT_API_EXTERNAL_string_strnicmp             STLSOFT_NS_GLOBAL_(_strnicmp)
 #  endif
 
   /* Digital Mars */
 # elif defined(STLSOFT_COMPILER_IS_DMC)
 
-#  define STLSOFT_API_EXTERNAL_string_strnicmp                              STLSOFT_NS_GLOBAL_(strnicmp)
+#  define STLSOFT_API_EXTERNAL_string_strnicmp              STLSOFT_NS_GLOBAL_(strnicmp)
 
   /* GCC */
 # elif defined(STLSOFT_COMPILER_IS_GCC)
 
 #  if 0
+#  elif 0 || \
+        defined(__MINGW32__)||\
+        defined(__MINGW64__)||\
+        0
+#   define STLSOFT_API_EXTERNAL_string_strnicmp             STLSOFT_NS_GLOBAL_(strncasecmp)
 #  elif !defined(__STRICT_ANSI__)
-#   define STLSOFT_API_EXTERNAL_string_strnicmp                             STLSOFT_NS_GLOBAL_(_strnicmp)
+#   define STLSOFT_API_EXTERNAL_string_strnicmp             STLSOFT_NS_GLOBAL_(_strnicmp)
 #  endif
 
   /* Intel */
@@ -350,9 +310,9 @@
 
 #  if 0
 #  elif !defined(__STDC__)
-#   define STLSOFT_API_EXTERNAL_string_strnicmp                             STLSOFT_NS_GLOBAL_(strnicmp)
+#   define STLSOFT_API_EXTERNAL_string_strnicmp             STLSOFT_NS_GLOBAL_(strnicmp)
 #  else
-#   define STLSOFT_API_EXTERNAL_string_strnicmp                             STLSOFT_NS_GLOBAL_(_strnicmp)
+#   define STLSOFT_API_EXTERNAL_string_strnicmp             STLSOFT_NS_GLOBAL_(_strnicmp)
 #  endif
 
   /* Microsoft Visual C++ */
@@ -360,20 +320,20 @@
 
 #  if 0
 #  elif !defined(STLSOFT_API_EXTERNAL_string_USE_MSVC_COMPILER_EXTENSION_FORMS_)
-#   define STLSOFT_API_EXTERNAL_string_strnicmp                             STLSOFT_NS_GLOBAL_(strnicmp)
+#   define STLSOFT_API_EXTERNAL_string_strnicmp             STLSOFT_NS_GLOBAL_(strnicmp)
 #  else
-#   define STLSOFT_API_EXTERNAL_string_strnicmp                             STLSOFT_NS_GLOBAL_(_strnicmp)
+#   define STLSOFT_API_EXTERNAL_string_strnicmp             STLSOFT_NS_GLOBAL_(_strnicmp)
 #  endif
 
   /* Metrowerks CodeWarrior */
 # elif defined(STLSOFT_COMPILER_IS_MWERKS)
 
-#  define STLSOFT_API_EXTERNAL_string_strnicmp                              STLSOFT_NS_GLOBAL_(strnicmp)
+#  define STLSOFT_API_EXTERNAL_string_strnicmp              STLSOFT_NS_GLOBAL_(strnicmp)
 
   /* Watcom */
 # elif defined(STLSOFT_COMPILER_IS_WATCOM)
 
-#  define STLSOFT_API_EXTERNAL_string_strnicmp                              STLSOFT_NS_GLOBAL_(_strnicmp)
+#  define STLSOFT_API_EXTERNAL_string_strnicmp              STLSOFT_NS_GLOBAL_(_strnicmp)
 # endif
 #endif /* !STLSOFT_API_EXTERNAL_string_strnicmp */
 
@@ -390,24 +350,24 @@
 
 #  if 0
 #  elif (0x0620 == (__BORLANDC__ & 0xfff0))
-#   define STLSOFT_API_EXTERNAL_string_wcsnicmp                             STLSOFT_NS_GLOBAL(_wcsnicmp)
+#   define STLSOFT_API_EXTERNAL_string_wcsnicmp             STLSOFT_NS_GLOBAL(_wcsnicmp)
 #  elif !defined(__STDC__)
-#   define STLSOFT_API_EXTERNAL_string_wcsnicmp                             STLSOFT_NS_GLOBAL_(wcsnicmp)
+#   define STLSOFT_API_EXTERNAL_string_wcsnicmp             STLSOFT_NS_GLOBAL_(wcsnicmp)
 #  elif !defined(__MFC_COMPAT__)
-#   define STLSOFT_API_EXTERNAL_string_wcsnicmp                             STLSOFT_NS_GLOBAL_(_wcsnicmp)
+#   define STLSOFT_API_EXTERNAL_string_wcsnicmp             STLSOFT_NS_GLOBAL_(_wcsnicmp)
 #  endif
 
   /* Digital Mars */
 # elif defined(STLSOFT_COMPILER_IS_DMC)
 
-#  define STLSOFT_API_EXTERNAL_string_wcsnicmp                              STLSOFT_NS_GLOBAL_(wcsnicmp)
+#  define STLSOFT_API_EXTERNAL_string_wcsnicmp              STLSOFT_NS_GLOBAL_(wcsnicmp)
 
   /* GCC */
 # elif defined(STLSOFT_COMPILER_IS_GCC)
 
 #  if 0
 #  elif !defined(__STRICT_ANSI__)
-#   define STLSOFT_API_EXTERNAL_string_wcsnicmp                             STLSOFT_NS_GLOBAL_(_wcsnicmp)
+#   define STLSOFT_API_EXTERNAL_string_wcsnicmp             STLSOFT_NS_GLOBAL_(_wcsnicmp)
 #  endif
 
   /* Intel */
@@ -416,9 +376,9 @@
 
 #  if 0
 #  elif !defined(__STDC__)
-#   define STLSOFT_API_EXTERNAL_string_wcsnicmp                             STLSOFT_NS_GLOBAL_(wcsnicmp)
+#   define STLSOFT_API_EXTERNAL_string_wcsnicmp             STLSOFT_NS_GLOBAL_(wcsnicmp)
 #  else
-#   define STLSOFT_API_EXTERNAL_string_wcsnicmp                             STLSOFT_NS_GLOBAL_(_wcsnicmp)
+#   define STLSOFT_API_EXTERNAL_string_wcsnicmp             STLSOFT_NS_GLOBAL_(_wcsnicmp)
 #  endif
 
   /* Microsoft Visual C++ */
@@ -426,22 +386,44 @@
 
 #  if 0
 #  elif !defined(STLSOFT_API_EXTERNAL_string_USE_MSVC_COMPILER_EXTENSION_FORMS_)
-#   define STLSOFT_API_EXTERNAL_string_wcsnicmp                             STLSOFT_NS_GLOBAL_(wcsnicmp)
+#   define STLSOFT_API_EXTERNAL_string_wcsnicmp             STLSOFT_NS_GLOBAL_(wcsnicmp)
 #  else
-#   define STLSOFT_API_EXTERNAL_string_wcsnicmp                             STLSOFT_NS_GLOBAL_(_wcsnicmp)
+#   define STLSOFT_API_EXTERNAL_string_wcsnicmp             STLSOFT_NS_GLOBAL_(_wcsnicmp)
 #  endif
 
   /* Metrowerks CodeWarrior */
 # elif defined(STLSOFT_COMPILER_IS_MWERKS)
 
-#  define STLSOFT_API_EXTERNAL_string_wcsnicmp                              STLSOFT_NS_GLOBAL_(wcsnicmp)
+#  define STLSOFT_API_EXTERNAL_string_wcsnicmp              STLSOFT_NS_GLOBAL_(wcsnicmp)
 
   /* Watcom */
 # elif defined(STLSOFT_COMPILER_IS_WATCOM)
 
-#  define STLSOFT_API_EXTERNAL_string_wcsnicmp                              STLSOFT_NS_GLOBAL_(_wcsnicmp)
+#  define STLSOFT_API_EXTERNAL_string_wcsnicmp              STLSOFT_NS_GLOBAL_(_wcsnicmp)
 # endif
 #endif /* !STLSOFT_API_EXTERNAL_string_wcsnicmp */
+
+/* /////////////////////////////////////////////////////////////////////////
+ * includes - 2
+ */
+
+#ifndef STLSOFT_API_EXTERNAL_string_strnicmp
+
+# define STLSOFT_API_EXTERNAL_string_strnicmp               stlsoft_C_strnicmp
+
+# ifndef STLSOFT_INCL_STLSOFT_STRING_C_STRING_H_STRNICMP
+#  include <stlsoft/string/c_string/strnicmp.h>
+# endif /* !STLSOFT_INCL_STLSOFT_STRING_C_STRING_H_STRNICMP */
+#endif /* !STLSOFT_API_EXTERNAL_string_strnicmp */
+
+#ifndef STLSOFT_API_EXTERNAL_string_wcsnicmp
+
+# define STLSOFT_API_EXTERNAL_string_wcsnicmp               stlsoft_C_wcsnicmp
+
+# ifndef STLSOFT_INCL_STLSOFT_STRING_C_STRING_H_STRNICMP
+#  include <stlsoft/string/c_string/strnicmp.h>
+# endif /* !STLSOFT_INCL_STLSOFT_STRING_C_STRING_H_STRNICMP */
+#endif /* !STLSOFT_API_EXTERNAL_string_strnicmp */
 
 /* /////////////////////////////////////////////////////////////////////////
  * inclusion control

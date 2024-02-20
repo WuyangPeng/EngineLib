@@ -4,10 +4,11 @@
  * Purpose:     Functions for manipulating COM Type Libraries.
  *
  * Created:     5th April 2005
- * Updated:     2nd February 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2005-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,7 +53,7 @@
 # define COMSTL_VER_COMSTL_TYPELIB_HPP_FUNCTIONS_MAJOR      1
 # define COMSTL_VER_COMSTL_TYPELIB_HPP_FUNCTIONS_MINOR      4
 # define COMSTL_VER_COMSTL_TYPELIB_HPP_FUNCTIONS_REVISION   3
-# define COMSTL_VER_COMSTL_TYPELIB_HPP_FUNCTIONS_EDIT       82
+# define COMSTL_VER_COMSTL_TYPELIB_HPP_FUNCTIONS_EDIT       84
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -192,7 +194,7 @@ typelib_load(
     ITypeLib*   ptl;
     HRESULT     hr = ximpl_comstl_typelib_function_util_::LoadTypeLibEx_(stlsoft::c_str_ptr(path), kind, &ptl);
 
-    if(SUCCEEDED(hr))
+    if (SUCCEEDED(hr))
     {
         typelib->set(ptl, false);
     }
@@ -227,7 +229,7 @@ typelib_load(
     ITypeLib*   ptl;
     HRESULT     hr = ximpl_comstl_typelib_function_util_::LoadRegTypeLib_(guid, verMajor, verMinor, lcid, &ptl);
 
-    if(SUCCEEDED(hr))
+    if (SUCCEEDED(hr))
     {
         typelib->set(ptl, false);
     }
@@ -265,7 +267,7 @@ typelib_find_name(
     USHORT                      num =   1;
     HRESULT                     hr  =   typelib2->FindName(const_cast<LPOLESTR>(name), 0, &pti, id, &num);
 
-    if(SUCCEEDED(hr))
+    if (SUCCEEDED(hr))
     {
         typeinfo->set(pti, false);
     }
@@ -284,7 +286,7 @@ typelib_get_typeinfo(
     ITypeInfo*                  pti;
     HRESULT                     hr = typelib2->GetTypeInfo(n, &pti);
 
-    if(SUCCEEDED(hr))
+    if (SUCCEEDED(hr))
     {
         typeinfo->set(pti, false);
     }

@@ -4,10 +4,11 @@
  * Purpose:     Platform header for the filesystem_traits components.
  *
  * Created:     16th July 2006
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2006-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -54,7 +56,7 @@
 # define PLATFORMSTL_VER_PLATFORMSTL_FILESYSTEM_HPP_CWD_STACK_MAJOR     2
 # define PLATFORMSTL_VER_PLATFORMSTL_FILESYSTEM_HPP_CWD_STACK_MINOR     1
 # define PLATFORMSTL_VER_PLATFORMSTL_FILESYSTEM_HPP_CWD_STACK_REVISION  10
-# define PLATFORMSTL_VER_PLATFORMSTL_FILESYSTEM_HPP_CWD_STACK_EDIT      36
+# define PLATFORMSTL_VER_PLATFORMSTL_FILESYSTEM_HPP_CWD_STACK_EDIT      38
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -189,7 +191,7 @@ typedef basic_cwd_stack<ss_char_a_t>            cwd_stack;
 template <typename C, typename XP>
 inline ss_typename_type_ret_k basic_cwd_stack<C, XP>::string_type const& basic_cwd_stack<C, XP>::translate_environment_(ss_typename_type_k basic_cwd_stack<C, XP>::string_type const& directory, ss_typename_type_k basic_cwd_stack<C, XP>::string_type &trueDirectory)
 {
-    if(directory.end() != std::find(directory.begin(), directory.end(), '%'))
+    if (directory.end() != std::find(directory.begin(), directory.end(), '%'))
     {
         stlsoft::auto_buffer<char_type>     buffer(1 + traits_type::expand_environment_strings(directory.c_str(), NULL, 0));
         const STLSOFT_NS_QUAL(ss_size_t)    cch = traits_type::expand_environment_strings(directory.c_str(), &buffer[0], buffer.size());
@@ -232,7 +234,7 @@ inline void basic_cwd_stack<C, XP>::push(ss_typename_type_k basic_cwd_stack<C, X
 
     m_stack.push(cwd);
 
-    if(!traits_type::set_current_directory(translate_environment_(directory, trueDirectory).c_str()))
+    if (!traits_type::set_current_directory(translate_environment_(directory, trueDirectory).c_str()))
     {
         m_stack.pop();
 
@@ -251,7 +253,7 @@ inline void basic_cwd_stack<C, XP>::pop()
 
     m_stack.pop();
 
-    if(!traits_type::set_current_directory(directory.c_str()))
+    if (!traits_type::set_current_directory(directory.c_str()))
     {
         exception_policy_type   xp;
 
@@ -266,7 +268,7 @@ inline ss_typename_type_ret_k basic_cwd_stack<C, XP>::bool_type basic_cwd_stack<
 
     string_type const   &directory  =   m_stack.top();
 
-    if(!traits_type::set_current_directory(directory.c_str()))
+    if (!traits_type::set_current_directory(directory.c_str()))
     {
         return false;
     }

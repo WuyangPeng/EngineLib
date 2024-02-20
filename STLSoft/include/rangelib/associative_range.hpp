@@ -4,10 +4,11 @@
  * Purpose:     Associative container range adaptor.
  *
  * Created:     1st October 2004
- * Updated:     2nd February 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2004-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -48,7 +50,7 @@
 # define RANGELIB_VER_RANGELIB_HPP_ASSOCIATIVE_RANGE_MAJOR       1
 # define RANGELIB_VER_RANGELIB_HPP_ASSOCIATIVE_RANGE_MINOR       4
 # define RANGELIB_VER_RANGELIB_HPP_ASSOCIATIVE_RANGE_REVISION    11
-# define RANGELIB_VER_RANGELIB_HPP_ASSOCIATIVE_RANGE_EDIT        44
+# define RANGELIB_VER_RANGELIB_HPP_ASSOCIATIVE_RANGE_EDIT        47
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -99,7 +101,7 @@ STLSOFT_COMPILER_IS_MWERKS:   (__MWERKS__ & 0xFF00) < 0x3000
 #else /* ? STLSOFT_CF_HAS_MEMBER_TYPE_SUPPORTED */
 # if defined(STLSOFT_CF_STD_LIBRARY_IS_DINKUMWARE_VC)
 #  if STLSOFT_CF_STD_LIBRARY_DINKUMWARE_VC_VERSION <= STLSOFT_CF_DINKUMWARE_VC_VERSION_6_0
-#   pragma message("associative_range<> assumes that the adapted type has a 'mapped_type' member type. std::map in the Dinkumware library that ships with Visual C++ 5 & 6 uses the non-standard 'referent_type', so adapting a parameterisation of it will not compile")
+#   pragma message("associative_range<> assumes that the adapted type has a 'mapped_type' member type. std::map in the Dinkumware library that ships with Visual C++ 5 & 6 uses the non-standard 'referent_type', so adapting a specialisation of it will not compile")
 #  endif /* STLSOFT_CF_STD_LIBRARY_DINKUMWARE_VC_VERSION <= STLSOFT_CF_DINKUMWARE_VC_VERSION_6_0 */
 # endif /* STLSOFT_CF_STD_LIBRARY_IS_DINKUMWARE_VC */
 #endif /* STLSOFT_CF_HAS_MEMBER_TYPE_SUPPORTED */
@@ -278,7 +280,7 @@ public:
 \code
 void dump_elements(std::vector<int> const& numbers)
 {
-  for(associative_range<std::vector<int> > r(numbers); r; ++r)
+  for (associative_range<std::vector<int> > r(numbers); r; ++r)
   {
     std::cout << &r; // Dump the current value to stdout
   }

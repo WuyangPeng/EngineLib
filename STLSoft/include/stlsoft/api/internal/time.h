@@ -1,14 +1,15 @@
 /* /////////////////////////////////////////////////////////////////////////
- * File:        stlsoft/api/internal/Time.h
+ * File:        stlsoft/api/internal/time.h
  *
- * Purpose:     External preprocessor aliases for internal Time API.
+ * Purpose:     Internal adaptations for time.h constructs.
  *
  * Created:     11th January 2017
- * Updated:     13th September 2019
+ * Updated:     2nd January 2021
  *
  * Home:        http://stlsoft.org/
  *
- * Copyright (c) 2017, Matthew Wilson and Synesis Software
+ * Copyright (c) 2019-2021, Matthew Wilson and Synesis Information Systems
+ * Copyright (c) 2017-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -103,7 +105,7 @@ STLSOFT_API_INTERNAL_Time_gmtime(
 
     STLSOFT_COVER_MARK_LINE();
 
-    if(NULL == ptm)
+    if (NULL == ptm)
     {
         STLSOFT_COVER_MARK_LINE();
 
@@ -143,7 +145,7 @@ STLSOFT_API_INTERNAL_Time_localtime(
 
     STLSOFT_COVER_MARK_LINE();
 
-    if(NULL == ptm)
+    if (NULL == ptm)
     {
         STLSOFT_COVER_MARK_LINE();
 

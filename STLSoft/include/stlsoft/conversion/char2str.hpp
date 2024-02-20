@@ -1,14 +1,14 @@
 /* /////////////////////////////////////////////////////////////////////////
- * File:        stlsoft/synch/spin_policies.hpp
+ * File:        stlsoft/conversion/char2str.hpp
  *
- * Purpose:     Policies for spin mutexes.
+ * Purpose:     Conversion from character(s) to string.
  *
- * Created:     25th November 2006
- * Updated:     13th September 2019
+ * Created:     12th November 2020
+ * Updated:     12th November 2020
  *
  * Home:        http://stlsoft.org/
  *
- * Copyright (c) 2006-2019, Matthew Wilson and Synesis Software
+ * Copyright (c) 2020, Matthew Wilson and Synesis Information Systems
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -20,9 +20,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -39,21 +40,20 @@
  * ////////////////////////////////////////////////////////////////////// */
 
 
-/** \file stlsoft/synch/spin_policies.hpp
+/** \file stlsoft/conversion/char2str.hpp
  *
- * \brief [C++] Definition of stlsoft::spin_yield and
- *    stlsoft::spin_no_yield policy classes
- *   (\ref group__library__Synch "Synchronisation" Library).
+ * \brief [C++] Conversion from character(s) to string
+ *   (\ref group__library__String "String" Library).
  */
 
-#ifndef STLSOFT_INCL_STLSOFT_SYNCH_HPP_SPIN_POLICIES
-#define STLSOFT_INCL_STLSOFT_SYNCH_HPP_SPIN_POLICIES
+#ifndef STLSOFT_INCL_STLSOFT_CONVERSION_HPP_CHAR2STR
+#define STLSOFT_INCL_STLSOFT_CONVERSION_HPP_CHAR2STR
 
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
-# define STLSOFT_VER_STLSOFT_SYNCH_HPP_SPIN_POLICIES_MAJOR      1
-# define STLSOFT_VER_STLSOFT_SYNCH_HPP_SPIN_POLICIES_MINOR      0
-# define STLSOFT_VER_STLSOFT_SYNCH_HPP_SPIN_POLICIES_REVISION   4
-# define STLSOFT_VER_STLSOFT_SYNCH_HPP_SPIN_POLICIES_EDIT       14
+# define STLSOFT_VER_INCL_STLSOFT_CONVERSION_HPP_CHAR2STR_MAJOR     1
+# define STLSOFT_VER_INCL_STLSOFT_CONVERSION_HPP_CHAR2STR_MINOR     0
+# define STLSOFT_VER_INCL_STLSOFT_CONVERSION_HPP_CHAR2STR_REVISION  1
+# define STLSOFT_VER_INCL_STLSOFT_CONVERSION_HPP_CHAR2STR_EDIT      1
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -67,9 +67,10 @@
 # pragma message(__FILE__)
 #endif /* STLSOFT_TRACE_INCLUDE */
 
-#ifndef STLSOFT_INCL_STLSOFT_SYNCH_HPP_CONCEPTS
-# include <stlsoft/synch/concepts.hpp>
-#endif /* !STLSOFT_INCL_STLSOFT_SYNCH_HPP_CONCEPTS */
+#ifndef STLSOFT_INCL_STRING
+# define STLSOFT_INCL_STRING
+# include <string>
+#endif /* !STLSOFT_INCL_STRING */
 
 /* /////////////////////////////////////////////////////////////////////////
  * namespace
@@ -81,37 +82,69 @@ namespace stlsoft
 #endif /* STLSOFT_NO_NAMESPACE */
 
 /* /////////////////////////////////////////////////////////////////////////
- * classes
+ * helper functions
  */
 
-/** This policy causes spin mutex types default behaviour to be to
- *    yield the current time slice when the spin variable cannot be acquired.
- *
- * \ingroup group__library__Synch
+#ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
+
+STLSOFT_OPEN_WORKER_NS_(ximpl_conversion_char2str_)
+
+STLSOFT_CLOSE_WORKER_NS_(ximpl_conversion_char2str_)
+#endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
+
+/* /////////////////////////////////////////////////////////////////////////
+ * functions
  */
-struct spin_yield
+
+template<
+    ss_typename_param_k T_s
+,   ss_typename_param_k T_c
+>
+inline
+T_s
+char2str(
+    T_c     ch
+,   size_t  n
+)
 {
-    enum
-    {
-        value = true
-    };
-};
+    return T_s(n, ch);
+}
 
-/** This policy causes spin mutex types default behaviour to be to
- *    <b>not</b> yield the current time slice when the spin variable cannot
- *    be acquired.
- *
- * \ingroup group__library__Synch
- */
-struct spin_no_yield
+inline
+std::string
+char2str(
+    char    ch
+,   size_t  n
+)
 {
-    enum
-    {
-        value = false
-    };
-};
+    return std::string(n, ch);
+}
 
-/* ////////////////////////////////////////////////////////////////////// */
+template<
+    ss_typename_param_k T_s
+,   ss_typename_param_k T_c
+>
+inline
+T_s
+char2str(
+    T_c     ch
+)
+{
+    return T_s(1u, ch);
+}
+
+inline
+std::string
+char2str(
+    char ch
+)
+{
+    return std::string(1u, ch);
+}
+
+/* /////////////////////////////////////////////////////////////////////////
+ * namespace
+ */
 
 #ifndef STLSOFT_NO_NAMESPACE
 } /* namespace stlsoft */
@@ -125,7 +158,7 @@ struct spin_no_yield
 # pragma once
 #endif /* STLSOFT_CF_PRAGMA_ONCE_SUPPORT */
 
-#endif /* !STLSOFT_INCL_STLSOFT_SYNCH_HPP_SPIN_POLICIES */
+#endif /* !STLSOFT_INCL_STLSOFT_CONVERSION_HPP_CHAR2STR */
 
 /* ///////////////////////////// end of file //////////////////////////// */
 

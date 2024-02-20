@@ -4,10 +4,11 @@
  * Purpose:     integer to string slice conversions.
  *
  * Created:     18th December 2016
- * Updated:     13th September 2019
+ * Updated:     18th January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2016-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -52,8 +54,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define STLSOFT_VER_STLSOFT_CONVERSION_H_ITOSLICE_MAJOR    1
 # define STLSOFT_VER_STLSOFT_CONVERSION_H_ITOSLICE_MINOR    0
-# define STLSOFT_VER_STLSOFT_CONVERSION_H_ITOSLICE_REVISION 1
-# define STLSOFT_VER_STLSOFT_CONVERSION_H_ITOSLICE_EDIT     5
+# define STLSOFT_VER_STLSOFT_CONVERSION_H_ITOSLICE_REVISION 2
+# define STLSOFT_VER_STLSOFT_CONVERSION_H_ITOSLICE_EDIT     7
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -88,7 +90,7 @@ namespace stlsoft
  */
 
 STLSOFT_INLINE
-STLSOFT_NS_QUAL(stlsoft_C_string_slice_a_t)
+stlsoft_C_string_slice_a_t
 stlsoft_C_itoslice_a(
     int             value
 ,   ss_char_a_t*    dest
@@ -98,7 +100,7 @@ stlsoft_C_itoslice_a(
     stlsoft_C_string_slice_a_t  r;
     int const                   n = stlsoft_C_snprintf(dest, cchDest, "%d", value);
 
-    if(n < 0)
+    if (n < 0)
     {
         r.len   =   0;
         r.ptr   =   NULL;
@@ -123,7 +125,7 @@ stlsoft_C_utoslice_a(
     stlsoft_C_string_slice_a_t  r;
     int const                   n = stlsoft_C_snprintf(dest, cchDest, "%u", value);
 
-    if(n < 0)
+    if (n < 0)
     {
         r.len   =   0;
         r.ptr   =   NULL;
@@ -148,7 +150,7 @@ stlsoft_C_ltoslice_a(
     stlsoft_C_string_slice_a_t  r;
     int const                   n = stlsoft_C_snprintf(dest, cchDest, "%ld", value);
 
-    if(n < 0)
+    if (n < 0)
     {
         r.len   =   0;
         r.ptr   =   NULL;
@@ -173,7 +175,7 @@ stlsoft_C_lutoslice_a(
     stlsoft_C_string_slice_a_t  r;
     int const                   n = stlsoft_C_snprintf(dest, cchDest, "%lu", value);
 
-    if(n < 0)
+    if (n < 0)
     {
         r.len   =   0;
         r.ptr   =   NULL;
@@ -243,7 +245,7 @@ stlsoft_C_lutoslice21_a(
 #endif /* STLSOFT_NO_NAMESPACE */
 
 /* /////////////////////////////////////////////////////////////////////////
- * inclusion
+ * inclusion control
  */
 
 #ifdef STLSOFT_CF_PRAGMA_ONCE_SUPPORT

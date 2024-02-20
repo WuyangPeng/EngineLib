@@ -5,10 +5,11 @@
  *              API.
  *
  * Created:     22nd October 2016
- * Updated:     4th August 2019
+ * Updated:     26th December 2020
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2020, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2016-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -21,9 +22,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -177,10 +179,10 @@
  */
 
 #ifndef WINSTL_API_EXTERNAL_Synchronisation_CreateEventA
-# define WINSTL_API_EXTERNAL_Synchronisation_CreateEventA                                           STLSOFT_NS_GLOBAL_(CreateEventA)
+# define WINSTL_API_EXTERNAL_Synchronisation_CreateEventA   STLSOFT_NS_GLOBAL_(CreateEventA)
 #endif /* !WINSTL_API_EXTERNAL_Synchronisation_CreateEventA */
 #ifndef WINSTL_API_EXTERNAL_Synchronisation_CreateEventW
-# define WINSTL_API_EXTERNAL_Synchronisation_CreateEventW                                           STLSOFT_NS_GLOBAL_(CreateEventW)
+# define WINSTL_API_EXTERNAL_Synchronisation_CreateEventW   STLSOFT_NS_GLOBAL_(CreateEventW)
 #endif /* !WINSTL_API_EXTERNAL_Synchronisation_CreateEventW */
 
 #if WINSTL_WIN32_WINNT >= 0x0600
@@ -193,22 +195,22 @@
 #endif
 
 #ifndef WINSTL_API_EXTERNAL_Synchronisation_OpenEventA
-# define WINSTL_API_EXTERNAL_Synchronisation_OpenEventA                                             STLSOFT_NS_GLOBAL_(OpenEventA)
+# define WINSTL_API_EXTERNAL_Synchronisation_OpenEventA     STLSOFT_NS_GLOBAL_(OpenEventA)
 #endif /* !WINSTL_API_EXTERNAL_Synchronisation_OpenEventA */
 #ifndef WINSTL_API_EXTERNAL_Synchronisation_OpenEventW
-# define WINSTL_API_EXTERNAL_Synchronisation_OpenEventW                                             STLSOFT_NS_GLOBAL_(OpenEventW)
+# define WINSTL_API_EXTERNAL_Synchronisation_OpenEventW     STLSOFT_NS_GLOBAL_(OpenEventW)
 #endif /* !WINSTL_API_EXTERNAL_Synchronisation_OpenEventW */
 
 #ifndef WINSTL_API_EXTERNAL_Synchronisation_PulseEvent
-# define WINSTL_API_EXTERNAL_Synchronisation_PulseEvent                                             STLSOFT_NS_GLOBAL_(PulseEvent)
+# define WINSTL_API_EXTERNAL_Synchronisation_PulseEvent     STLSOFT_NS_GLOBAL_(PulseEvent)
 #endif /* !WINSTL_API_EXTERNAL_Synchronisation_PulseEvent */
 
 #ifndef WINSTL_API_EXTERNAL_Synchronisation_ResetEvent
-# define WINSTL_API_EXTERNAL_Synchronisation_ResetEvent                                             STLSOFT_NS_GLOBAL_(ResetEvent)
+# define WINSTL_API_EXTERNAL_Synchronisation_ResetEvent     STLSOFT_NS_GLOBAL_(ResetEvent)
 #endif /* !WINSTL_API_EXTERNAL_Synchronisation_ResetEvent */
 
 #ifndef WINSTL_API_EXTERNAL_Synchronisation_SetEvent
-# define WINSTL_API_EXTERNAL_Synchronisation_SetEvent                                               STLSOFT_NS_GLOBAL_(SetEvent)
+# define WINSTL_API_EXTERNAL_Synchronisation_SetEvent       STLSOFT_NS_GLOBAL_(SetEvent)
 #endif /* !WINSTL_API_EXTERNAL_Synchronisation_SetEvent */
 
 
@@ -311,10 +313,10 @@
  */
 
 #ifndef WINSTL_API_EXTERNAL_Synchronization_CreateMutexA
-# define WINSTL_API_EXTERNAL_Synchronization_CreateMutexA                                           STLSOFT_NS_GLOBAL_(CreateMutexA)
+# define WINSTL_API_EXTERNAL_Synchronization_CreateMutexA   STLSOFT_NS_GLOBAL_(CreateMutexA)
 #endif /* !WINSTL_API_EXTERNAL_Synchronization_CreateMutexA */
 #ifndef WINSTL_API_EXTERNAL_Synchronization_CreateMutexW
-# define WINSTL_API_EXTERNAL_Synchronization_CreateMutexW                                           STLSOFT_NS_GLOBAL_(CreateMutexW)
+# define WINSTL_API_EXTERNAL_Synchronization_CreateMutexW   STLSOFT_NS_GLOBAL_(CreateMutexW)
 #endif /* !WINSTL_API_EXTERNAL_Synchronization_CreateMutexW */
 
 #if WINSTL_WIN32_WINNT >= 0x0600
@@ -327,14 +329,14 @@
 #endif
 
 #ifndef WINSTL_API_EXTERNAL_Synchronization_OpenMutexA
-# define WINSTL_API_EXTERNAL_Synchronization_OpenMutexA                                             STLSOFT_NS_GLOBAL_(OpenMutexA)
+# define WINSTL_API_EXTERNAL_Synchronization_OpenMutexA     STLSOFT_NS_GLOBAL_(OpenMutexA)
 #endif /* !WINSTL_API_EXTERNAL_Synchronization_OpenMutexA */
 #ifndef WINSTL_API_EXTERNAL_Synchronization_OpenMutexW
-# define WINSTL_API_EXTERNAL_Synchronization_OpenMutexW                                             STLSOFT_NS_GLOBAL_(OpenMutexW)
+# define WINSTL_API_EXTERNAL_Synchronization_OpenMutexW     STLSOFT_NS_GLOBAL_(OpenMutexW)
 #endif /* !WINSTL_API_EXTERNAL_Synchronization_OpenMutexW */
 
 #ifndef WINSTL_API_EXTERNAL_Synchronization_ReleaseMutex
-# define WINSTL_API_EXTERNAL_Synchronization_ReleaseMutex                                           STLSOFT_NS_GLOBAL_(ReleaseMutex)
+# define WINSTL_API_EXTERNAL_Synchronization_ReleaseMutex   STLSOFT_NS_GLOBAL_(ReleaseMutex)
 #endif /* !WINSTL_API_EXTERNAL_Synchronization_ReleaseMutex */
 
 
@@ -416,7 +418,7 @@
 #if 0
 
 #ifndef WINSTL_API_EXTERNAL_Synchronization_WaitOnAddress
-# define WINSTL_API_EXTERNAL_Synchronization_WaitOnAddress                                          STLSOFT_NS_GLOBAL_(WaitOnAddress)
+# define WINSTL_API_EXTERNAL_Synchronization_WaitOnAddress  STLSOFT_NS_GLOBAL_(WaitOnAddress)
 #endif /* !WINSTL_API_EXTERNAL_Synchronization_WaitOnAddress */
 
 #ifndef WINSTL_API_EXTERNAL_Synchronization_WakeByAddressAll

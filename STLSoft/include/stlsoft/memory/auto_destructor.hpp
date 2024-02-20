@@ -5,10 +5,11 @@
  *              classes.
  *
  * Created:     1st November 1994
- * Updated:     13th September 2019
+ * Updated:     20th January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 1994-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -21,9 +22,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -54,7 +56,7 @@
 # define STLSOFT_VER_STLSOFT_MEMORY_HPP_AUTO_DESTRUCTOR_MAJOR       5
 # define STLSOFT_VER_STLSOFT_MEMORY_HPP_AUTO_DESTRUCTOR_MINOR       2
 # define STLSOFT_VER_STLSOFT_MEMORY_HPP_AUTO_DESTRUCTOR_REVISION    1
-# define STLSOFT_VER_STLSOFT_MEMORY_HPP_AUTO_DESTRUCTOR_EDIT        87
+# define STLSOFT_VER_STLSOFT_MEMORY_HPP_AUTO_DESTRUCTOR_EDIT        90
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -200,7 +202,7 @@ class auto_destructor
 public:
     /// The value type
     typedef T                                               value_type;
-    /// The current parameterisation of the type
+    /// The current specialisation of the type
     typedef auto_destructor<T>                              class_type;
     /// The return value type
     typedef return_value_destructor<T>                      return_value_type;
@@ -317,7 +319,7 @@ class auto_array_destructor
 public:
     /// The value type
     typedef T                                               value_type;
-    /// The current parameterisation of the type
+    /// The current specialisation of the type
     typedef auto_array_destructor<T>                        class_type;
     /// The return value type
     typedef return_value_array_destructor<T>                return_value_type;
@@ -451,7 +453,7 @@ class return_value_destructor
 public:
     /// The value type
     typedef T                                           value_type;
-    /// The current parameterisation of the type
+    /// The current specialisation of the type
     typedef return_value_destructor<T>                  class_type;
     /// The auto type
     typedef auto_destructor<T>                          auto_type;
@@ -470,7 +472,7 @@ public:
     {}
 #endif /* STLSOFT_RETURN_VALUE_DESTRUCTOR_ENABLE_DIRECT_CTOR */
     /// Construct from an auto_destructor<T>, transferring the managed instance from it
-    return_value_destructor(auto_type& rhs) // Note: not explicit
+    return_value_destructor(auto_type& rhs) // NOTE: not explicit
         : m_value(rhs.detach())
     {}
     /// Move constructor
@@ -552,7 +554,7 @@ class return_value_array_destructor
 public:
     /// The value type
     typedef T                                           value_type;
-    /// The current parameterisation of the type
+    /// The current specialisation of the type
     typedef return_value_array_destructor<T>            class_type;
     /// The auto type
     typedef auto_array_destructor<T>                    auto_type;
@@ -571,7 +573,7 @@ public:
     {}
 #endif /* STLSOFT_RETURN_VALUE_DESTRUCTOR_ENABLE_DIRECT_CTOR */
     /// Constructs from an auto_array_destructor<T> instance, transferring the managed array from it
-    return_value_array_destructor(auto_type& rhs) // Note: not explicit
+    return_value_array_destructor(auto_type& rhs) // NOTE: not explicit
         : m_value(rhs.detach())
     {}
 #if 1

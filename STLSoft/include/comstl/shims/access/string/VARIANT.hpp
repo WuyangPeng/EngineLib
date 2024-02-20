@@ -4,10 +4,11 @@
  * Purpose:     Definition of the string access shims for the VARIANT type.
  *
  * Created:     24th May 2002
- * Updated:     2nd February 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2002-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -52,8 +54,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define COMSTL_VER_COMSTL_SHIMS_ACCESS_STRING_HPP_VARIANT_MAJOR    5
 # define COMSTL_VER_COMSTL_SHIMS_ACCESS_STRING_HPP_VARIANT_MINOR    4
-# define COMSTL_VER_COMSTL_SHIMS_ACCESS_STRING_HPP_VARIANT_REVISION 6
-# define COMSTL_VER_COMSTL_SHIMS_ACCESS_STRING_HPP_VARIANT_EDIT     143
+# define COMSTL_VER_COMSTL_SHIMS_ACCESS_STRING_HPP_VARIANT_REVISION 8
+# define COMSTL_VER_COMSTL_SHIMS_ACCESS_STRING_HPP_VARIANT_EDIT     149
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -80,10 +82,6 @@
 # include <stlsoft/shims/access/string/std/c_string.h>
 #endif /* !STLSOFT_INCL_STLSOFT_SHIMS_ACCESS_STRING_STD_H_C_STRING */
 
-#ifndef STLSOFT_INCL_STLSOFT_API_external_h_string
-# include <stlsoft/api/external/string.h>
-#endif /* !STLSOFT_INCL_STLSOFT_API_external_h_string */
-
 #ifdef STLSOFT_CF_THROW_BAD_ALLOC
 # include <new>
 #endif /* STLSOFT_CF_THROW_BAD_ALLOC */
@@ -94,6 +92,14 @@
 #ifndef WINSTL_INCL_WINSTL_API_external_h_UnicodeAndCharacterSet
 # include <winstl/api/external/UnicodeAndCharacterSet.h>
 #endif /* !WINSTL_INCL_WINSTL_API_external_h_UnicodeAndCharacterSet */
+
+#ifndef STLSOFT_INCL_STLSOFT_API_external_h_string
+# include <stlsoft/api/external/string.h>
+#endif /* !STLSOFT_INCL_STLSOFT_API_external_h_string */
+
+#ifndef STLSOFT_INCL_STLSOFT_API_internal_h_memfns
+# include <stlsoft/api/internal/memfns.h>
+#endif /* !STLSOFT_INCL_STLSOFT_API_internal_h_memfns */
 
 /* /////////////////////////////////////////////////////////////////////////
  * namespace
@@ -132,17 +138,11 @@ public:
 
         osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
 
-#if defined(STLSOFT_COMPILER_IS_MSVC) && \
-    _MSC_VER >= 1700
-# pragma warning(push)
-# pragma warning(disable : 4996)
-#endif
-        if( !::GetVersionEx(&osvi) ||
+#include <stlsoft/internal/warnings/push/suppress_deprecation_.h>
+
+        if (!::GetVersionEx(&osvi) ||
             VER_PLATFORM_WIN32_NT != osvi.dwPlatformId)
-#if defined(STLSOFT_COMPILER_IS_MSVC) && \
-    _MSC_VER >= 1700
-# pragma warning(pop)
-#endif
+#include <stlsoft/internal/warnings/pop/suppress_deprecation_.h>
         {
             /* Not supported on Windows 9x */
             return NULL;
@@ -163,11 +163,11 @@ public:
                                                 ,   NULL);
             DWORD   cchAll  =   cchCode;
 
-            if(0 == cchMsg)
+            if (0 == cchMsg)
             {
                 DWORD const e = WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();
 
-                if(ERROR_OUTOFMEMORY == e)
+                if (ERROR_OUTOFMEMORY == e)
                 {
 #ifdef STLSOFT_CF_THROW_BAD_ALLOC
                     STLSOFT_THROW_X(STLSOFT_NS_QUAL(out_of_memory_exception)(STLSoftProjectIdentifier_COMSTL, STLSoftLibraryIdentifier_Shims_Access_String, e));
@@ -178,11 +178,11 @@ public:
             }
             else
             {
-                for(; 0 != cchCode; --cchMsg)
+                for (; 0 != cchCode; --cchMsg)
                 {
                     WCHAR& ch = msg[cchMsg - 1];
 
-                    switch(ch)
+                    switch (ch)
                     {
                         case    L'\r':
                         case    L'\n':
@@ -192,7 +192,7 @@ public:
                             break;
                     }
 
-                    if(L'\0' != ch)
+                    if (L'\0' != ch)
                     {
                         break;
                     }
@@ -203,7 +203,7 @@ public:
 
             BSTR result = ::SysAllocStringLen(NULL, cchAll);
 
-            if(NULL == result)
+            if (NULL == result)
             {
 #ifdef STLSOFT_CF_THROW_BAD_ALLOC
                 ::LocalFree(msg);
@@ -214,15 +214,15 @@ public:
             }
             else
             {
-                ::memcpy(result + 0, code, cchCode * sizeof(WCHAR));
-                if(0 != cchMsg)
+                STLSOFT_API_INTERNAL_memfns_memcpy(result + 0, code, cchCode * sizeof(WCHAR));
+                if (0 != cchMsg)
                 {
-                    ::memcpy(result + cchCode, L", ", 2 * sizeof(WCHAR));
-                    ::memcpy(result + cchCode + 2, msg, cchMsg * sizeof(WCHAR));
+                    STLSOFT_API_INTERNAL_memfns_memcpy(result + cchCode, L", ", 2 * sizeof(WCHAR));
+                    STLSOFT_API_INTERNAL_memfns_memcpy(result + cchCode + 2, msg, cchMsg * sizeof(WCHAR));
                 }
             }
 
-            if(NULL != msg)
+            if (NULL != msg)
             {
                 ::LocalFree(msg);
             }
@@ -244,15 +244,15 @@ public:
         HRESULT hr = VARIANT_change_type(dest, &src, LOCALE_USER_DEFAULT, VARIANT_ALPHABOOL, VT_BSTR);
 
 #ifdef STLSOFT_CF_THROW_BAD_ALLOC
-        if(E_OUTOFMEMORY == hr)
+        if (E_OUTOFMEMORY == hr)
         {
             STLSOFT_THROW_X(STLSOFT_NS_QUAL(out_of_memory_exception)(STLSoftProjectIdentifier_COMSTL, STLSoftLibraryIdentifier_Shims_Access_String, hr));
         }
 #endif /* STLSOFT_CF_THROW_BAD_ALLOC */
 
-        if(FAILED(hr))
+        if (FAILED(hr))
         {
-            if(VT_ERROR == src.vt)
+            if (VT_ERROR == src.vt)
             {
                 dest->bstrVal = BSTR_from_SCODE(src.scode);
             }
@@ -274,17 +274,17 @@ private:
     ,   VARTYPE const&      vt
     )
     {
-        if(cch1 != cch2)
+        if (cch1 != cch2)
         {
             return false;
         }
 
-        if(0 == cch1)
+        if (0 == cch1)
         {
             return true;
         }
 
-        switch(vt)
+        switch (vt)
         {
         default:
             return 0 == STLSOFT_NS_GLOBAL(strncmp)(s1, s2, cch1);
@@ -307,17 +307,17 @@ private:
     ,   VARTYPE const&      vt
     )
     {
-        if(cch1 != cch2)
+        if (cch1 != cch2)
         {
             return false;
         }
 
-        if(0 == cch1)
+        if (0 == cch1)
         {
             return true;
         }
 
-        switch(vt)
+        switch (vt)
         {
         default:
             return 0 == STLSOFT_NS_GLOBAL(wcsncmp)(s1, s2, cch1);
@@ -344,7 +344,6 @@ public:
     {
         return string_equal_by_VT_(s1, cch1, s2, cch2, vt);
     }
-
 };
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
@@ -405,7 +404,7 @@ public:
     {}
 #endif /* STLSOFT_CF_MOVE_CONSTRUCTOR_SUPPORT */
 
-    /// Releases any storage aquired by the proxy
+    /// Releases any storage acquired by the proxy
     ~c_str_null_VARIANT_proxy_w() STLSOFT_NOEXCEPT
     {
         ::SysFreeString(m_bstr);
@@ -497,12 +496,12 @@ public:
     {}
 #endif /* STLSOFT_CF_MOVE_CONSTRUCTOR_SUPPORT */
 
-    /// Releases any storage aquired by the proxy
+    /// Releases any storage acquired by the proxy
     ~c_str_null_VARIANT_proxy_a() STLSOFT_NOEXCEPT
     {
         ::SysFreeString(m_bstr);
 #ifndef STLSOFT_CF_THROW_BAD_ALLOC
-        if(empty_string_() != m_buffer)
+        if (empty_string_() != m_buffer)
 #endif /* !STLSOFT_CF_THROW_BAD_ALLOC */
         {
             ::CoTaskMemFree(m_buffer);
@@ -516,18 +515,18 @@ public:
     /// Returns a null-terminated string representing the VARIANT contents.
     operator char_type const* () const
     {
-        if(NULL == m_buffer)
+        if (NULL == m_buffer)
         {
             cs_size_t cch = ::SysStringLen(m_bstr);
 
-            if(0 != cch)
+            if (0 != cch)
             {
                 LPCOLESTR   w_value =   m_bstr;
                 char_type*& buffer_ =   const_cast<class_type*>(this)->m_buffer;
 
                 buffer_ = static_cast<char_type *>(::CoTaskMemAlloc((1 + cch) * sizeof(char_type)));
 
-                if(NULL == buffer_)
+                if (NULL == buffer_)
                 {
 #ifdef STLSOFT_CF_THROW_BAD_ALLOC
                     STLSOFT_THROW_X(STLSOFT_NS_QUAL(out_of_memory_exception)(STLSoftProjectIdentifier_COMSTL, STLSoftLibraryIdentifier_Shims_Access_String, WINSTL_API_EXTERNAL_ErrorHandling_GetLastError()));
@@ -540,7 +539,7 @@ public:
                     int const n = WINSTL_API_EXTERNAL_UnicodeAndCharacterSet_WideCharToMultiByte(0, 0, w_value, -1, buffer_, static_cast<int>(cch + 1), NULL, NULL);
 
 #ifdef WIN32
-                    if(0 == n)
+                    if (0 == n)
 #else /* ? WIN32 */
 # error Not currently implemented for operating systems other than Win32
 #endif /* WIN32 */
@@ -647,7 +646,7 @@ public:
     {}
 #endif /* STLSOFT_CF_MOVE_CONSTRUCTOR_SUPPORT */
 
-    /// Releases any storage aquired by the proxy
+    /// Releases any storage acquired by the proxy
     ~c_str_VARIANT_proxy_w() STLSOFT_NOEXCEPT
     {
         ::SysFreeString(m_bstr);
@@ -740,11 +739,11 @@ public:
     {}
 #endif /* STLSOFT_CF_MOVE_CONSTRUCTOR_SUPPORT */
 
-    /// Releases any storage aquired by the proxy
+    /// Releases any storage acquired by the proxy
     ~c_str_VARIANT_proxy_a() STLSOFT_NOEXCEPT
     {
         ::SysFreeString(m_bstr);
-        if(m_buffer != empty_string_())
+        if (m_buffer != empty_string_())
         {
             ::CoTaskMemFree(m_buffer);
         }
@@ -757,12 +756,12 @@ public:
     /// Returns a null-terminated string representing the VARIANT contents.
     operator char_type const* () const
     {
-        if(NULL == m_buffer)
+        if (NULL == m_buffer)
         {
             LPCOLESTR   w_value =   m_bstr;
             char_type*& buffer_ =   const_cast<class_type*>(this)->m_buffer;
 
-            if( NULL == w_value ||
+            if (NULL == w_value ||
                 L'\0' == *w_value)
             {
                 buffer_ = empty_string_();
@@ -773,7 +772,7 @@ public:
 
                 buffer_ = static_cast<char_type*>(::CoTaskMemAlloc((1 + cch) * sizeof(char_type)));
 
-                if(NULL == buffer_)
+                if (NULL == buffer_)
                 {
                     buffer_ = empty_string_();
                 }
@@ -782,7 +781,7 @@ public:
                     int const n = WINSTL_API_EXTERNAL_UnicodeAndCharacterSet_WideCharToMultiByte(0, 0, w_value, -1, buffer_, static_cast<int>(cch + 1), NULL, NULL);
 
 #ifdef WIN32
-                    if(0 == n)
+                    if (0 == n)
 #else /* ? WIN32 */
 # error Not currently implemented for operating systems other than Win32
 #endif /* WIN32 */
@@ -1143,7 +1142,7 @@ c_str_len_a(
     VARIANT const& v
 )
 {
-    if( v.vt == VT_NULL ||
+    if (v.vt == VT_NULL ||
         v.vt == VT_EMPTY)
     {
         return 0;
@@ -1165,11 +1164,11 @@ c_str_len_w(
     VARIANT const& v
 )
 {
-    if(v.vt == VT_BSTR)
+    if (v.vt == VT_BSTR)
     {
         return v.bstrVal != NULL ? ::SysStringLen(v.bstrVal) : 0;
     }
-    else if(v.vt == VT_NULL ||
+    else if (v.vt == VT_NULL ||
             v.vt == VT_EMPTY)
     {
         return 0;

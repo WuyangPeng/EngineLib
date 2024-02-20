@@ -1,14 +1,15 @@
 /* /////////////////////////////////////////////////////////////////////////
- * File:        mfcstl/collections/clist_adaptors.hpp
+ * File:        mfcstl/collections/CList_adaptors.hpp
  *
  * Purpose:     Contains the definition of the CList_cadaptor and CList_iadaptor
  *              class templates.
  *
  * Created:     1st December 2002
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2002-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -21,9 +22,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -40,7 +42,7 @@
  * ////////////////////////////////////////////////////////////////////// */
 
 
-/** \file mfcstl/collections/clist_adaptors.hpp
+/** \file mfcstl/collections/CList_adaptors.hpp
  *
  * \brief [C++] Definition of the mfcstl::CList_cadaptor and
  *   mfcstl::CList_iadaptor traits class templates
@@ -53,8 +55,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define MFCSTL_VER_MFCSTL_COLLECTIONS_HPP_CLIST_ADAPTORS_MAJOR     3
 # define MFCSTL_VER_MFCSTL_COLLECTIONS_HPP_CLIST_ADAPTORS_MINOR     0
-# define MFCSTL_VER_MFCSTL_COLLECTIONS_HPP_CLIST_ADAPTORS_REVISION  13
-# define MFCSTL_VER_MFCSTL_COLLECTIONS_HPP_CLIST_ADAPTORS_EDIT      78
+# define MFCSTL_VER_MFCSTL_COLLECTIONS_HPP_CLIST_ADAPTORS_REVISION  15
+# define MFCSTL_VER_MFCSTL_COLLECTIONS_HPP_CLIST_ADAPTORS_EDIT      81
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -72,10 +74,10 @@
 # include <mfcstl/memory/afx_allocator.hpp>
 #endif /* !MFCSTL_INCL_MFCSTL_MEMORY_HPP_AFX_ALLOCATOR */
 #ifndef MFCSTL_INCL_MFCSTL_COLLECTIONS_HPP_CLIST_SWAP
-# include <mfcstl/collections/clist_swap.hpp>
+# include <mfcstl/collections/CList_swap.hpp>
 #endif /* !MFCSTL_INCL_MFCSTL_COLLECTIONS_HPP_CLIST_SWAP */
 #ifndef MFCSTL_INCL_MFCSTL_COLLECTIONS_HPP_CLIST_TRAITS
-# include <mfcstl/collections/clist_traits.hpp>
+# include <mfcstl/collections/CList_traits.hpp>
 #endif /* !MFCSTL_INCL_MFCSTL_COLLECTIONS_HPP_CLIST_TRAITS */
 #ifndef MFCSTL_INCL_MFCSTL_UTIL_HPP_MEMORY_EXCEPTION_TRANSLATION_POLICIES
 # include <mfcstl/util/memory_exception_translation_policies.hpp>
@@ -184,60 +186,86 @@ class CList_adaptor_base
 /// @{
 public:
     /// The type of the underlying MFC list
-    typedef L                                                                   list_type;
+    typedef L                                               list_type;
 private:
-    typedef I                                                                   interface_class_type;
-    typedef T                                                                   list_traits_type;
+    typedef I                                               interface_class_type;
+    typedef T                                               list_traits_type;
 #if defined(MFCSTL_CLIST_ADAPTORS_USE_BAD_ALLOC_POLICY)
-    typedef bad_alloc_throwing_policy                                           exception_translation_policy_type;
+    typedef bad_alloc_throwing_policy                       exception_translation_policy_type;
 #else /* ? MFCSTL_CLIST_ADAPTORS_USE_BAD_ALLOC_POLICY */
-    typedef CMemoryException_throwing_policy                                    exception_translation_policy_type;
+    typedef CMemoryException_throwing_policy                exception_translation_policy_type;
 #endif /* MFCSTL_CLIST_ADAPTORS_USE_BAD_ALLOC_POLICY */
 public:
     /// The value type
     ///
     /// \note If the compiler report "use of undefined type" when you're using the adaptor class(es)
     /// with CList<>, ensure that you've included <b>afxtempl</b> <i>before</i> you include this file.
-    typedef ss_typename_type_k list_traits_type::value_type                     value_type;
+    typedef ss_typename_type_k list_traits_type::value_type value_type;
     /// The allocator type
-    typedef afx_allocator<value_type>                                           allocator_type;
-    /// The mutating (non-const) reference type
-    typedef ss_typename_type_k allocator_type::reference                        reference;
+    typedef afx_allocator<value_type>                       allocator_type;
+#ifdef STLSOFT_LF_ALLOCATOR_TRAITS_SUPPORT
+    /// The allocator traits type
+    typedef std::allocator_traits<allocator_type>           allocator_traits_type;
+#endif /* STLSOFT_LF_ALLOCATOR_TRAITS_SUPPORT */
+#ifdef STLSOFT_LF_ALLOCATOR_TRAITS_SUPPORT
+    /// The reference type
+    typedef ss_typename_type_k allocator_traits_type::value_type&
+                                                            reference;
     /// The non-mutating (const) reference type
-    typedef ss_typename_type_k allocator_type::const_reference                  const_reference;
-    /// The mutating (non-const) pointer type
-    typedef ss_typename_type_k allocator_type::pointer                          pointer;
+    typedef ss_typename_type_k allocator_traits_type::value_type const&
+                                                            const_reference;
+    /// The pointer type
+    typedef ss_typename_type_k allocator_traits_type::pointer
+                                                            pointer;
     /// The non-mutating (const) pointer type
-    typedef ss_typename_type_k allocator_type::const_pointer                    const_pointer;
+    typedef ss_typename_type_k allocator_traits_type::const_pointer
+                                                            const_pointer;
+#else /* ? STLSOFT_LF_ALLOCATOR_TRAITS_SUPPORT */
+    /// The mutating (non-const) reference type
+    typedef ss_typename_type_k allocator_type::reference    reference;
+    /// The non-mutating (const) reference type
+    typedef ss_typename_type_k allocator_type::const_reference
+                                                            const_reference;
+    /// The mutating (non-const) pointer type
+    typedef ss_typename_type_k allocator_type::pointer      pointer;
+    /// The non-mutating (const) pointer type
+    typedef ss_typename_type_k allocator_type::const_pointer
+                                                            const_pointer;
+#endif /* STLSOFT_LF_ALLOCATOR_TRAITS_SUPPORT */
     /// The size type
-    typedef ms_size_t                                                           size_type;
+    typedef ms_size_t                                       size_type;
     /// The difference type
-    typedef ms_ptrdiff_t                                                        difference_type;
+    typedef ms_ptrdiff_t                                    difference_type;
     /// The instantiation of the current type
-    typedef CList_adaptor_base<L, I, T>                                         class_type;
+    typedef CList_adaptor_base<L, I, T>                     class_type;
 public:
     /// Non-mutating (const) iterator for the CList_adaptor_base class
     ///
     /// \note This currently supports the Input Iterator concept only
     class const_iterator
-        : public STLSOFT_NS_QUAL(iterator_base)<STLSOFT_NS_QUAL_STD(input_iterator_tag)
-                                            ,   value_type
-                                            ,   ms_ptrdiff_t
-                                            ,   void        // By-Value Temporary reference
-                                            ,   value_type  // By-Value Temporary reference
-                                            >
+        : public STLSOFT_NS_QUAL(iterator_base)<
+                STLSOFT_NS_QUAL_STD(input_iterator_tag)
+            ,   value_type
+            ,   ms_ptrdiff_t
+            ,   void        // By-Value Temporary reference
+            ,   value_type  // By-Value Temporary reference
+            >
     {
         friend class CList_adaptor_base<L, I, T>;
 
-        typedef const_iterator                                              class_type;
+        typedef const_iterator                              class_type;
         // NOTE: If you get a compiler error on the next line, referring to
         // undefined 'value_type' then you need to provide a traits type
         // with the member type 'value_type' defined.
 # ifdef STLSOFT_CF_TEMPLATE_PARTIAL_SPECIALISATION_SUPPORT
-        typedef ss_typename_type_k CList_adaptor_base<L, I, T>::value_type  value_type;
+        typedef ss_typename_type_k CList_adaptor_base<
+            L
+        ,   I
+        ,   T
+        >::value_type                                       value_type;
 # endif /* !STLSOFT_CF_TEMPLATE_PARTIAL_SPECIALISATION_SUPPORT */
 # ifndef _MFCSTL_LIST_ADAPTOR_ENABLE_FWD_ITERATOR
-        typedef stlsoft_define_move_rhs_type(class_type)                    rhs_type;
+        typedef stlsoft_define_move_rhs_type(class_type)    rhs_type;
 # endif /* !_MFCSTL_LIST_ADAPTOR_ENABLE_FWD_ITERATOR */
 
     // Construction
@@ -299,7 +327,7 @@ public:
         /// Pre-increment operator
         const_iterator& operator ++()
         {
-            if(m_pos == NULL)
+            if (m_pos == NULL)
             {
                 MFCSTL_MESSAGE_ASSERT("operator ++() called on invalid iterator", NULL != m_list);
 

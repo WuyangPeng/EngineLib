@@ -1,13 +1,14 @@
 /* /////////////////////////////////////////////////////////////////////////
- * File:        mfcstl/string/grab_cstring_buffer.hpp (originally MFGrbStr.h: ::SynesisMfc)
+ * File:        mfcstl/string/grab_CString_buffer.hpp (originally MFGrbStr.h: ::SynesisMfc)
  *
  * Purpose:     CString Get/ReleaseBuffer scoping class.
  *
  * Created:     12th February 1999
- * Updated:     13th September 2019
+ * Updated:     26th December 2020
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2020, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 1999-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -39,9 +41,9 @@
  * ////////////////////////////////////////////////////////////////////// */
 
 
-/** \file mfcstl/string/grab_cstring_buffer.hpp
+/** \file mfcstl/string/grab_CString_buffer.hpp
  *
- * \brief [C++] Definition of the mfcstl::grab_cstring_buffer class
+ * \brief [C++] Definition of the mfcstl::grab_CString_buffer class
  *   (\ref group__library__String "String" Library).
  */
 
@@ -49,10 +51,10 @@
 #define MFCSTL_INCL_MFCSTL_STRING_HPP_GRAB_CSTRING_BUFFER
 
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
-# define MFCSTL_VER_MFCSTL_STRING_HPP_GRAB_CSTRING_BUFFER_MAJOR      4
+# define MFCSTL_VER_MFCSTL_STRING_HPP_GRAB_CSTRING_BUFFER_MAJOR      5
 # define MFCSTL_VER_MFCSTL_STRING_HPP_GRAB_CSTRING_BUFFER_MINOR      0
-# define MFCSTL_VER_MFCSTL_STRING_HPP_GRAB_CSTRING_BUFFER_REVISION   6
-# define MFCSTL_VER_MFCSTL_STRING_HPP_GRAB_CSTRING_BUFFER_EDIT       70
+# define MFCSTL_VER_MFCSTL_STRING_HPP_GRAB_CSTRING_BUFFER_REVISION   1
+# define MFCSTL_VER_MFCSTL_STRING_HPP_GRAB_CSTRING_BUFFER_EDIT       72
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -86,7 +88,7 @@ namespace mfcstl_project
 #endif /* !MFCSTL_NO_NAMESPACE */
 
 /* /////////////////////////////////////////////////////////////////////////
- * grab_cstring_buffer
+ * grab_CString_buffer
  *
  * This class is used to scope the aquisition and release of a CString buffer
  * ensuring that ReleaseBuffer() is called on the given CString object.
@@ -99,10 +101,10 @@ namespace mfcstl_project
  * This class is used to scope the aquisition and release of a CString buffer
  * ensuring that ReleaseBuffer() is called on the given CString object.
  */
-class grab_cstring_buffer
+class grab_CString_buffer
 {
 private:
-    typedef grab_cstring_buffer   class_type;
+    typedef grab_CString_buffer   class_type;
 
 // Construction
 public:
@@ -110,9 +112,9 @@ public:
     ///
     /// Calls \c GetBuffer(length) on the given string, after recording the
     /// original length. If acquisition fails then a CMemoryException is thrown.
-    grab_cstring_buffer(CString &str, int length) stlsoft_throw_1(CMemoryException *);
+    grab_CString_buffer(CString &str, int length) stlsoft_throw_1(CMemoryException *);
     /// Releases the managed string.
-    ~grab_cstring_buffer() STLSOFT_NOEXCEPT;
+    ~grab_CString_buffer() STLSOFT_NOEXCEPT;
 
 // Conversion operators
 public:
@@ -142,14 +144,23 @@ private:
 
 // Not implemented
 private:
-    grab_cstring_buffer(class_type const& rhs);
+    grab_CString_buffer(class_type const& rhs);
     class_type& operator =(class_type const& rhs);
 };
+
+/* /////////////////////////////////////////////////////////////////////////
+ * backwards compatibility
+ */
+
+#ifdef STLSOFT_OBSOLETE
+
+typedef grab_CString_buffer                                 grab_cstring_buffer;
+#endif /* !STLSOFT_OBSOLETE */
 
 ////////////////////////////////////////////////////////////////////////////
 // Implementation
 
-inline grab_cstring_buffer::grab_cstring_buffer(CString &str, int length) stlsoft_throw_1(CMemoryException *)
+inline grab_CString_buffer::grab_CString_buffer(CString &str, int length) stlsoft_throw_1(CMemoryException *)
     : m_str(str)
     , m_len(length)
     , m_originalLen(str.GetLength())
@@ -163,10 +174,10 @@ inline grab_cstring_buffer::grab_cstring_buffer(CString &str, int length) stlsof
     m_psz[m_len] = '\0';
 }
 
-inline grab_cstring_buffer::~grab_cstring_buffer() STLSOFT_NOEXCEPT
+inline grab_CString_buffer::~grab_CString_buffer() STLSOFT_NOEXCEPT
 {
     // Best to check that the end character has not been overwritten
-    MFCSTL_MESSAGE_ASSERT("The client code has overwritten the managed area of the grab_cstring_buffer instance", '\0' == m_psz[m_len]);
+    MFCSTL_MESSAGE_ASSERT("The client code has overwritten the managed area of the grab_CString_buffer instance", '\0' == m_psz[m_len]);
 
     // Dtor will never be called if GetBufferSetLength throws,
     // so we can assume we have a valid reference to an open
@@ -174,29 +185,29 @@ inline grab_cstring_buffer::~grab_cstring_buffer() STLSOFT_NOEXCEPT
     m_str.ReleaseBuffer();
 }
 
-inline LPCTSTR grab_cstring_buffer::c_str() const
+inline LPCTSTR grab_CString_buffer::c_str() const
 {
     return m_psz;
 }
 
-inline grab_cstring_buffer::operator LPTSTR()
+inline grab_CString_buffer::operator LPTSTR()
 {
     return m_psz;
 }
 
 #if !defined(STLSOFT_COMPILER_IS_BORLAND)
-inline grab_cstring_buffer::operator LPCTSTR() const
+inline grab_CString_buffer::operator LPCTSTR() const
 {
     return m_psz;
 }
 #endif /* compiler */
 
-inline int grab_cstring_buffer::length() const
+inline int grab_CString_buffer::length() const
 {
     return m_len;
 }
 
-inline int grab_cstring_buffer::original_length() const
+inline int grab_CString_buffer::original_length() const
 {
     return m_originalLen;
 }

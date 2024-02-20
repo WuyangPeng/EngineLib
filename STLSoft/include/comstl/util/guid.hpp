@@ -4,10 +4,11 @@
  * Purpose:     guid class.
  *
  * Created:     10th May 2000
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2000-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -52,7 +54,7 @@
 # define _COMSTL_VER_COMSTL_UTIL_HPP_COMSTL_GUID_MAJOR      4
 # define _COMSTL_VER_COMSTL_UTIL_HPP_COMSTL_GUID_MINOR      3
 # define _COMSTL_VER_COMSTL_UTIL_HPP_COMSTL_GUID_REVISION   11
-# define _COMSTL_VER_COMSTL_UTIL_HPP_COMSTL_GUID_EDIT       62
+# define _COMSTL_VER_COMSTL_UTIL_HPP_COMSTL_GUID_EDIT       64
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -127,7 +129,7 @@ public:
 public:
     /// Constructs with a new, unique, GUID value
     ///
-    /// \note If a new value cannot be aquired, then an instance of
+    /// \note If a new value cannot be acquired, then an instance of
     ///   comstl_exception is thrown if compiled under conditions where exceptions
     ///   are supported (STLSOFT_CF_EXCEPTION_SUPPORT is defined), or the
     ///   instance GUID is set to GUID_NULL otherwise.
@@ -388,7 +390,7 @@ inline guid::guid()
 {
     HRESULT hr  =   ::CoCreateGuid(&m_guid);
 
-    if(FAILED(hr))
+    if (FAILED(hr))
     {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
         STLSOFT_THROW_X(comstl_exception("Could not allocate GUID", hr));
@@ -403,21 +405,21 @@ inline /* ss_explicit_k */ guid::guid(cs_char_a_t const* s)
     OLECHAR     osz[1 + COMSTL_CCH_GUID];
     HRESULT     hr  =   S_OK;
 
-    switch(WINSTL_API_EXTERNAL_UnicodeAndCharacterSet_MultiByteToWideChar(0, 0, s, -1, &osz[0], 1 + COMSTL_CCH_GUID))
+    switch (WINSTL_API_EXTERNAL_UnicodeAndCharacterSet_MultiByteToWideChar(0, 0, s, -1, &osz[0], 1 + COMSTL_CCH_GUID))
     {
         case    1 + COMSTL_CCH_GUID:
             osz[COMSTL_CCH_GUID] = L'\0';
             hr = ::CLSIDFromString(osz, &m_guid);
             break;
         default:
-            if(S_OK == (hr = HRESULT_FROM_WIN32(WINSTL_API_EXTERNAL_ErrorHandling_GetLastError())))
+            if (S_OK == (hr = HRESULT_FROM_WIN32(WINSTL_API_EXTERNAL_ErrorHandling_GetLastError())))
             {
                 hr = E_INVALIDARG;
             }
             break;
     }
 
-    if(FAILED(hr))
+    if (FAILED(hr))
     {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
         STLSOFT_THROW_X(comstl_exception("Could not convert string to valid GUID", hr));
@@ -431,7 +433,7 @@ inline /* ss_explicit_k */ guid::guid(cs_char_w_t const* s)
 {
     HRESULT hr  =   ::CLSIDFromString(const_cast<LPOLESTR>(s), &m_guid);
 
-    if(FAILED(hr))
+    if (FAILED(hr))
     {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
         STLSOFT_THROW_X(comstl_exception("Could not convert string to valid GUID", hr));

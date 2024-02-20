@@ -5,10 +5,11 @@
  *              Information Functions API.
  *
  * Created:     24th December 2016
- * Updated:     2nd February 2019
+ * Updated:     30th November 2020
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2020, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2016-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -21,9 +22,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -114,13 +116,40 @@
 # define WINSTL_API_EXTERNAL_SystemInformation_GetComputerNameW             STLSOFT_NS_GLOBAL_(GetComputerNameW)
 #endif /* !WINSTL_API_EXTERNAL_SystemInformation_GetComputerNameW */
 
+#ifndef WINSTL_API_EXTERNAL_SystemInformation_ExpandEnvironmentStringsA
+# define WINSTL_API_EXTERNAL_SystemInformation_ExpandEnvironmentStringsA    STLSOFT_NS_GLOBAL_(ExpandEnvironmentStringsA)
+#endif /* !WINSTL_API_EXTERNAL_SystemInformation_ExpandEnvironmentStringsA */
+#ifndef WINSTL_API_EXTERNAL_SystemInformation_ExpandEnvironmentStringsW
+# define WINSTL_API_EXTERNAL_SystemInformation_ExpandEnvironmentStringsW    STLSOFT_NS_GLOBAL_(ExpandEnvironmentStringsW)
+#endif /* !WINSTL_API_EXTERNAL_SystemInformation_ExpandEnvironmentStringsW */
+
+#ifndef WINSTL_API_EXTERNAL_SystemInformation_GetEnvironmentVariableA
+# define WINSTL_API_EXTERNAL_SystemInformation_GetEnvironmentVariableA      STLSOFT_NS_GLOBAL_(GetEnvironmentVariableA)
+#endif /* !WINSTL_API_EXTERNAL_SystemInformation_GetEnvironmentVariableA */
+#ifndef WINSTL_API_EXTERNAL_SystemInformation_GetEnvironmentVariableW
+# define WINSTL_API_EXTERNAL_SystemInformation_GetEnvironmentVariableW      STLSOFT_NS_GLOBAL_(GetEnvironmentVariableW)
+#endif /* !WINSTL_API_EXTERNAL_SystemInformation_GetEnvironmentVariableW */
+
+#ifndef WINSTL_API_EXTERNAL_SystemInformation_GetSystemDirectoryA
+# define WINSTL_API_EXTERNAL_SystemInformation_GetSystemDirectoryA          STLSOFT_NS_GLOBAL_(GetSystemDirectoryA)
+#endif /* !WINSTL_API_EXTERNAL_SystemInformation_GetSystemDirectoryA */
+#ifndef WINSTL_API_EXTERNAL_SystemInformation_GetSystemDirectoryW
+# define WINSTL_API_EXTERNAL_SystemInformation_GetSystemDirectoryW          STLSOFT_NS_GLOBAL_(GetSystemDirectoryW)
+#endif /* !WINSTL_API_EXTERNAL_SystemInformation_GetSystemDirectoryW */
 
 #ifndef WINSTL_API_EXTERNAL_SystemInformation_GetUserNameA
-# define WINSTL_API_EXTERNAL_SystemInformation_GetUserNameA                 STLSOFT_NS_GLOBAL_(GetUserNameA)
+# define WINSTL_API_EXTERNAL_SystemInformation_GetUserNameA STLSOFT_NS_GLOBAL_(GetUserNameA)
 #endif /* !WINSTL_API_EXTERNAL_SystemInformation_GetUserNameA */
 #ifndef WINSTL_API_EXTERNAL_SystemInformation_GetUserNameW
-# define WINSTL_API_EXTERNAL_SystemInformation_GetUserNameW                 STLSOFT_NS_GLOBAL_(GetUserNameW)
+# define WINSTL_API_EXTERNAL_SystemInformation_GetUserNameW STLSOFT_NS_GLOBAL_(GetUserNameW)
 #endif /* !WINSTL_API_EXTERNAL_SystemInformation_GetUserNameW */
+
+#ifndef WINSTL_API_EXTERNAL_SystemInformation_GetWindowsDirectoryA
+# define WINSTL_API_EXTERNAL_SystemInformation_GetWindowsDirectoryA         STLSOFT_NS_GLOBAL_(GetWindowsDirectoryA)
+#endif /* !WINSTL_API_EXTERNAL_SystemInformation_GetWindowsDirectoryA */
+#ifndef WINSTL_API_EXTERNAL_SystemInformation_GetWindowsDirectoryW
+# define WINSTL_API_EXTERNAL_SystemInformation_GetWindowsDirectoryW         STLSOFT_NS_GLOBAL_(GetWindowsDirectoryW)
+#endif /* !WINSTL_API_EXTERNAL_SystemInformation_GetWindowsDirectoryW */
 
 
 /* *************************************

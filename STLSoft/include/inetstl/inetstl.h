@@ -5,10 +5,11 @@
  *              and platform discriminations, and definitions of types.
  *
  * Created:     24th April 2004
- * Updated:     2nd February 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2004-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -21,9 +22,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -47,9 +49,9 @@
 /* File version */
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define INETSTL_VER_INETSTL_H_INETSTL_MAJOR    3
-# define INETSTL_VER_INETSTL_H_INETSTL_MINOR    9
-# define INETSTL_VER_INETSTL_H_INETSTL_REVISION 1
-# define INETSTL_VER_INETSTL_H_INETSTL_EDIT     566
+# define INETSTL_VER_INETSTL_H_INETSTL_MINOR    10
+# define INETSTL_VER_INETSTL_H_INETSTL_REVISION 3
+# define INETSTL_VER_INETSTL_H_INETSTL_EDIT     570
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /** \file inetstl/inetstl.h
@@ -128,12 +130,14 @@
 # define _INETSTL_VER_1_3_8      0x010308ff  /*!< Version 1.3.8 (with STLSoft 1.9.121) */
 # define _INETSTL_VER_1_4_1_B01  0x01040181  /*!< Version 1.4.1 beta 1 (with STLSoft 1.10.1 beta 1) */
 # define _INETSTL_VER_1_4_1_B02  0x01040182  /*!< Version 1.4.1 beta 2 (with STLSoft 1.10.1 beta 10) */
+# define _INETSTL_VER_1_4_1_B03  0x01040183  /*!< Version 1.4.1 beta 3 (with STLSoft 1.10.1 beta 26) */
+# define _INETSTL_VER_1_4_1      0x010401ff  /*!< Version 1.4.1 (with STLSoft 1.10.3) */
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 #define _INETSTL_VER_MAJOR       1
 #define _INETSTL_VER_MINOR       4
 #define _INETSTL_VER_REVISION    1
-#define _INETSTL_VER             _INETSTL_VER_1_4_1_B02
+#define _INETSTL_VER             _INETSTL_VER_1_4_1
 
 /* /////////////////////////////////////////////////////////////////////////
  * includes
@@ -147,7 +151,7 @@
      !defined(NO_STRICT) &&\
      1
 #  ifdef _INETSTL_STRICT
-#   define STRICT 1
+#   define STRICT                                           1
 #  endif /* _INETSTL_STRICT */
 # endif /* !NO_STRICT && !_INETSTL_NO_STRICT && !STRICT */
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
@@ -190,8 +194,8 @@
  * STLSoft version compatibility check(s)
  */
 
-#if _STLSOFT_VER < 0x010a0181
-# error This version of the InetSTL libraries requires STLSoft version 1.10.1 beta 1, or later
+#if _STLSOFT_VER < 0x010a019a
+# error This version of the InetSTL libraries requires STLSoft version 1.10.1 beta 26, or later
 #endif /* _STLSOFT_VER */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -562,6 +566,46 @@ typedef is_streamoff_t      streamoff_t;        /*!< streamoff */
 #endif /* !INETSTL_NO_NAMESPACE */
 
 /* /////////////////////////////////////////////////////////////////////////
+ * constants
+ */
+
+#if 0
+#elif 0 || \
+      defined(_WIN32) || \
+      defined(WIN32) || \
+      defined(WIN64) || \
+      0
+
+/** \def INETSTL_CONST_MAX_PATH
+ *
+ */
+# if 0
+# elif defined(STLSOFT_DOCUMENTATION_SKIP_SECTION)
+
+#  define INETSTL_CONST_MAX_PATH                            (260)
+# elif defined(_MAX_PATH)
+
+#  define INETSTL_CONST_MAX_PATH                            _MAX_PATH
+# elif defined(__CYGWIN__) || \
+       defined(__MINGW32__) || \
+       defined(__MINGW64__)
+
+#  define INETSTL_CONST_MAX_PATH                            (260)
+# else
+
+#  error _MAX_PATH not defined, and not CygWin compiler
+# endif
+
+# ifdef __cplusplus
+
+/** C++ constant equivalent to \ref INETSTL_CONST_MAX_PATH.
+ */
+const is_size_t CONST_MAX_PATH          =   INETSTL_CONST_MAX_PATH;
+
+# endif /* __cplusplus */
+#endif
+
+/* /////////////////////////////////////////////////////////////////////////
  * values
  *
  * Since the boolean type may not be supported natively on all compilers, the
@@ -571,8 +615,8 @@ typedef is_streamoff_t      streamoff_t;        /*!< streamoff */
 
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 
-#define is_true_v       ss_true_v
-#define is_false_v      ss_false_v
+#define is_true_v                                           ss_true_v
+#define is_false_v                                          ss_false_v
 
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
@@ -626,7 +670,7 @@ namespace inetstl = ::stlsoft::inetstl_project;
 #endif /* !INETSTL_NO_NAMESPACE */
 
 /* /////////////////////////////////////////////////////////////////////////
- * inclusion
+ * inclusion control
  */
 
 #ifdef STLSOFT_CF_PRAGMA_ONCE_SUPPORT

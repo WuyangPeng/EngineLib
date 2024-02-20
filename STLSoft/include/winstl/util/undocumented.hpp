@@ -4,10 +4,11 @@
  * Purpose:     Miscellaneous undocumented features.
  *
  * Created:     20th October 1994
- * Updated:     13th September 2019
+ * Updated:     29th January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 1994-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -52,7 +54,7 @@
 #define WINSTL_VER_WINSTL_UTIL_HPP_UNDOCUMENTED_MAJOR       4
 #define WINSTL_VER_WINSTL_UTIL_HPP_UNDOCUMENTED_MINOR       0
 #define WINSTL_VER_WINSTL_UTIL_HPP_UNDOCUMENTED_REVISION    5
-#define WINSTL_VER_WINSTL_UTIL_HPP_UNDOCUMENTED_EDIT        47
+#define WINSTL_VER_WINSTL_UTIL_HPP_UNDOCUMENTED_EDIT        50
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -95,7 +97,7 @@ namespace winstl_project
  *
  * \note This has to be implemented as a class, because the function version
  * does not correctly work in respect of the static. Specifically, it does not
- * distinguish between different values of the parameterising constant, so that,
+ * distinguish between different values of the specialising constant, so that,
  * say, get_undoc_clipboard_fmt__<1>(. . .) will cause fmt to be correctly
  * initialised, but get_undoc_clipboard_fmt__<2>(. . .) will use the same value.
  * This behaviour is demonstrated on VC5 & VC6, but works fine with Intel C++
@@ -163,7 +165,7 @@ private:
 /* Messages */
 
 #ifndef WM_CONTEXTMENU
-# define WM_CONTEXTMENU         (0x007B)
+# define WM_CONTEXTMENU                                     (0x007B)
 #endif /* !WM_CONTEXTMENU */
 
 /* Clipboard formats */
@@ -173,27 +175,27 @@ private:
 #endif /* __SYNSOFT_DBS_COMPILER_SUPPORTS_PRAGMA_MESSAGE */
 
 #ifndef CF_FILENAMEA
-# define CF_FILENAMEA           WINSTL_NS_QUAL(get_undoc_clipboard_fmt__)<1>(TEXT("FileName"))
+# define CF_FILENAMEA                                       WINSTL_NS_QUAL(get_undoc_clipboard_fmt__)<1>(TEXT("FileName"))
 #endif /* !CF_FILENAMEA */
 
 #ifndef CF_FILENAMEW
-# define CF_FILENAMEW           WINSTL_NS_QUAL(get_undoc_clipboard_fmt__)<2>(TEXT("FileNameW"))
+# define CF_FILENAMEW                                       WINSTL_NS_QUAL(get_undoc_clipboard_fmt__)<2>(TEXT("FileNameW"))
 #endif /* !CF_FILENAMEW */
 
 #ifndef CF_FILENAME
 # ifdef UNICODE
-#  define CF_FILENAME           CF_FILENAMEW
+#  define CF_FILENAME                                       CF_FILENAMEW
 # else /* ? UNICODE */
-#  define CF_FILENAME           CF_FILENAMEA
+#  define CF_FILENAME                                       CF_FILENAMEA
 # endif /* UNICODE */
 #endif /* !CF_FILENAME */
 
 #ifndef CF_IDLIST
-# define CF_IDLIST              WINSTL_NS_QUAL(get_undoc_clipboard_fmt__)<3>(TEXT("Shell IDList Array"))
+# define CF_IDLIST                                          WINSTL_NS_QUAL(get_undoc_clipboard_fmt__)<3>(TEXT("Shell IDList Array"))
 #endif /* !CF_IDLIST */
 
 #ifndef CF_NETRESOURCE
-# define CF_NETRESOURCE         WINSTL_NS_QUAL(get_undoc_clipboard_fmt__)<4>(TEXT("Net Resource"))
+# define CF_NETRESOURCE                                     WINSTL_NS_QUAL(get_undoc_clipboard_fmt__)<4>(TEXT("Net Resource"))
 #endif /* !CF_NETRESOURCE */
 
 /* ////////////////////////////////////////////////////////////////////// */

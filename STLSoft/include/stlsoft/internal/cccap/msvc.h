@@ -4,13 +4,14 @@
  * Purpose:     Compiler feature discrimination for Visual C++.
  *
  * Created:     7th February 2003
- * Updated:     6th September 2019
+ * Updated:     12th February 2024
  *
- * Thanks:      To Cl·udio Albuquerque for working on the
+ * Thanks:      To Cl√°udio Albuquerque for working on the
  *              Win64-compatibility.
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2003-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -23,9 +24,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -61,14 +63,16 @@
 # error This file has been erroneously included for a compiler other than Visual C++
 #endif /* compiler */
 
+
 /* ////////////////////////////////////////////////////////////////////// */
 
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define STLSOFT_VER_H_STLSOFT_CCCAP_MSVC_MAJOR     3
-# define STLSOFT_VER_H_STLSOFT_CCCAP_MSVC_MINOR     32
-# define STLSOFT_VER_H_STLSOFT_CCCAP_MSVC_REVISION  2
-# define STLSOFT_VER_H_STLSOFT_CCCAP_MSVC_EDIT      144
+# define STLSOFT_VER_H_STLSOFT_CCCAP_MSVC_MINOR     36
+# define STLSOFT_VER_H_STLSOFT_CCCAP_MSVC_REVISION  1
+# define STLSOFT_VER_H_STLSOFT_CCCAP_MSVC_EDIT      154
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
+
 
 /* /////////////////////////////////////////////////////////////////////////
  * Structure:
@@ -93,6 +97,7 @@
  * - obsolete features
  */
 
+
 /* /////////////////////////////////////////////////////////////////////////
  * Auto-generation and compatibility
  */
@@ -101,6 +106,7 @@
 [<[STLSOFT-AUTO:NO-DOCFILELABEL]>]
 [<[STLSOFT-AUTO:NO-UNITTEST]>]
 */
+
 
 /* /////////////////////////////////////////////////////////////////////////
  * predefined macros extensions
@@ -114,14 +120,15 @@
  */
 
 #ifdef _MSC_FULL_VER
-# define STLSOFT_MSVC_VER                   _MSC_FULL_VER
+# define STLSOFT_MSVC_VER                                   _MSC_FULL_VER
 #else /* ? _MSC_FULL_VER */
 # if _MSC_VER < 1200
-#  define STLSOFT_MSVC_VER                  (_MSC_VER * 10000)
+#  define STLSOFT_MSVC_VER                                  (_MSC_VER * 10000)
 # else
-#  define STLSOFT_MSVC_VER                  (_MSC_VER * 100000)
+#  define STLSOFT_MSVC_VER                                  (_MSC_VER * 100000)
 # endif
 #endif /* _MSC_FULL_VER */
+
 
 /* /////////////////////////////////////////////////////////////////////////
  * preprocessor features
@@ -159,6 +166,18 @@
 # define STLSOFT_PPF_VARIADIC_MACROS_SUPPORT
 #endif /* compiler */
 
+
+/* /////////////////////////////////////////////////////////////////////////
+ * compiler-specific features
+ *
+ * - #pragma warning
+ */
+
+#if _MSC_VER >= 1200
+# define STLSOFT_CF_msvc_pragma_warning_pop
+#endif /* compiler */
+
+
 /* /////////////////////////////////////////////////////////////////////////
  * Support for built-in types
  *
@@ -194,6 +213,7 @@
 # define STLSOFT_CF_BUILTIN_long_long_SUPPORT
 #endif /* compiler */
 
+
 /* /////////////////////////////////////////////////////////////////////////
  * Built-in type characteristics
  *
@@ -211,6 +231,7 @@
     defined(_WCHAR_T_DEFINED)
 # define STLSOFT_CF_wchar_t_IS_SYNTHESISED
 #endif /* !STLSOFT_CF_BUILTIN_wchar_t_SUPPORT && _WCHAR_T_DEFINED */
+
 
 /* /////////////////////////////////////////////////////////////////////////
  * Support for C/C++ language features
@@ -247,6 +268,7 @@
 
 #define STLSOFT_CF_NEGATIVE_MODULUS_POSITIVE_GIVES_NEGATIVE_RESULT
 
+
 /* /////////////////////////////////////////////////////////////////////////
  * support for C language features
  *
@@ -257,7 +279,8 @@
 
 /* #define STLSOFT_CF_C99_INLINE_SUPPORT */
 
-#define STLSOFT_CUSTOM_C_INLINE             __inline
+#define STLSOFT_CUSTOM_C_INLINE                             __inline
+
 
 /* /////////////////////////////////////////////////////////////////////////
  * Support for C++ language features - 1
@@ -362,7 +385,8 @@
 # define STLSOFT_CF_noexcept_KEYWORD_SUPPORT
 #endif /* compiler */
 
-#if _MSC_VER >= 1600
+#if _MSC_VER >= 1600 && \
+    defined(__cplusplus)
 # define STLSOFT_CF_nullptr_KEYWORD_SUPPORT
 #endif /* compiler */
 
@@ -413,6 +437,14 @@
 # define STLSOFT_CF_STATIC_ARRAY_SIZE_DETERMINATION_SUPPORT
 #endif /* compiler */
 
+/* Move semantics, old and new
+ *
+ * STLSOFT_CF_MOVE_CONSTRUCTOR_SUPPORT is the legacy, circa-2000
+ * functionality. It is deprecated, and should not be used in any new
+ * code
+ *
+ * STLSOFT_CF_RVALUE_REFERENCES_SUPPORT is the C++11 symbol
+ */
 #if defined(_MSC_EXTENSIONS) && \
     _MSC_VER < 1310
 # define STLSOFT_CF_MOVE_CONSTRUCTOR_SUPPORT
@@ -426,6 +458,7 @@
 #if _MSC_VER <= 1200
 # define STLSOFT_CF_REQUIRE_RETURN_ALWAYS
 #endif /* compiler */
+
 
 /* /////////////////////////////////////////////////////////////////////////
  * Support for C++ language features - 2
@@ -453,6 +486,7 @@
  *    - copy-constructor template overload is properly discriminated against
  *      other non-template copy-constructor
  *    - template void type parameter
+ *    - variadic templates
  */
 
 #if _MSC_VER >= 1100
@@ -544,6 +578,11 @@
 # define STLSOFT_CF_TEMPLATE_VOID_TYPE_PARAMETER
 #endif /* compiler */
 
+#if _MSC_VER >= 1800
+# define STLSOFT_CF_VARIADIC_TEMPLATE_SUPPORT
+#endif /* compiler */
+
+
 /* /////////////////////////////////////////////////////////////////////////
  * inline assembler
  */
@@ -557,12 +596,14 @@
 # define STSLSOFT_ASM_IN_INLINE_SUPPORTED
 #endif /* arch */
 
+
 /* /////////////////////////////////////////////////////////////////////////
  * linkage specification
  */
 
 /* supports MS' '__declspec' ? */
 #define STLSOFT_CF_SUPPORT___declspec
+
 
 /* /////////////////////////////////////////////////////////////////////////
  * calling convention
@@ -586,11 +627,11 @@
 # endif /* !_MANAGED */
 # define STLSOFT_CF_STDCALL_SUPPORTED
 
-# define STLSOFT_CDECL                  __cdecl
+# define STLSOFT_CDECL                                      __cdecl
 # ifndef _MANAGED
-#  define STLSOFT_FASTCALL              __fastcall
+#  define STLSOFT_FASTCALL                                  __fastcall
 # endif /* !_MANAGED */
-# define STLSOFT_STDCALL                __stdcall
+# define STLSOFT_STDCALL                                    __stdcall
 
 #elif defined(_M_IA64) || \
       defined(_M_X64)
@@ -603,17 +644,19 @@
 # error Only defined for the Intel x86, IA64 and x64 architectures
 #endif /* arch */
 
+
 /* /////////////////////////////////////////////////////////////////////////
  * integer sizes
  */
 
-#define _STLSOFT_SIZEOF_CHAR            (1)
-#define _STLSOFT_SIZEOF_SHORT           (2)
-#define _STLSOFT_SIZEOF_INT             (4)
-#define _STLSOFT_SIZEOF_LONG            (4)
+#define _STLSOFT_SIZEOF_CHAR                                (1)
+#define _STLSOFT_SIZEOF_SHORT                               (2)
+#define _STLSOFT_SIZEOF_INT                                 (4)
+#define _STLSOFT_SIZEOF_LONG                                (4)
 #if _MSC_VER >= 1400
-# define _STLSOFT_SIZEOF_LONG_LONG      (8)
+# define _STLSOFT_SIZEOF_LONG_LONG                          (8)
 #endif /* compiler */
+
 
 /* /////////////////////////////////////////////////////////////////////////
  * Size-specific integer types
@@ -640,42 +683,42 @@
 /* 8-bit integer */
 #define STLSOFT_CF_8BIT_INT_SUPPORT
 #if _MSC_VER >= 1020
-# define STLSOFT_SI08_T_BASE_TYPE   signed      __int8
-# define STLSOFT_UI08_T_BASE_TYPE   unsigned    __int8
+# define STLSOFT_SI08_T_BASE_TYPE                           signed      __int8
+# define STLSOFT_UI08_T_BASE_TYPE                           unsigned    __int8
 # if _MSC_VER == 1200
 #  define STLSOFT_CF_CHAR_DISTINCT_INT_TYPE
 # endif /* compiler */
 #else /* ? compiler */
-# define STLSOFT_SI08_T_BASE_TYPE   signed      char
-# define STLSOFT_UI08_T_BASE_TYPE   unsigned    char
+# define STLSOFT_SI08_T_BASE_TYPE                           signed      char
+# define STLSOFT_UI08_T_BASE_TYPE                           unsigned    char
 #endif /* compiler */
 
 /* 16-bit integer */
 #define STLSOFT_CF_16BIT_INT_SUPPORT
 #if _MSC_VER >= 1020
-# define STLSOFT_SI16_T_BASE_TYPE   signed      __int16
-# define STLSOFT_UI16_T_BASE_TYPE   unsigned    __int16
+# define STLSOFT_SI16_T_BASE_TYPE                           signed      __int16
+# define STLSOFT_UI16_T_BASE_TYPE                           unsigned    __int16
 # if _MSC_VER == 1200
 #  define STLSOFT_CF_SHORT_DISTINCT_INT_TYPE
 # endif /* compiler */
 #else /* ? compiler */
-# define STLSOFT_SI16_T_BASE_TYPE   signed      short
-# define STLSOFT_UI16_T_BASE_TYPE   unsigned    short
+# define STLSOFT_SI16_T_BASE_TYPE                           signed      short
+# define STLSOFT_UI16_T_BASE_TYPE                           unsigned    short
 #endif /* compiler */
 
 /* 32-bit integer */
 #define STLSOFT_CF_32BIT_INT_SUPPORT
 #if 0
 #elif _MSC_VER >= 1020
-# define STLSOFT_SI32_T_BASE_TYPE   signed      __int32
-# define STLSOFT_UI32_T_BASE_TYPE   unsigned    __int32
+# define STLSOFT_SI32_T_BASE_TYPE                           signed      __int32
+# define STLSOFT_UI32_T_BASE_TYPE                           unsigned    __int32
 # if _MSC_VER == 1200
 #  define STLSOFT_CF_INT_DISTINCT_INT_TYPE
 # endif /* compiler */
 # define STLSOFT_CF_LONG_DISTINCT_INT_TYPE
 #else /* ? compiler */
-# define STLSOFT_SI32_T_BASE_TYPE   signed      long
-# define STLSOFT_UI32_T_BASE_TYPE   unsigned    long
+# define STLSOFT_SI32_T_BASE_TYPE                           signed      long
+# define STLSOFT_UI32_T_BASE_TYPE                           unsigned    long
 # define STLSOFT_CF_INT_DISTINCT_INT_TYPE
 #endif /* compiler */
 
@@ -683,9 +726,21 @@
 #if _MSC_VER >= 1020
 # define STLSOFT_CF_64BIT_INT_SUPPORT
 # define STLSOFT_CF_64BIT_INT_IS___int64
-# define STLSOFT_SI64_T_BASE_TYPE   signed      __int64
-# define STLSOFT_UI64_T_BASE_TYPE   unsigned    __int64
+# define STLSOFT_SI64_T_BASE_TYPE                           signed      __int64
+# define STLSOFT_UI64_T_BASE_TYPE                           unsigned    __int64
 #endif /* compiler */
+
+/* ptr-bit integer */
+#ifdef _WIN64
+
+# define STLSOFT_SPTR_T_BASE_TYPE                           signed __int64
+# define STLSOFT_UPTR_T_BASE_TYPE                           unsigned __int64
+#else /* ? _WIN64 */
+
+# define STLSOFT_SPTR_T_BASE_TYPE                           _W64 signed int
+# define STLSOFT_UPTR_T_BASE_TYPE                           _W64 unsigned int
+#endif /* _WIN64 */
+
 
 /* /////////////////////////////////////////////////////////////////////////
  * Still to-be-determined features
@@ -701,7 +756,7 @@
   */
 # ifdef _NATIVE_WCHAR_T_DEFINED
 #  define STLSOFT_CF_NATIVE_WCHAR_T_SUPPORT
-/* #  define STLSOFT_NATIVE_WCHAR_T            __wchar_t */
+/* #  define STLSOFT_NATIVE_WCHAR_T                            __wchar_t */
 # elif defined(_WCHAR_T_DEFINED)
 #  define STLSOFT_CF_TYPEDEF_WCHAR_T_SUPPORT
 # else
@@ -791,9 +846,9 @@
   */
 # define __STLSOFT_CF_ASSERT_SUPPORT
 # define STLSOFT_CF_ASSERT_SUPPORT
-# define STLSOFT_ASSERT(expr)                   _STLSOFT_CUSTOM_ASSERT(expr)
+# define STLSOFT_ASSERT(expr)                               _STLSOFT_CUSTOM_ASSERT(expr)
 # if defined(_STLSOFT_CUSTOM_ASSERT_INCLUDE)
-#  define   __STLSOFT_CF_ASSERT_INCLUDE_NAME    _STLSOFT_CUSTOM_ASSERT_INCLUDE
+#  define   __STLSOFT_CF_ASSERT_INCLUDE_NAME                _STLSOFT_CUSTOM_ASSERT_INCLUDE
 # else /* ? _STLSOFT_CUSTOM_ASSERT_INCLUDE */
 #  error You must define _STLSOFT_CUSTOM_ASSERT_INCLUDE along with _STLSOFT_CUSTOM_ASSERT()
 # endif /* !_STLSOFT_CUSTOM_ASSERT_INCLUDE */
@@ -801,9 +856,10 @@
 # define __STLSOFT_CF_ASSERT_SUPPORT
 # define STLSOFT_CF_ASSERT_SUPPORT
  /* #define   __STLSOFT_CF_USE_cassert */
-# define __STLSOFT_CF_ASSERT_INCLUDE_NAME       <crtdbg.h>
-# define STLSOFT_ASSERT(expr)                   _ASSERTE(expr)
+# define __STLSOFT_CF_ASSERT_INCLUDE_NAME                   <crtdbg.h>
+# define STLSOFT_ASSERT(expr)                               _ASSERTE(expr)
 #endif /* _STLSOFT_CUSTOM_ASSERT */
+
 
 /* /////////////////////////////////////////////////////////////////////////
  * compiler warning suppression
@@ -961,21 +1017,23 @@
 # include <cstddef>
 # ifdef _XSTDDEF_
 #  undef _TRY_BEGIN
-#  define _TRY_BEGIN    if(1) {
+#  define _TRY_BEGIN                                        if (1) {
 #  undef _CATCH
-#  define _CATCH(x)     } else {
+#  define _CATCH(x)                                         } else {
 #  undef _CATCH_ALL
-#  define _CATCH_ALL    } else {
+#  define _CATCH_ALL                                        } else {
 #  undef _CATCH_END
-#  define _CATCH_END    }
+#  define _CATCH_END                                        }
 # endif /* _XSTDDEF_ */
 #endif /* compiler */
+
 
 /* /////////////////////////////////////////////////////////////////////////
  * obsolete features
  */
 
 #include <stlsoft/internal/cccap/obsolete.h>
+
 
 /* ///////////////////////////// end of file //////////////////////////// */
 

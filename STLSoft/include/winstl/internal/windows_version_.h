@@ -4,10 +4,11 @@
  * Purpose:     Windows version discrimination.
  *
  * Created:     4th August 2015
- * Updated:     2nd February 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2015-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,8 +53,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 #define WINSTL_VER_WINSTL_INTERNAL_H_WINDOWS_VERSION__MAJOR     1
 #define WINSTL_VER_WINSTL_INTERNAL_H_WINDOWS_VERSION__MINOR     0
-#define WINSTL_VER_WINSTL_INTERNAL_H_WINDOWS_VERSION__REVISION  2
-#define WINSTL_VER_WINSTL_INTERNAL_H_WINDOWS_VERSION__EDIT      12
+#define WINSTL_VER_WINSTL_INTERNAL_H_WINDOWS_VERSION__REVISION  3
+#define WINSTL_VER_WINSTL_INTERNAL_H_WINDOWS_VERSION__EDIT      14
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -143,7 +145,7 @@ winstl_C_internal_GetWkstaVersionInfo_(
     WINSTL_ASSERT(NULL != verMajor);
     WINSTL_ASSERT(NULL != verMinor);
 
-    if(NULL != hm)
+    if (NULL != hm)
     {
         union u_aq_
         {
@@ -164,15 +166,15 @@ winstl_C_internal_GetWkstaVersionInfo_(
 #endif
         } u_fr;
 
-        u_aq.fp =   STLSOFT_NS_GLOBAL(GetProcAddress)(hm, "NetWkstaGetInfo");
-        u_fr.fp =   STLSOFT_NS_GLOBAL(GetProcAddress)(hm, "NetApiBufferFree");
+        u_aq.fp =   WINSTL_API_EXTERNAL_DynamicLinkLibrary_GetProcAddress(hm, "NetWkstaGetInfo");
+        u_fr.fp =   WINSTL_API_EXTERNAL_DynamicLinkLibrary_GetProcAddress(hm, "NetApiBufferFree");
 
-        if( NULL != u_aq.fp &&
+        if (NULL != u_aq.fp &&
             NULL != u_fr.fp)
         {
             LPBYTE pData;
 
-            if(0 == (*u_aq.fn)(NULL, 100, &pData))
+            if (0 == (*u_aq.fn)(NULL, 100, &pData))
             {
                 WKSTA_INFO_100_ const* const info = STLSOFT_REINTERPRET_CAST(WKSTA_INFO_100_*, pData);
 
@@ -216,15 +218,15 @@ winstl_C_internal_IsWindows9x(
     ws_uint_t const verMinor_   =   STLSOFT_STATIC_CAST(ws_uint_t, HIBYTE(LOWORD(version_)));
     ws_uint_t       dummy_;
 
-    if(NULL == verMajor)
+    if (NULL == verMajor)
     {
         verMajor = &dummy_;
     }
-    if(NULL == verMinor)
+    if (NULL == verMinor)
     {
         verMinor = &dummy_;
     }
-    if(NULL == buildNumber)
+    if (NULL == buildNumber)
     {
         buildNumber = &dummy_;
     }
@@ -233,7 +235,7 @@ winstl_C_internal_IsWindows9x(
     *verMinor           =   verMinor_;
     *buildNumber        =   0;
 
-    if(0 == (0x80000000 & version_))
+    if (0 == (0x80000000 & version_))
     {
         *buildNumber    =   STLSOFT_STATIC_CAST(ws_uint_t, HIWORD(version_));
     }
@@ -251,15 +253,15 @@ winstl_C_internal_GetVersionEx(
     using namespace ximpl_;
 #endif /* __cplusplus */
 
-    if(winstl_C_internal_GetVersionEx_(osvi))
+    if (winstl_C_internal_GetVersionEx_(osvi))
     {
-        if( 6 == osvi->dwMajorVersion &&
+        if (6 == osvi->dwMajorVersion &&
             2 == osvi->dwMinorVersion)
         {
             DWORD   verMajor;
             DWORD   verMinor;
 
-            if(winstl_C_internal_GetWkstaVersionInfo_(&verMajor, &verMinor))
+            if (winstl_C_internal_GetWkstaVersionInfo_(&verMajor, &verMinor))
             {
                 osvi->dwMajorVersion    =   verMajor;
                 osvi->dwMinorVersion    =   verMinor;

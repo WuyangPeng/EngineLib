@@ -4,10 +4,11 @@
  * Purpose:     Windows console functions.
  *
  * Created:     3rd December 2005
- * Updated:     2nd February 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2005-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,8 +53,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define WINSTL_VER_WINSTL_SYSTEM_H_CONSOLE_FUNCTIONS_MAJOR     2
 # define WINSTL_VER_WINSTL_SYSTEM_H_CONSOLE_FUNCTIONS_MINOR     4
-# define WINSTL_VER_WINSTL_SYSTEM_H_CONSOLE_FUNCTIONS_REVISION  7
-# define WINSTL_VER_WINSTL_SYSTEM_H_CONSOLE_FUNCTIONS_EDIT      40
+# define WINSTL_VER_WINSTL_SYSTEM_H_CONSOLE_FUNCTIONS_REVISION  8
+# define WINSTL_VER_WINSTL_SYSTEM_H_CONSOLE_FUNCTIONS_EDIT      44
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -115,7 +117,7 @@ winstl_C_console_read_silent_character_from_(
 {
     DWORD   currMode;
 
-    if( !WINSTL_API_EXTERNAL_Console_GetConsoleMode(h, &currMode) ||
+    if (!WINSTL_API_EXTERNAL_Console_GetConsoleMode(h, &currMode) ||
         !WINSTL_API_EXTERNAL_Console_SetConsoleMode(h, 0))
     {
         return -1;
@@ -124,37 +126,37 @@ winstl_C_console_read_silent_character_from_(
     {
         LONG c = -1;
 
-        for(;;)
+        for (;;)
         {
             INPUT_RECORD    ir;
             DWORD           numRead;
 
-            if(!WINSTL_API_EXTERNAL_Console_ReadConsoleInput(h, &ir, 1, &numRead))
+            if (!WINSTL_API_EXTERNAL_Console_ReadConsoleInput(h, &ir, 1, &numRead))
             {
                 c = -1;
                 break;
             }
             else
             {
-                if(0 == numRead)
+                if (0 == numRead)
                 {
                     c = -1;
                     break;
                 }
                 else
                 {
-                    if(KEY_EVENT == ir.EventType)
+                    if (KEY_EVENT == ir.EventType)
                     {
-                        if(ir.Event.KeyEvent.bKeyDown)
+                        if (ir.Event.KeyEvent.bKeyDown)
                         {
 #ifdef UNICODE
-                            if(0 != ir.Event.KeyEvent.uChar.UnicodeChar)
+                            if (0 != ir.Event.KeyEvent.uChar.UnicodeChar)
                             {
                                 c = (long)ir.Event.KeyEvent.uChar.UnicodeChar;
                                 break;
                             }
 #else /* ? UNICODE */
-                            if(0 != ir.Event.KeyEvent.uChar.AsciiChar)
+                            if (0 != ir.Event.KeyEvent.uChar.AsciiChar)
                             {
                                 c = (long)ir.Event.KeyEvent.uChar.AsciiChar;
                                 break;
@@ -188,11 +190,11 @@ winstl_C_get_console_width(void)
 {
     HANDLE hStdOut = WINSTL_API_EXTERNAL_Console_GetStdHandle(STD_OUTPUT_HANDLE);
 
-    if(INVALID_HANDLE_VALUE != hStdOut)
+    if (INVALID_HANDLE_VALUE != hStdOut)
     {
         CONSOLE_SCREEN_BUFFER_INFO csbi;
 
-        if(WINSTL_API_EXTERNAL_Console_GetConsoleScreenBufferInfo(hStdOut, &csbi))
+        if (WINSTL_API_EXTERNAL_Console_GetConsoleScreenBufferInfo(hStdOut, &csbi))
         {
             return csbi.dwMaximumWindowSize.X;
         }
@@ -218,9 +220,9 @@ GetConsoleWindow()
     typedef HWND (WINAPI *GCW_t)();
 
     HMODULE Kernel32    =   WINSTL_API_EXTERNAL_DynamicLinkLibrary_LoadLibraryA("KERNEL32");
-    GCW_t   pfn         =   stlsoft_reinterpret_cast(GCW_t, STLSOFT_NS_GLOBAL(GetProcAddress)(Kernel32, "GetConsoleWindow"));
+    GCW_t   pfn         =   stlsoft_reinterpret_cast(GCW_t, WINSTL_API_EXTERNAL_DynamicLinkLibrary_GetProcAddress(Kernel32, "GetConsoleWindow"));
 
-    if(NULL == pfn)
+    if (NULL == pfn)
     {
         return NULL;
     }
@@ -274,7 +276,7 @@ winstl_C_console_read_silent_character_from_CONIO(void)
                     ,   NULL
                     );
 
-    if(INVALID_HANDLE_VALUE == hConin)
+    if (INVALID_HANDLE_VALUE == hConin)
     {
         return -1;
     }
@@ -309,12 +311,12 @@ winstl_C_console_read_silent_character_from_CONIO(void)
  *
  * \deprecated Use winstl_C_get_console_window
  */
-# define winstl__get_console_window         winstl_C_get_console_window
+# define winstl__get_console_window                         winstl_C_get_console_window
 /** \def winstl__get_console_width
  *
  * \deprecated Use winstl_C_get_console_width
  */
-# define winstl__get_console_width          winstl_C_get_console_width
+# define winstl__get_console_width                          winstl_C_get_console_width
 
 #endif /* obsolete || 1.9 */
 
@@ -388,7 +390,7 @@ console_read_silent_character_from_CONIO()
 #endif /* !WINSTL_NO_NAMESPACE */
 
 /* /////////////////////////////////////////////////////////////////////////
- * inclusion
+ * inclusion control
  */
 
 #ifdef STLSOFT_CF_PRAGMA_ONCE_SUPPORT

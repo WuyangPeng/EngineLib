@@ -4,10 +4,11 @@
  * Purpose:     Contains the exception_string limited functionality string class.
  *
  * Created:     26th December 2005
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2005-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,8 +53,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define STLSOFT_VER_STLSOFT_UTIL_HPP_EXCEPTION_STRING_MAJOR    1
 # define STLSOFT_VER_STLSOFT_UTIL_HPP_EXCEPTION_STRING_MINOR    4
-# define STLSOFT_VER_STLSOFT_UTIL_HPP_EXCEPTION_STRING_REVISION 5
-# define STLSOFT_VER_STLSOFT_UTIL_HPP_EXCEPTION_STRING_EDIT     30
+# define STLSOFT_VER_STLSOFT_UTIL_HPP_EXCEPTION_STRING_REVISION 6
+# define STLSOFT_VER_STLSOFT_UTIL_HPP_EXCEPTION_STRING_EDIT     33
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -69,9 +71,9 @@
 #ifndef STLSOFT_INCL_STLSOFT_MEMORY_UTIL_HPP_ALLOCATOR_SELECTOR
 # include <stlsoft/memory/util/allocator_selector.hpp>
 #endif /* !STLSOFT_INCL_STLSOFT_MEMORY_UTIL_HPP_ALLOCATOR_SELECTOR */
-#ifndef STLSOFT_INCL_STLSOFT_HPP_MEMORY_AUTO_BUFFER
+#ifndef STLSOFT_INCL_STLSOFT_MEMORY_HPP_AUTO_BUFFER
 # include <stlsoft/memory/auto_buffer.hpp>
-#endif /* !STLSOFT_INCL_STLSOFT_HPP_MEMORY_AUTO_BUFFER */
+#endif /* !STLSOFT_INCL_STLSOFT_MEMORY_HPP_AUTO_BUFFER */
 #ifndef STLSOFT_INCL_STLSOFT_STRING_HPP_CHAR_TRAITS
 # include <stlsoft/string/char_traits.hpp>
 #endif /* !STLSOFT_INCL_STLSOFT_STRING_HPP_CHAR_TRAITS */
@@ -149,7 +151,7 @@ public:
         const ss_size_t n       =   traits_type::length(s);
         const ss_size_t currLen =   this->length();
 
-        if(m_message.resize(m_message.size() + n))
+        if (m_message.resize(m_message.size() + n))
         {
             traits_type::copy(&m_message[currLen], s, n);
             m_message[m_message.size() - 1] = '\0';
@@ -161,7 +163,7 @@ public:
         const ss_size_t n       =   rhs.length();
         const ss_size_t currLen =   this->length();
 
-        if(m_message.resize(m_message.size() + n))
+        if (m_message.resize(m_message.size() + n))
         {
             traits_type::copy(&m_message[currLen], rhs.c_str(), n);
             m_message[m_message.size() - 1] = '\0';
@@ -173,7 +175,7 @@ public:
         const ss_size_t n       =   1;
         const ss_size_t currLen =   this->length();
 
-        if(m_message.resize(m_message.size() + n))
+        if (m_message.resize(m_message.size() + n))
         {
             traits_type::copy(&m_message[currLen], &ch, n);
             m_message[m_message.size() - 1] = '\0';
@@ -188,9 +190,9 @@ public:
     ///  than the current length
     void truncate(size_type n)
     {
-        if(n < m_message.size() - 1)
+        if (n < m_message.size() - 1)
         {
-            if(m_message.resize(n + 1))
+            if (m_message.resize(n + 1))
             {
                 m_message[m_message.size() - 1] = '\0';
             }

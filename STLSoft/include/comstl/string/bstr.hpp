@@ -4,12 +4,13 @@
  * Purpose:     bstr class.
  *
  * Created:     20th December 1996
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Thanks:      To Gabor Fischer for requesting attach().
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 1996-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -22,9 +23,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -53,8 +55,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define _COMSTL_VER_COMSTL_STRING_HPP_BSTR_MAJOR       2
 # define _COMSTL_VER_COMSTL_STRING_HPP_BSTR_MINOR       8
-# define _COMSTL_VER_COMSTL_STRING_HPP_BSTR_REVISION    14
-# define _COMSTL_VER_COMSTL_STRING_HPP_BSTR_EDIT        79
+# define _COMSTL_VER_COMSTL_STRING_HPP_BSTR_REVISION    15
+# define _COMSTL_VER_COMSTL_STRING_HPP_BSTR_EDIT        82
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -465,12 +467,12 @@ inline /* explicit */ bstr::bstr(cs_char_a_t const* s, ssize_type len /* = -1 */
 
     ssize_type actualLen = static_cast<ssize_type>(STLSOFT_NS_QUAL(c_str_len)(s));
 
-    if( NULL != s &&
+    if (NULL != s &&
         len > actualLen)
     {
         m_bstr = bstr_create(static_cast<cs_char_w_t const*>(NULL), static_cast<cs_size_t>(len));
 
-        if(NULL != m_bstr)
+        if (NULL != m_bstr)
         {
 # ifdef _WIN64
             int buffLen = static_cast<int>(actualLen + 1);
@@ -483,7 +485,7 @@ inline /* explicit */ bstr::bstr(cs_char_a_t const* s, ssize_type len /* = -1 */
     }
     else
     {
-        if(-1 == len)
+        if (-1 == len)
         {
             len = actualLen;
         }
@@ -492,7 +494,7 @@ inline /* explicit */ bstr::bstr(cs_char_a_t const* s, ssize_type len /* = -1 */
     }
 
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
-    if( NULL == m_bstr &&
+    if (NULL == m_bstr &&
         NULL != s &&
         0 != len &&
         '\0' != 0[s])
@@ -516,12 +518,12 @@ inline /* explicit */ bstr::bstr(cs_char_w_t const* s, ssize_type len /* = -1 */
 
     ssize_type actualLen = static_cast<ssize_type>(STLSOFT_NS_QUAL(c_str_len)(s));
 
-    if( NULL != s &&
+    if (NULL != s &&
         len > actualLen)
     {
         m_bstr = bstr_create(static_cast<cs_char_w_t const*>(NULL), static_cast<cs_size_t>(len));
 
-        if(NULL != m_bstr)
+        if (NULL != m_bstr)
         {
 #ifdef STLSOFT_USING_SAFE_STR_FUNCTIONS
             ::wcscpy_s(m_bstr, static_cast<cs_size_t>(actualLen), s);
@@ -532,7 +534,7 @@ inline /* explicit */ bstr::bstr(cs_char_w_t const* s, ssize_type len /* = -1 */
     }
     else
     {
-        if(-1 == len)
+        if (-1 == len)
         {
             len = actualLen;
         }
@@ -541,7 +543,7 @@ inline /* explicit */ bstr::bstr(cs_char_w_t const* s, ssize_type len /* = -1 */
     }
 
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
-    if( NULL == m_bstr &&
+    if (NULL == m_bstr &&
         NULL != s &&
         0 != len &&
         '\0' != 0[s])
@@ -554,9 +556,9 @@ inline /* explicit */ bstr::bstr(cs_char_w_t const* s, ssize_type len /* = -1 */
 inline bstr::bstr(bstr::size_type n, bstr::char_type ch)
     : m_bstr(bstr_create_w(NULL, n))
 {
-    if(NULL == m_bstr)
+    if (NULL == m_bstr)
     {
-        if(0 != n)
+        if (0 != n)
         {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
             STLSOFT_THROW_X(comstl_exception("failed to allocate string", HRESULT_FROM_WIN32(WINSTL_API_EXTERNAL_ErrorHandling_GetLastError())));
@@ -565,7 +567,7 @@ inline bstr::bstr(bstr::size_type n, bstr::char_type ch)
     }
     else
     {
-        { for(size_type i = 0; i < n; ++i)
+        { for (size_type i = 0; i < n; ++i)
         {
             m_bstr[i] = ch;
         }}
@@ -576,7 +578,7 @@ inline bstr::bstr(bstr::class_type const& rhs)
     : m_bstr(bstr_dup(rhs.m_bstr))
 {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
-    if( NULL == m_bstr &&
+    if (NULL == m_bstr &&
         !rhs.empty())
     {
         STLSOFT_THROW_X(comstl_exception("failed to allocate string", HRESULT_FROM_WIN32(WINSTL_API_EXTERNAL_ErrorHandling_GetLastError())));
@@ -588,7 +590,7 @@ inline bstr::bstr(bstr::class_type const& rhs, bstr::size_type pos, bstr::size_t
     : m_bstr(NULL)
 {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
-    if(pos > rhs.size())
+    if (pos > rhs.size())
     {
         STLSOFT_THROW_X(STLSOFT_NS_QUAL_STD(out_of_range)("Position out of range"));
     }
@@ -596,7 +598,7 @@ inline bstr::bstr(bstr::class_type const& rhs, bstr::size_type pos, bstr::size_t
     COMSTL_MESSAGE_ASSERT("Position out of range", pos <= rhs.size());
 #endif /* STLSOFT_CF_EXCEPTION_SUPPORT */
 
-    if(pos + len > rhs.size())
+    if (pos + len > rhs.size())
     {
         len = rhs.size() - pos;
     }
@@ -604,7 +606,7 @@ inline bstr::bstr(bstr::class_type const& rhs, bstr::size_type pos, bstr::size_t
     m_bstr = bstr_create(rhs.data() + pos, len);
 
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
-    if( NULL == m_bstr &&
+    if (NULL == m_bstr &&
         !rhs.empty())
     {
         STLSOFT_THROW_X(comstl_exception("failed to allocate string", HRESULT_FROM_WIN32(WINSTL_API_EXTERNAL_ErrorHandling_GetLastError())));
@@ -689,7 +691,7 @@ inline bstr::class_type& bstr::append(bstr::class_type const& s, ssize_type len 
 
 inline bstr::class_type& bstr::append(cs_char_w_t const* s, ssize_type len /* = -1 */)
 {
-    if(empty())
+    if (empty())
     {
         bstr    rhs(s, len);
 
@@ -697,12 +699,12 @@ inline bstr::class_type& bstr::append(cs_char_w_t const* s, ssize_type len /* = 
     }
     else
     {
-        if(len < 0)
+        if (len < 0)
         {
             len = (NULL == s) ? 0 : static_cast<ssize_type>(::wcslen(s));
         }
 
-        if(0 != len)
+        if (0 != len)
         {
             size_type   totalLen = size() + len;
             bstr        rhs(data(), static_cast<ssize_type>(totalLen));
@@ -910,6 +912,8 @@ using ::comstl::c_str_ptr_null_o;
  * traits
  */
 
+#ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
+
 /** Specialisation for comstl::bstr
  */
 STLSOFT_TEMPLATE_SPECIALISATION
@@ -954,7 +958,7 @@ struct string_traits< ::comstl::bstr>
         return (str = string_type(first, last - first), str);
     }
 };
-
+#endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 # if !defined(STLSOFT_NO_NAMESPACE) && \
      !defined(STLSOFT_DOCUMENTATION_SKIP_SECTION)

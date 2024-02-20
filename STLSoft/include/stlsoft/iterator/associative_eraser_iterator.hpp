@@ -4,10 +4,11 @@
  * Purpose:     Eraser iterator for associative containers.
  *
  * Created:     28th January 2005
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2005-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -53,7 +55,7 @@
 # define STLSOFT_VER_STLSOFT_ITERATOR_HPP_ASSOCIATIVE_ERASE_ITERATOR_MAJOR      1
 # define STLSOFT_VER_STLSOFT_ITERATOR_HPP_ASSOCIATIVE_ERASE_ITERATOR_MINOR      3
 # define STLSOFT_VER_STLSOFT_ITERATOR_HPP_ASSOCIATIVE_ERASE_ITERATOR_REVISION   2
-# define STLSOFT_VER_STLSOFT_ITERATOR_HPP_ASSOCIATIVE_ERASE_ITERATOR_EDIT       24
+# define STLSOFT_VER_STLSOFT_ITERATOR_HPP_ASSOCIATIVE_ERASE_ITERATOR_EDIT       27
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -87,7 +89,48 @@ namespace stlsoft
  * classes
  */
 
-/** Iterator class that 
+/** Iterator class that erases from an associative container an entry, if it
+ * exists, that is applied to the dereference operator, and therefore may be
+ * used with <code>std::copy()</code> to erase matching elements from a
+ * range, as in:
+\htmlonly
+<pre>
+  static char const* contained_strings[] =
+  {
+    "abc",
+    "def",
+    "ghi",
+    "jkl",
+  };
+
+  static char const* erased_strings[] =
+  {
+    "abc",
+    "ghi",
+    "mno",
+  };
+
+  std::set<std::string>  c;
+
+  // insert some strings
+
+  std::copy(
+    contained_strings, contained_strings + dimensionof(contained_strings)
+  , std::inserter(c, c.end())
+  );
+
+  assert(4 == c.size();
+
+  // now erase some other strings
+
+  std::copy(
+    erased_strings, erased_strings + dimensionof(erased_strings)
+  , stlsoft::assoc_eraser(c, nullptr, nullptr)
+  );
+
+  assert(2 == c.size();
+</pre>
+\endhtmlonly
  *
  */
 template <ss_typename_param_k T_container>
@@ -163,7 +206,7 @@ private:
     {
         size_type n = m_container->erase(value);
 
-        if(0u == n)
+        if (0u == n)
         {
             ++*m_misses;
         }
@@ -218,11 +261,11 @@ inline associative_eraser_iterator<T_container> make_associative_eraser_iterator
 {
     static ss_size_t dummy;
 
-    if(NULL == hits)
+    if (NULL == hits)
     {
         hits = &dummy;
     }
-    if(NULL == misses)
+    if (NULL == misses)
     {
         misses = &dummy;
     }
@@ -241,11 +284,11 @@ inline associative_eraser_iterator<T_container> assoc_eraser(
 {
     static ss_size_t dummy;
 
-    if(NULL == hits)
+    if (NULL == hits)
     {
         hits = &dummy;
     }
-    if(NULL == misses)
+    if (NULL == misses)
     {
         misses = &dummy;
     }

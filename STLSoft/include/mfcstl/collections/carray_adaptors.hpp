@@ -1,11 +1,11 @@
 /* /////////////////////////////////////////////////////////////////////////
- * File:        mfcstl/collections/carray_adaptors.hpp (derived from mfcstl_array_adaptor.h)
+ * File:        mfcstl/collections/CArray_adaptors.hpp (derived from mfcstl_array_adaptor.h)
  *
  * Purpose:     Contains the definition of the CArray_cadaptor and CArray_iadaptor
  *              class templates.
  *
  * Created:     1st December 2002
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Thanks to:   Nevin Liber and Scott Meyers for kicking my lazy behind, and
  *              requiring that I implement the full complement of standard
@@ -13,6 +13,7 @@
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2002-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -25,9 +26,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -44,7 +46,7 @@
  * ////////////////////////////////////////////////////////////////////// */
 
 
-/** \file mfcstl/collections/carray_adaptors.hpp
+/** \file mfcstl/collections/CArray_adaptors.hpp
  *
  * \brief [C++] Definition of the mfcstl::CArray_cadaptor and
  *   mfcstl::CArray_iadaptor traits class templates
@@ -57,8 +59,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define MFCSTL_VER_MFCSTL_COLLECTIONS_HPP_CARRAY_ADAPTORS_MAJOR    4
 # define MFCSTL_VER_MFCSTL_COLLECTIONS_HPP_CARRAY_ADAPTORS_MINOR    3
-# define MFCSTL_VER_MFCSTL_COLLECTIONS_HPP_CARRAY_ADAPTORS_REVISION 9
-# define MFCSTL_VER_MFCSTL_COLLECTIONS_HPP_CARRAY_ADAPTORS_EDIT     99
+# define MFCSTL_VER_MFCSTL_COLLECTIONS_HPP_CARRAY_ADAPTORS_REVISION 11
+# define MFCSTL_VER_MFCSTL_COLLECTIONS_HPP_CARRAY_ADAPTORS_EDIT     102
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -76,10 +78,10 @@
 # include <mfcstl/memory/afx_allocator.hpp>
 #endif /* !MFCSTL_INCL_MFCSTL_MEMORY_HPP_AFX_ALLOCATOR */
 #ifndef MFCSTL_INCL_MFCSTL_COLLECTIONS_HPP_CARRAY_SWAP
-# include <mfcstl/collections/carray_swap.hpp>
+# include <mfcstl/collections/CArray_swap.hpp>
 #endif /* !MFCSTL_INCL_MFCSTL_COLLECTIONS_HPP_CARRAY_SWAP */
 #ifndef MFCSTL_INCL_MFCSTL_COLLECTIONS_HPP_CARRAY_TRAITS
-# include <mfcstl/collections/carray_traits.hpp>
+# include <mfcstl/collections/CArray_traits.hpp>
 #endif /* !MFCSTL_INCL_MFCSTL_COLLECTIONS_HPP_CARRAY_TRAITS */
 #ifndef MFCSTL_INCL_MFCSTL_UTIL_HPP_MEMORY_EXCEPTION_TRANSLATION_POLICIES
 # include <mfcstl/util/memory_exception_translation_policies.hpp>
@@ -179,71 +181,97 @@ class CArray_adaptor_base
 /// @{
 public:
     /// The type of the underlying MFC array
-    typedef A                                                                   array_type;
+    typedef A                                               array_type;
 private:
-    typedef I                                                                   interface_class_type;
-    typedef T                                                                   array_traits_type;
+    typedef I                                               interface_class_type;
+    typedef T                                               array_traits_type;
 #if defined(MFCSTL_CARRAY_ADAPTORS_USE_BAD_ALLOC_POLICY)
-    typedef bad_alloc_throwing_policy                                           exception_translation_policy_type;
+    typedef bad_alloc_throwing_policy                       exception_translation_policy_type;
 #else /* ? MFCSTL_CARRAY_ADAPTORS_USE_BAD_ALLOC_POLICY */
-    typedef CMemoryException_throwing_policy                                    exception_translation_policy_type;
+    typedef CMemoryException_throwing_policy                exception_translation_policy_type;
 #endif /* MFCSTL_CARRAY_ADAPTORS_USE_BAD_ALLOC_POLICY */
 public:
     /// The value type
     ///
     /// \note If the compiler report "use of undefined type" when you're using the adaptor class(es)
     /// with CArray<>, ensure that you've included <b>afxtempl</b> <i>before</i> you include this file.
-    typedef ss_typename_type_k array_traits_type::value_type                    value_type;
+    typedef ss_typename_type_k array_traits_type::value_type
+                                                            value_type;
     /// The allocator type
-    typedef afx_allocator<value_type>                                           allocator_type;
-    /// The mutating (non-const) reference type
-    typedef ss_typename_type_k allocator_type::reference                        reference;
+    typedef afx_allocator<value_type>                       allocator_type;
+#ifdef STLSOFT_LF_ALLOCATOR_TRAITS_SUPPORT
+    /// The allocator traits type
+    typedef std::allocator_traits<allocator_type>           allocator_traits_type;
+#endif /* STLSOFT_LF_ALLOCATOR_TRAITS_SUPPORT */
+#ifdef STLSOFT_LF_ALLOCATOR_TRAITS_SUPPORT
+    /// The reference type
+    typedef ss_typename_type_k allocator_traits_type::value_type&
+                                                            reference;
     /// The non-mutating (const) reference type
-    typedef ss_typename_type_k allocator_type::const_reference                  const_reference;
-    /// The mutating (non-const) pointer type
-    typedef ss_typename_type_k allocator_type::pointer                          pointer;
+    typedef ss_typename_type_k allocator_traits_type::value_type const&
+                                                            const_reference;
+    /// The pointer type
+    typedef ss_typename_type_k allocator_traits_type::pointer
+                                                            pointer;
     /// The non-mutating (const) pointer type
-    typedef ss_typename_type_k allocator_type::const_pointer                    const_pointer;
+    typedef ss_typename_type_k allocator_traits_type::const_pointer
+                                                            const_pointer;
+#else /* ? STLSOFT_LF_ALLOCATOR_TRAITS_SUPPORT */
+    /// The mutating (non-const) reference type
+    typedef ss_typename_type_k allocator_type::reference    reference;
+    /// The non-mutating (const) reference type
+    typedef ss_typename_type_k allocator_type::const_reference
+                                                            const_reference;
+    /// The mutating (non-const) pointer type
+    typedef ss_typename_type_k allocator_type::pointer      pointer;
+    /// The non-mutating (const) pointer type
+    typedef ss_typename_type_k allocator_type::const_pointer
+                                                            const_pointer;
+#endif /* STLSOFT_LF_ALLOCATOR_TRAITS_SUPPORT */
     /// The mutating (non-const) iterator type
     typedef
 # if !defined(STLSOFT_COMPILER_IS_BORLAND)
            ss_typename_type_k
 # endif /* compiler */
-                       pointer_iterator <   value_type
-                                        ,   pointer
-                                        ,   reference
-                                        >::type                                 iterator;
+                       pointer_iterator<
+                            value_type
+                        ,   pointer
+                        ,   reference
+                        >::type                             iterator;
     /// The non-mutating (const) iterator type
     typedef
 # if !defined(STLSOFT_COMPILER_IS_BORLAND)
          ss_typename_type_k
 # endif /* compiler */
-                       pointer_iterator <   value_type const
-                                        ,   const_pointer
-                                        ,   const_reference
-                                        >::type                                 const_iterator;
+                       pointer_iterator<
+                            value_type const
+                        ,   const_pointer
+                        ,   const_reference
+                        >::type                             const_iterator;
     /// The size type
-    typedef ms_size_t                                                           size_type;
+    typedef ms_size_t                                       size_type;
     /// The difference type
-    typedef ms_ptrdiff_t                                                        difference_type;
+    typedef ms_ptrdiff_t                                    difference_type;
     /// The instantiation of the current type
-    typedef CArray_adaptor_base<A, I, T>                                        class_type;
+    typedef CArray_adaptor_base<A, I, T>                    class_type;
 #ifdef STLSOFT_LF_BIDIRECTIONAL_ITERATOR_SUPPORT
     /// The mutating (non-const) reverse iterator type
-    typedef ss_typename_type_k reverse_iterator_generator   <   iterator
-                                                            ,   value_type
-                                                            ,   reference
-                                                            ,   pointer
-                                                            ,   difference_type
-                                                            >::type             reverse_iterator;
+    typedef ss_typename_type_k reverse_iterator_generator<
+        iterator
+    ,   value_type
+    ,   reference
+    ,   pointer
+    ,   difference_type
+    >::type                                                 reverse_iterator;
 
     /// The non-mutating (const) reverse iterator type
-    typedef ss_typename_type_k const_reverse_iterator_generator <   const_iterator
-                                                            ,   value_type
-                                                            ,   const_reference
-                                                            ,   const_pointer
-                                                            ,   difference_type
-                                                            >::type             const_reverse_iterator;
+    typedef ss_typename_type_k const_reverse_iterator_generator<
+        const_iterator
+    ,   value_type
+    ,   const_reference
+    ,   const_pointer
+    ,   difference_type
+    >::type                                                 const_reverse_iterator;
 #endif /* STLSOFT_LF_BIDIRECTIONAL_ITERATOR_SUPPORT */
 /// @}
 
@@ -348,7 +376,7 @@ public:
             array_type  ar;
 
             ar.SetSize(0, calc_increment_(n));
-            if(n > 0) // Can't pass 0 to InsertAt()
+            if (n > 0) // Can't pass 0 to InsertAt()
             {
                 ar.InsertAt(0, value, static_cast<int>(n));
             }
@@ -363,7 +391,7 @@ public:
             exception_translation_policy_type::handle(x);
         }
 #else /* ? MFCSTL_CARRAY_SWAP_MEMBERS_SUPPORT */
-//      if( empty() &&
+//      if (empty() &&
 //          0 != n)
 //      {
 //          resize(1);
@@ -391,7 +419,7 @@ public:
         MFCSTL_ASSERT(is_valid_source_range_(first, last));
 
 #ifdef MFCSTL_CARRAY_SWAP_MEMBERS_SUPPORT
-        if(empty())
+        if (empty())
         {
             // If "this" is empty, then we can call clear_and_assign_() to instantiate it
             // and just catch any thrown exception and call clear() to ensure strong
@@ -482,7 +510,7 @@ public:
     {
         const size_type oldSize = size();
         resize(n);
-        if(oldSize < n)
+        if (oldSize < n)
         {
             try
             {
@@ -528,7 +556,7 @@ public:
     /// instance of std::out_of_range will be thrown
     reference at(size_type n)
     {
-        if(n >= size())
+        if (n >= size())
         {
             STLSOFT_THROW_X(STLSOFT_NS_QUAL_STD(out_of_range)("Invalid index specified"));
         }
@@ -541,7 +569,7 @@ public:
     /// instance of std::out_of_range will be thrown
     const_reference at(size_type n) const
     {
-        if(n >= size())
+        if (n >= size())
         {
             STLSOFT_THROW_X(STLSOFT_NS_QUAL_STD(out_of_range)("Invalid index specified"));
         }
@@ -734,7 +762,7 @@ public:
         }
         catch(...)
         {
-            if(size() != oldSize)
+            if (size() != oldSize)
             {
                 MFCSTL_ASSERT(size() == oldSize + 1);
 
@@ -796,7 +824,7 @@ public:
         }
         catch(...)
         {
-            if(size() != oldSize)
+            if (size() != oldSize)
             {
                 MFCSTL_ASSERT(size() == oldSize + 1);
 
@@ -829,7 +857,7 @@ public:
 
         difference_type index = pos - begin();
 
-        if(empty())
+        if (empty())
         {
             MFCSTL_ASSERT(0 == index);
 
@@ -845,7 +873,7 @@ public:
             {
                 try
                 {
-                    if(n > 0) // Can't pass 0 to InsertAt()
+                    if (n > 0) // Can't pass 0 to InsertAt()
                     {
                         get_CArray().InsertAt(static_cast<int>(index), value, n);
                     }
@@ -861,7 +889,7 @@ public:
             }
             catch(...)
             {
-                if(size() != oldSize)
+                if (size() != oldSize)
                 {
                     MFCSTL_ASSERT(size() == oldSize + n);
 
@@ -921,7 +949,7 @@ public:
         }
         catch(...)
         {
-            if(size() != oldSize)
+            if (size() != oldSize)
             {
                 MFCSTL_ASSERT(size() == oldSize + n);
 

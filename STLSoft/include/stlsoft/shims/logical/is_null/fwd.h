@@ -4,10 +4,11 @@
  * Purpose:     Forward declaration for logical shim is_null.
  *
  * Created:     31st March 2007
- * Updated:     2nd February 2019
+ * Updated:     18th January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2007-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -52,8 +54,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define STLSOFT_VER_STLSOFT_SHIMS_LOGICAL_IS_NULL_H_FWD_MAJOR      2
 # define STLSOFT_VER_STLSOFT_SHIMS_LOGICAL_IS_NULL_H_FWD_MINOR      0
-# define STLSOFT_VER_STLSOFT_SHIMS_LOGICAL_IS_NULL_H_FWD_REVISION   3
-# define STLSOFT_VER_STLSOFT_SHIMS_LOGICAL_IS_NULL_H_FWD_EDIT       20
+# define STLSOFT_VER_STLSOFT_SHIMS_LOGICAL_IS_NULL_H_FWD_REVISION   4
+# define STLSOFT_VER_STLSOFT_SHIMS_LOGICAL_IS_NULL_H_FWD_EDIT       22
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -80,6 +82,9 @@ namespace stlsoft
  * forward declarations
  */
 
+#ifndef __cplusplus
+STLSOFT_INLINE
+#endif
 ss_truthy_t
 is_null(
     void const volatile* pv
@@ -94,7 +99,7 @@ is_null(
 #endif /* STLSOFT_NO_NAMESPACE */
 
 /* /////////////////////////////////////////////////////////////////////////
- * inclusion
+ * inclusion control
  */
 
 #ifdef STLSOFT_CF_PRAGMA_ONCE_SUPPORT

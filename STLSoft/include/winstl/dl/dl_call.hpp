@@ -4,10 +4,11 @@
  * Purpose:     Invocation of functions in dynamic libraries.
  *
  * Created:     sometime in 1998
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 1998-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -50,9 +52,9 @@
 
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define WINSTL_VER_WINSTL_DL_HPP_DL_CALL_MAJOR     2
-# define WINSTL_VER_WINSTL_DL_HPP_DL_CALL_MINOR     7
-# define WINSTL_VER_WINSTL_DL_HPP_DL_CALL_REVISION  10
-# define WINSTL_VER_WINSTL_DL_HPP_DL_CALL_EDIT      59
+# define WINSTL_VER_WINSTL_DL_HPP_DL_CALL_MINOR     8
+# define WINSTL_VER_WINSTL_DL_HPP_DL_CALL_REVISION  2
+# define WINSTL_VER_WINSTL_DL_HPP_DL_CALL_EDIT      67
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -99,6 +101,9 @@
 # include <stlsoft/string/string_view.hpp>
 #endif /* !STLSOFT_INCL_STLSOFT_STRING_HPP_STRING_VIEW */
 
+#ifndef WINSTL_INCL_WINSTL_API_external_h_DynamicLinkLibrary
+# include <winstl/api/external/DynamicLinkLibrary.h>
+#endif /* !WINSTL_INCL_WINSTL_API_external_h_DynamicLinkLibrary */
 #ifndef WINSTL_INCL_WINSTL_API_external_h_ErrorHandling
 # include <winstl/api/external/ErrorHandling.h>
 #endif /* !WINSTL_INCL_WINSTL_API_external_h_ErrorHandling */
@@ -191,7 +196,7 @@ public:
         : parent_class_type(class_type::create_reason_(functionName).c_str(), sc)
     {}
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
-    virtual ~missing_entry_point_exception() STLSOFT_NOEXCEPT
+    virtual ~missing_entry_point_exception() STLSOFT_NOEXCEPT_STDOVR
     {}
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 private:
@@ -245,7 +250,7 @@ public:
         , m_ccs(callingConventionSpecifier)
     {}
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
-    virtual ~invalid_calling_convention_exception() STLSOFT_NOEXCEPT
+    virtual ~invalid_calling_convention_exception() STLSOFT_NOEXCEPT_STDOVR
     {}
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 /// @}
@@ -303,21 +308,27 @@ namespace calling_convention
 #endif // STLSOFT_CF_STDCALL_SUPPORTED
     };
 
-    inline calling_convention from_int(int i)
+    inline
+    calling_convention
+    from_int(int i)
     {
-        switch(i)
+        switch (i)
         {
             default:
+
                 STLSOFT_MESSAGE_ASSERT("Invalid/unrecognised calling convention specifier. cdecl will be assumed", 0);
 #ifdef STLSOFT_CF_CDECL_SUPPORTED
             case    cdeclCallConv:
+
                 return cdeclCallConv;
 #endif /* STLSOFT_CF_CDECL_SUPPORTED */
 #ifdef STLSOFT_CF_FASTCALL_SUPPORTED
             case    fastcallCallConv:
+
                 return fastcallCallConv;
 #endif // STLSOFT_CF_FASTCALL_SUPPORTED
 #ifdef STLSOFT_CF_STDCALL_SUPPORTED
+
             case    stdcallCallConv:
                 return stdcallCallConv;
 #endif // STLSOFT_CF_STDCALL_SUPPORTED
@@ -333,7 +344,7 @@ namespace calling_convention
  */
 struct function_descriptor_base
 {
-    operator function_descriptor_base const* () const
+    operator function_descriptor_base const* () const STLSOFT_NOEXCEPT
     {
         return this;
     }
@@ -344,15 +355,17 @@ struct function_descriptor_base
  * \param CC The calling convention, one of the \link winstl::calling_convention::calling_convention calling_convention\endlink enumerators
  * \param S The string type
  */
-template<   int                 CC
-        ,   ss_typename_param_k S
-        >
+template<
+    int                 CC
+,   ss_typename_param_k S
+>
 struct function_descriptor
     : public function_descriptor_base
 {
     enum { value = CC };
 
-    ss_explicit_k function_descriptor(S const& functionName)
+    ss_explicit_k
+    function_descriptor(S const& functionName)
         : FunctionName(functionName)
         , CallingConvention(CC)
     {
@@ -371,7 +384,10 @@ struct function_descriptor
 #endif /* STLSOFT_CF_FASTCALL_SUPPORTED */
     }
 
-    ss_explicit_k function_descriptor(S const& functionName, int cc)
+    function_descriptor(
+        S const&    functionName
+    ,   int         cc
+    )
         : FunctionName(functionName)
         , CallingConvention(cc)
     {}
@@ -383,17 +399,26 @@ private:
     function_descriptor& operator =(function_descriptor const&);
 };
 
-template<   int                 cc
-        ,   ss_typename_param_k S
-        >
-inline function_descriptor<cc, S> fn_desc(S const& functionName)
+template<
+    int                 cc
+,   ss_typename_param_k S
+>
+inline
+function_descriptor<cc, S>
+fn_desc(S const& functionName)
 {
     return function_descriptor<cc, S>(functionName);
 }
 
-template<   ss_typename_param_k    S
-        >
-inline function_descriptor<0, S> fn_desc(int cc, S const& functionName)
+template<
+    ss_typename_param_k    S
+>
+inline
+function_descriptor<0, S>
+fn_desc(
+    int         cc
+,   S const&    functionName
+)
 {
     return function_descriptor<0, S>(functionName, cc);
 }
@@ -429,7 +454,9 @@ namespace winstl
 } /&zwj;* namespace winstl *&zwj;/
 \endcode
  */
-template<ss_typename_param_k T>
+template<
+    ss_typename_param_k T
+>
 struct is_valid_dl_call_arg
 {
     enum { value = 0 };
@@ -453,9 +480,14 @@ public:
 /// \name Dynamic Library Functions
 /// @{
 public:
-    static entry_point_type get_symbol(library_handle_type hLib, char const* functionName)
+    static
+    entry_point_type
+    get_symbol(
+        library_handle_type hLib
+    ,   char const*         functionName
+    ) STLSOFT_NOEXCEPT
     {
-        return ::GetProcAddress(hLib, functionName);
+        return WINSTL_API_EXTERNAL_DynamicLinkLibrary_GetProcAddress(hLib, functionName);
     }
 /// @}
 
@@ -487,46 +519,69 @@ public:
 
 
 // These structures used for selecting lock_name_() function templates
-template<   ss_typename_param_k T
-        >
-inline T const& lock_name_(T const& t, dl_call_traits::is_not_fd)
+template<
+    ss_typename_param_k T
+>
+inline
+T const&
+lock_name_(
+    T const&    t
+,   dl_call_traits::is_not_fd
+)
 {
     return t;
 }
 
-template<   int                 cc
-        ,   ss_typename_param_k S
-        >
-inline S const& lock_name_(function_descriptor<cc, S> const& fd, dl_call_traits::is_fd)
+template<
+    int                 cc
+,   ss_typename_param_k S
+>
+inline
+S const&
+lock_name_(
+    function_descriptor<cc, S> const&   fd
+,   dl_call_traits::is_fd
+)
 {
     return fd.FunctionName;
 }
 
-inline dl_call_traits::is_fd test_fd_(function_descriptor_base const*)
+inline
+dl_call_traits::is_fd
+test_fd_(function_descriptor_base const*)
 {
     return dl_call_traits::is_fd();
 }
 
-inline dl_call_traits::is_not_fd test_fd_(...)
+inline
+dl_call_traits::is_not_fd test_fd_(...)
 {
     return dl_call_traits::is_not_fd();
 }
 
 #if defined(STLSOFT_COMPILER_IS_MSVC) || \
     defined(STLSOFT_COMPILER_IS_GCCx)
-inline dl_call_traits::library_is_handle test_library_(dl_call_traits::library_handle_type )
+inline
+dl_call_traits::library_is_handle
+test_library_(dl_call_traits::library_handle_type)
 {
     return dl_call_traits::library_is_handle();
 }
 #else /* ? compiler */
-inline dl_call_traits::library_is_handle test_library_(dl_call_traits::library_handle_type const&)
+inline
+dl_call_traits::library_is_handle
+test_library_(dl_call_traits::library_handle_type const&)
 {
     return dl_call_traits::library_is_handle();
 }
 #endif /* compiler */
 
-template <ss_typename_param_k T>
-inline dl_call_traits::library_is_not_handle test_library_(T const&)
+template<
+    ss_typename_param_k T
+>
+inline
+dl_call_traits::library_is_not_handle
+test_library_(T const&)
 {
     return dl_call_traits::library_is_not_handle();
 }
@@ -535,11 +590,16 @@ inline dl_call_traits::library_is_not_handle test_library_(T const&)
  * helper functions
  */
 
-inline dl_call_traits::entry_point_type lookup_symbol_(dl_call_traits::library_handle_type hinst, char const* functionName)
+inline
+dl_call_traits::entry_point_type
+lookup_symbol_(
+    dl_call_traits::library_handle_type hinst
+,   char const*                         functionName
+)
 {
-    dl_call_traits::entry_point_type    fp  =   dl_call_traits::get_symbol(hinst, functionName);
+    dl_call_traits::entry_point_type fp = dl_call_traits::get_symbol(hinst, functionName);
 
-    if(NULL == fp)
+    if (NULL == fp)
     {
         STLSOFT_THROW_X(missing_entry_point_exception(functionName, WINSTL_API_EXTERNAL_ErrorHandling_GetLastError()));
     }
@@ -547,38 +607,51 @@ inline dl_call_traits::entry_point_type lookup_symbol_(dl_call_traits::library_h
     return fp;
 }
 
-template <ss_typename_param_k C>
-inline calling_convention::calling_convention determine_calling_convention_(C const*& functionName)
+template<
+    ss_typename_param_k C
+>
+inline
+calling_convention::calling_convention
+determine_calling_convention_(C const*& functionName)
 {
-    typedef stlsoft::basic_string_view<C>   string_t;
+#if 0
+#elif defined(WINSTL_ARCH_IS_IA64) || \
+      defined(WINSTL_ARCH_IS_X64)
+
+    STLSOFT_SUPPRESS_UNUSED(functionName);
+
+    return calling_convention::cdeclCallConv;
+#else
+
+    typedef stlsoft::basic_string_view<C> string_t;
 
     calling_convention::calling_convention  cc = calling_convention::cdeclCallConv;
     string_t                                s0;
     string_t                                s1;
 
-    if(stlsoft::split(functionName, ':', s0, s1))
+    if (stlsoft::split(functionName, ':', s0, s1))
     {
-#ifdef STLSOFT_CF_CDECL_SUPPORTED
-        if( s0 == "C" ||
+# ifdef STLSOFT_CF_CDECL_SUPPORTED
+        if (s0 == "C" ||
             s0 == "cdecl")
         {
                 cc = calling_convention::cdeclCallConv;
         } else
-#endif /* STLSOFT_CF_CDECL_SUPPORTED */
-#ifdef STLSOFT_CF_FASTCALL_SUPPORTED
-        if( s0 == "F" ||
+# endif /* STLSOFT_CF_CDECL_SUPPORTED */
+# ifdef STLSOFT_CF_FASTCALL_SUPPORTED
+        if (s0 == "F" ||
             s0 == "fastcall")
         {
                 cc = calling_convention::fastcallCallConv;
         } else
-#endif // STLSOFT_CF_FASTCALL_SUPPORTED
-#ifdef STLSOFT_CF_STDCALL_SUPPORTED
-        if( s0 == "S" ||
+# endif // STLSOFT_CF_FASTCALL_SUPPORTED
+# ifdef STLSOFT_CF_STDCALL_SUPPORTED
+        if (s0 == "S" ||
             s0 == "stdcall")
         {
                 cc = calling_convention::stdcallCallConv;
         } else
-#endif // STLSOFT_CF_STDCALL_SUPPORTED
+# endif // STLSOFT_CF_STDCALL_SUPPORTED
         {
             STLSOFT_THROW_X(invalid_calling_convention_exception(s0.c_str()));
         }
@@ -587,26 +660,37 @@ inline calling_convention::calling_convention determine_calling_convention_(C co
     }
 
     return cc;
+#endif
 }
 
-template <ss_typename_param_k S>
-char const* detect_cc_( dl_call_traits::is_not_fd
-                    ,   char const*                             functionName
-                    ,   S const&
-                    ,   calling_convention::calling_convention& cc)
+template<
+    ss_typename_param_k S
+>
+inline
+char const*
+detect_cc_(
+    dl_call_traits::is_not_fd
+,   char const*                             functionName
+,   S const&
+,   calling_convention::calling_convention& cc
+)
 {
     cc = determine_calling_convention_(functionName);
 
     return functionName;
 }
 
-template<   int                 CC
-        ,   ss_typename_param_k C
-        >
-char const* detect_cc_( dl_call_traits::is_fd
-                    ,   char const*                             functionName
-                    ,   function_descriptor<CC, C> const&       fd
-                    ,   calling_convention::calling_convention& cc)
+template<
+    int                 CC
+,   ss_typename_param_k C
+>
+char const*
+detect_cc_(
+    dl_call_traits::is_fd
+,   char const*                             functionName
+,   function_descriptor<CC, C> const&       fd
+,   calling_convention::calling_convention& cc
+)
 {
     cc = calling_convention::from_int(fd.CallingConvention);
 
@@ -2135,7 +2219,7 @@ inline R dl_call_dispatch_0(dl_call_traits::entry_point_type fp, calling_convent
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2163,7 +2247,7 @@ inline R dl_call_dispatch_1(dl_call_traits::entry_point_type fp, calling_convent
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2191,7 +2275,7 @@ inline R dl_call_dispatch_2(dl_call_traits::entry_point_type fp, calling_convent
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2219,7 +2303,7 @@ inline R dl_call_dispatch_3(dl_call_traits::entry_point_type fp, calling_convent
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2247,7 +2331,7 @@ inline R dl_call_dispatch_4(dl_call_traits::entry_point_type fp, calling_convent
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2275,7 +2359,7 @@ inline R dl_call_dispatch_5(dl_call_traits::entry_point_type fp, calling_convent
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2303,7 +2387,7 @@ inline R dl_call_dispatch_6(dl_call_traits::entry_point_type fp, calling_convent
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2331,7 +2415,7 @@ inline R dl_call_dispatch_7(dl_call_traits::entry_point_type fp, calling_convent
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2359,7 +2443,7 @@ inline R dl_call_dispatch_8(dl_call_traits::entry_point_type fp, calling_convent
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2387,7 +2471,7 @@ inline R dl_call_dispatch_9(dl_call_traits::entry_point_type fp, calling_convent
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2415,7 +2499,7 @@ inline R dl_call_dispatch_10(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2443,7 +2527,7 @@ inline R dl_call_dispatch_11(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2471,7 +2555,7 @@ inline R dl_call_dispatch_12(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2499,7 +2583,7 @@ inline R dl_call_dispatch_13(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2527,7 +2611,7 @@ inline R dl_call_dispatch_14(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2555,7 +2639,7 @@ inline R dl_call_dispatch_15(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2583,7 +2667,7 @@ inline R dl_call_dispatch_16(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2611,7 +2695,7 @@ inline R dl_call_dispatch_17(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2639,7 +2723,7 @@ inline R dl_call_dispatch_18(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2667,7 +2751,7 @@ inline R dl_call_dispatch_19(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2695,7 +2779,7 @@ inline R dl_call_dispatch_20(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2723,7 +2807,7 @@ inline R dl_call_dispatch_21(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2751,7 +2835,7 @@ inline R dl_call_dispatch_22(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2779,7 +2863,7 @@ inline R dl_call_dispatch_23(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2807,7 +2891,7 @@ inline R dl_call_dispatch_24(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2835,7 +2919,7 @@ inline R dl_call_dispatch_25(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2863,7 +2947,7 @@ inline R dl_call_dispatch_26(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2891,7 +2975,7 @@ inline R dl_call_dispatch_27(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2919,7 +3003,7 @@ inline R dl_call_dispatch_28(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2947,7 +3031,7 @@ inline R dl_call_dispatch_29(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -2975,7 +3059,7 @@ inline R dl_call_dispatch_30(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -3003,7 +3087,7 @@ inline R dl_call_dispatch_31(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -3031,7 +3115,7 @@ inline R dl_call_dispatch_32(dl_call_traits::entry_point_type fp, calling_conven
 {
   WINSTL_ASSERT(NULL != fp);
 
-  switch(cc)
+  switch (cc)
   {
       default:
           STLSOFT_MESSAGE_ASSERT("Invalid calling convention", 0);
@@ -5864,7 +5948,7 @@ inline R dl_call(L const& library, FD const& fd, A0 a0, A1 a1, A2 a2, A3 a3, A4 
 #endif /* !WINSTL_NO_NAMESPACE */
 
 /* /////////////////////////////////////////////////////////////////////////
- * inclusion
+ * inclusion control
  */
 
 #ifdef STLSOFT_CF_PRAGMA_ONCE_SUPPORT

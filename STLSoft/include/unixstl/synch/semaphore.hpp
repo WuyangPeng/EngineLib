@@ -4,10 +4,11 @@
  * Purpose:     Semaphore class, based on POSIX semaphore object.
  *
  * Created:     30th May 2006
- * Updated:     13th September 2019
+ * Updated:     16th January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2006-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -50,9 +52,9 @@
 
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define UNIXSTL_VER_UNIXSTL_SYNCH_HPP_SEMAPHORE_MAJOR    1
-# define UNIXSTL_VER_UNIXSTL_SYNCH_HPP_SEMAPHORE_MINOR    2
-# define UNIXSTL_VER_UNIXSTL_SYNCH_HPP_SEMAPHORE_REVISION 13
-# define UNIXSTL_VER_UNIXSTL_SYNCH_HPP_SEMAPHORE_EDIT     36
+# define UNIXSTL_VER_UNIXSTL_SYNCH_HPP_SEMAPHORE_MINOR    3
+# define UNIXSTL_VER_UNIXSTL_SYNCH_HPP_SEMAPHORE_REVISION 1
+# define UNIXSTL_VER_UNIXSTL_SYNCH_HPP_SEMAPHORE_EDIT     41
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -70,18 +72,29 @@
 # include <unixstl/synch/common.hpp>
 #endif /* !UNIXSTL_INCL_UNIXSTL_SYNCH_HPP_COMMON */
 
-#ifndef STLSOFT_INCL_H_LIMITS
-# define STLSOFT_INCL_H_LIMITS
-# include <limits.h>
-#endif /* !STLSOFT_INCL_H_LIMITS */
+#ifndef UNIXSTL_INCL_UNIXSTL_SYNCH_UTIL_H_SEMAPHORE_API_
+# include <unixstl/synch/util/semaphore_api_.h>
+#endif /* !UNIXSTL_INCL_UNIXSTL_SYNCH_UTIL_H_SEMAPHORE_API_ */
+
 #ifndef STLSOFT_INCL_H_ERRNO
 # define STLSOFT_INCL_H_ERRNO
 # include <errno.h>
 #endif /* !STLSOFT_INCL_H_ERRNO */
-#ifndef STLSOFT_INCL_H_PTHREAD
-# define STLSOFT_INCL_H_PTHREAD
-# include <pthread.h>
-#endif /* !STLSOFT_INCL_H_PTHREAD */
+#if 0
+#elif defined(_WIN32) && \
+      defined(_STLSOFT_FORCE_ANY_COMPILER)
+
+# ifndef STLSOFT_INCL_H_PTHREAD
+#  define STLSOFT_INCL_H_PTHREAD
+#  include <pthread.h>
+# endif /* !STLSOFT_INCL_H_PTHREAD */
+#else
+
+# ifndef STLSOFT_INCL_H_LIMITS
+#  define STLSOFT_INCL_H_LIMITS
+#  include <limits.h>
+# endif /* !STLSOFT_INCL_H_LIMITS */
+#endif /* _WIN32 */
 #ifndef STLSOFT_INCL_H_SEMAPHORE
 # define STLSOFT_INCL_H_SEMAPHORE
 # include <semaphore.h>
@@ -122,23 +135,27 @@ class semaphore
                                             >
     , public STLSOFT_NS_QUAL(synchronisable_object_tag)
 {
-/// \name Member Types
+/// \name Types
 /// @{
 public:
-    typedef semaphore       class_type;
-    typedef sem_t*          handle_type;
-    typedef us_bool_t       bool_type;
-    typedef unsigned int    count_type;
-
-    typedef sem_t*          resource_type;
+    /// This type
+    typedef semaphore                                       class_type;
+    /// The handle type
+    typedef UNIXSTL_INTERNAL_SYNCH_POSIX_sem_t*             handle_type;
+    /// The bool type
+    typedef us_bool_t                                       bool_type;
+    /// The count type
+    typedef unsigned int                                    count_type;
+    /// The resource type
+    typedef handle_type                                     resource_type;
 /// @}
 
-/// \name Member Constants
+/// \name Constants
 /// @{
 public:
     enum
     {
-        maxCountValue   =   _POSIX_SEM_VALUE_MAX    // Borrowed from PThreads-win32
+        maxCountValue   =   _POSIX_SEM_VALUE_MAX    // Obtained from limit.h or PThreads-win32
     };
 /// @}
 
@@ -161,10 +178,10 @@ public:
     /// Destroys an instance of the semaphore
     ~semaphore() STLSOFT_NOEXCEPT
     {
-        if( NULL != m_sem &&
+        if (NULL != m_sem &&
             m_bOwnHandle)
         {
-            ::sem_destroy(m_sem);
+            UNIXSTL_INTERNAL_SYNCH_POSIX_sem_destroy(m_sem);
         }
     }
 
@@ -176,67 +193,71 @@ private:
 #if 0
     void close() STLSOFT_NOEXCEPT
     {
-        if( NULL != m_sem &&
+        if (NULL != m_sem &&
             m_bOwnHandle)
         {
-            ::sem_destroy(m_sem);
+            UNIXSTL_INTERNAL_SYNCH_POSIX_sem_destroy(m_sem);
+
             m_sem = NULL;
         }
     }
 #endif /* 0 */
-
 /// @}
 
 /// \name Operations
 /// @{
 public:
-    /// Acquires a lock on the semaphore, pending the thread until the lock is aquired
+    /// Acquires a lock on the semaphore, pending the thread until the lock is acquired
     void lock()
     {
         UNIXSTL_ASSERT(NULL != m_sem);
 
-        if(::sem_wait(m_sem) < 0)
+        if (UNIXSTL_INTERNAL_SYNCH_POSIX_sem_wait(m_sem) < 0)
         {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
-            STLSOFT_THROW_X(synchronisation_exception("semaphore wait failed", errno));
+            int const e = errno;
+
+            STLSOFT_THROW_X(synchronisation_exception("semaphore wait failed", e));
 #endif /* STLSOFT_CF_EXCEPTION_SUPPORT */
         }
     }
     /// Attempts to lock the semaphore
     ///
-    /// \return <b>true</b> if the semaphore was aquired, or <b>false</b> if not
+    /// \return <b>true</b> if the semaphore was acquired, or <b>false</b> if not
     bool_type try_lock()
     {
         UNIXSTL_ASSERT(NULL != m_sem);
 
-        int res =   ::sem_trywait(m_sem);
-
-        if(0 == res)
+        if (UNIXSTL_INTERNAL_SYNCH_POSIX_sem_trywait(m_sem) < 0)
         {
-            return true;
+            int const e = errno;
+
+            if (EAGAIN != e)
+            {
+#ifdef STLSOFT_CF_EXCEPTION_SUPPORT
+                STLSOFT_THROW_X(synchronisation_exception("semaphore wait failed", e));
+#endif /* STLSOFT_CF_EXCEPTION_SUPPORT */
+            }
+
+            return false;
         }
         else
         {
-            if(EAGAIN != res)
-            {
-#ifdef STLSOFT_CF_EXCEPTION_SUPPORT
-                STLSOFT_THROW_X(synchronisation_exception("semaphore wait failed", errno));
-#endif /* STLSOFT_CF_EXCEPTION_SUPPORT */
-            }
+            return true;
         }
-
-        return false;
     }
-    /// Releases an aquired lock on the semaphore, increasing the
+    /// Releases an acquired lock on the semaphore, increasing the
     ///  semaphore's counter by one.
     void unlock()
     {
         UNIXSTL_ASSERT(NULL != m_sem);
 
-        if(::sem_post(m_sem) < 0)
+        if (UNIXSTL_INTERNAL_SYNCH_POSIX_sem_post(m_sem) < 0)
         {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
-            STLSOFT_THROW_X(synchronisation_exception("semaphore release failed", errno));
+            int const e = errno;
+
+            STLSOFT_THROW_X(synchronisation_exception("semaphore release failed", e));
 #endif /* STLSOFT_CF_EXCEPTION_SUPPORT */
         }
     }
@@ -259,17 +280,19 @@ public:
 
 // Implementation
 private:
-    static handle_type create_semaphore_(sem_t* internal, count_type initialCount, bool_type bInterProcessShared)
+    static handle_type create_semaphore_(handle_type internal, count_type initialCount, bool_type bInterProcessShared)
     {
         UNIXSTL_ASSERT(initialCount <= maxCountValue);
 
         handle_type sem = NULL;
 
-        if(::sem_init(internal, bInterProcessShared, initialCount) < 0)
+        if (UNIXSTL_INTERNAL_SYNCH_POSIX_sem_init(internal, bInterProcessShared, initialCount) < 0)
         {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
 
-            STLSOFT_THROW_X(synchronisation_exception("failed to create kernel semaphore object", errno));
+            int const e = errno;
+
+            STLSOFT_THROW_X(synchronisation_exception("failed to create kernel semaphore object", e));
 #else /* ? STLSOFT_CF_EXCEPTION_SUPPORT */
 
             sem = NULL;
@@ -285,9 +308,9 @@ private:
 
 // Members
 private:
-    sem_t               m_semInternal;  // The actual object if internally initialised
+    UNIXSTL_INTERNAL_SYNCH_POSIX_sem_t               m_semInternal;  // The actual object if internally initialised
     handle_type         m_sem;          // Handle to the underlying semaphore object
-    const bool_type     m_bOwnHandle;   // Does the instance own the handle?
+    bool_type const     m_bOwnHandle;   // Does the instance own the handle?
 };
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -303,13 +326,13 @@ private:
 # endif /* STLSOFT_NO_NAMESPACE */
 #endif /* !UNIXSTL_NO_NAMESPACE */
 
-/** This \ref group__concept__Shim "control shim" aquires a lock on the given semaphore
+/** This \ref group__concept__Shim "control shim" acquires a lock on the given semaphore
  *
  * \ingroup group__concept__Shim__synchronisation_control
  *
- * \param sem The semaphore on which to aquire the lock.
+ * \param sem The semaphore on which to acquire the lock.
  */
-inline void lock_instance(UNIXSTL_NS_QUAL(semaphore) &sem)
+inline void lock_instance(UNIXSTL_NS_QUAL(semaphore)& sem)
 {
     sem.lock();
 }
@@ -320,7 +343,7 @@ inline void lock_instance(UNIXSTL_NS_QUAL(semaphore) &sem)
  *
  * \param sem The semaphore on which to release the lock
  */
-inline void unlock_instance(UNIXSTL_NS_QUAL(semaphore) &sem)
+inline void unlock_instance(UNIXSTL_NS_QUAL(semaphore)& sem)
 {
     sem.unlock();
 }
@@ -357,15 +380,15 @@ public:
 // Operations
 public:
     /// Lock the given semaphore instance
-    static void lock(semaphore &c)
+    static void lock(semaphore& l)
     {
-        lock_instance(c);
+        lock_instance(l);
     }
 
     /// Unlock the given semaphore instance
-    static void unlock(semaphore &c)
+    static void unlock(semaphore& l)
     {
-        unlock_instance(c);
+        unlock_instance(l);
     }
 };
 

@@ -4,10 +4,11 @@
  * Purpose:     Algorithms for Plain-Old Data types.
  *
  * Created:     17th January 2002
- * Updated:     13th September 2019
+ * Updated:     2nd January 2021
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2021, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2002-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,8 +53,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define STLSOFT_VER_STLSOFT_ALGORITHMS_HPP_POD_MAJOR       3
 # define STLSOFT_VER_STLSOFT_ALGORITHMS_HPP_POD_MINOR       5
-# define STLSOFT_VER_STLSOFT_ALGORITHMS_HPP_POD_REVISION    7
-# define STLSOFT_VER_STLSOFT_ALGORITHMS_HPP_POD_EDIT        101
+# define STLSOFT_VER_STLSOFT_ALGORITHMS_HPP_POD_REVISION    8
+# define STLSOFT_VER_STLSOFT_ALGORITHMS_HPP_POD_EDIT        103
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -85,13 +87,9 @@
 # include <stlsoft/meta/yesno.hpp>
 #endif /* !STLSOFT_INCL_STLSOFT_META_HPP_YESNO */
 
-#if defined(STLSOFT_COMPILER_IS_BORLAND) || \
-    defined(STLSOFT_COMPILER_IS_INTEL) || \
-    defined(STLSOFT_COMPILER_IS_MSVC)
-# include <memory.h>                    // for memcpy
-#else /* ? compiler */
-# include <string.h>                    // for memcpy
-#endif /* compiler */
+#ifndef STLSOFT_INCL_STLSOFT_API_internal_h_memfns
+# include <stlsoft/api/internal/memfns.h>
+#endif /* !STLSOFT_INCL_STLSOFT_API_internal_h_memfns */
 
 /* /////////////////////////////////////////////////////////////////////////
  * namespace
@@ -122,7 +120,7 @@ struct ximpl_stlsoft_algorithm_pod_helper_
     ,   yes_type
     )
     {
-        ::memcpy(dest, src, n * sizeof(*dest));
+        STLSOFT_API_INTERNAL_memfns_memcpy(dest, src, n * sizeof(*dest));
     }
 
     template<
@@ -164,7 +162,7 @@ struct ximpl_stlsoft_algorithm_pod_helper_
         STLSOFT_STATIC_ASSERT(int(O_IS_INTEGRAL_TYPE) == int(I_IS_INTEGRAL_TYPE));
         STLSOFT_STATIC_ASSERT(int(O_IS_POINTER_TYPE) == int(I_IS_POINTER_TYPE));
 
-        ::memcpy(dest, src, n * sizeof(*dest));
+        STLSOFT_API_INTERNAL_memfns_memcpy(dest, src, n * sizeof(*dest));
     }
 
     template<
@@ -435,17 +433,17 @@ inline void pod_fill_n(T *dest, ss_size_t n, V const& value)
 // [[synesis:function:algorithm: pod_fill_n(char *dest, int value)]]
 inline void pod_fill_n(char *dest, ss_size_t n, int value)
 {
-    ::memset(dest, value, n);
+    STLSOFT_API_INTERNAL_memfns_memset(dest, value, n);
 }
 // [[synesis:function:algorithm: pod_fill_n(signed char *dest, int value)]]
 inline void pod_fill_n(signed char *dest, ss_size_t n, int value)
 {
-    ::memset(dest, value, n);
+    STLSOFT_API_INTERNAL_memfns_memset(dest, value, n);
 }
 // [[synesis:function:algorithm: pod_fill_n(unsigned char *dest, int value)]]
 inline void pod_fill_n(unsigned char *dest, ss_size_t n, int value)
 {
-    ::memset(dest, value, n);
+    STLSOFT_API_INTERNAL_memfns_memset(dest, value, n);
 }
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 

@@ -5,10 +5,11 @@
  *              and platform discriminations, and definitions of types.
  *
  * Created:     15th January 2002
- * Updated:     12th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2002-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -21,9 +22,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -42,14 +44,14 @@
 
 #ifndef WINSTL_INCL_WINSTL_H_WINSTL
 #define WINSTL_INCL_WINSTL_H_WINSTL
-#define WINSTL_INCL_H_WINSTL    /*!< Definition of previous include-guard symbol for winstl/winstl.h, for backwards compatibility. */
+#define WINSTL_INCL_H_WINSTL                                /*!< Definition of previous include-guard symbol for winstl/winstl.h, for backwards compatibility. */
 
 /* File version */
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define WINSTL_VER_WINSTL_H_WINSTL_MAJOR       3
 # define WINSTL_VER_WINSTL_H_WINSTL_MINOR       17
-# define WINSTL_VER_WINSTL_H_WINSTL_REVISION    2
-# define WINSTL_VER_WINSTL_H_WINSTL_EDIT        214
+# define WINSTL_VER_WINSTL_H_WINSTL_REVISION    6
+# define WINSTL_VER_WINSTL_H_WINSTL_EDIT        221
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /** \file winstl/winstl.h
@@ -159,12 +161,15 @@
 # define _WINSTL_VER_1_12_1_B01 0x010c0181  /*!< Version 1.12.1 beta 1 (with STLSoft 1.10.1 beta 1) */
 # define _WINSTL_VER_1_12_1_B02 0x010c0182  /*!< Version 1.12.1 beta 2 (with STLSoft 1.10.1 beta 10) */
 # define _WINSTL_VER_1_12_1_B03 0x010c0183  /*!< Version 1.12.1 beta 3 (with STLSoft 1.10.1 beta 14) */
+# define _WINSTL_VER_1_12_1_B04 0x010c0184  /*!< Version 1.12.1 beta 4 (with STLSoft 1.10.1 beta 14) */
+# define _WINSTL_VER_1_12_1_B05 0x010c0185  /*!< Version 1.12.1 beta 5 (with STLSoft 1.10.1 beta 26) */
+# define _WINSTL_VER_1_12_1     0x010c01ff  /*!< Version 1.12.1 (with STLSoft 1.10.3) */
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 #define _WINSTL_VER_MAJOR       1
 #define _WINSTL_VER_MINOR       12
 #define _WINSTL_VER_REVISION    1
-#define _WINSTL_VER             _WINSTL_VER_1_12_1_B03
+#define _WINSTL_VER             _WINSTL_VER_1_12_1
 
 /* /////////////////////////////////////////////////////////////////////////
  * includes
@@ -178,7 +183,7 @@
      !defined(NO_STRICT) &&\
      1
 #  ifdef _WINSTL_STRICT
-#   define STRICT 1
+#   define STRICT                                           1
 #  endif /* _WINSTL_STRICT */
 # endif /* !NO_STRICT && !_WINSTL_NO_STRICT && !STRICT */
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
@@ -246,8 +251,8 @@
  * STLSoft version compatibility check(s)
  */
 
-#if _STLSOFT_VER < 0x010a0181
-# error This version of the WinSTL libraries requires STLSoft version 1.10.1 beta 1, or later
+#if _STLSOFT_VER < 0x010a019a
+# error This version of the WinSTL libraries requires STLSoft version 1.10.1 beta 26, or later
 #endif /* _STLSOFT_VER */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -317,9 +322,9 @@
  *  avoid C-style cast warnings.
  */
 # if defined(STLSOFT_COMPILER_IS_INTEL)
-#  define   INVALID_HANDLE_VALUE        STLSOFT_NS_QUAL(union_cast)<HANDLE>(WINSTL_NS_QUAL(ws_sptrint_t)(-1))
+#  define   INVALID_HANDLE_VALUE                            STLSOFT_NS_QUAL(union_cast)<HANDLE>(WINSTL_NS_QUAL(ws_sptrint_t)(-1))
 # else /* ? compiler */
-#  define   INVALID_HANDLE_VALUE        reinterpret_cast<HANDLE>(-1)
+#  define   INVALID_HANDLE_VALUE                            reinterpret_cast<HANDLE>(-1)
 # endif /* compiler */
 
 /** \def MAKEINTRESOURCEA
@@ -374,7 +379,7 @@
  *  avoid C-style cast warnings.
  */
 # undef     INVALID_FILE_SIZE
-# define    INVALID_FILE_SIZE           static_cast<DWORD>(0xFFFFFFFF)
+# define    INVALID_FILE_SIZE                               static_cast<DWORD>(0xFFFFFFFF)
 
 
 /** \def INVALID_SET_FILE_POINTER
@@ -382,7 +387,7 @@
  *  avoid C-style cast warnings.
  */
 # undef     INVALID_SET_FILE_POINTER
-# define    INVALID_SET_FILE_POINTER    static_cast<DWORD>(0xFFFFFFFF)
+# define    INVALID_SET_FILE_POINTER                        static_cast<DWORD>(0xFFFFFFFF)
 
 /** \def INVALID_FILE_ATTRIBUTES
  * A C++-only redefinition of this \#define which uses C++ cast operators to
@@ -391,16 +396,16 @@
 # ifdef INVALID_FILE_ATTRIBUTES
 #  undef INVALID_FILE_ATTRIBUTES
 # endif /* INVALID_FILE_ATTRIBUTES */
-# define INVALID_FILE_ATTRIBUTES        static_cast<DWORD>(0xFFFFFFFF)
+# define INVALID_FILE_ATTRIBUTES                            static_cast<DWORD>(0xFFFFFFFF)
 
 #else /* ? __cplusplus */
 
 # ifndef INVALID_SET_FILE_POINTER
-#  define INVALID_SET_FILE_POINTER      stlsoft_c_cast(DWORD, -1)
+#  define INVALID_SET_FILE_POINTER                          stlsoft_c_cast(DWORD, -1)
 # endif /* !INVALID_SET_FILE_POINTER */
 
 # ifndef INVALID_FILE_ATTRIBUTES
-#  define INVALID_FILE_ATTRIBUTES       stlsoft_c_cast(DWORD, -1)
+#  define INVALID_FILE_ATTRIBUTES                           stlsoft_c_cast(DWORD, -1)
 # endif /* !INVALID_FILE_ATTRIBUTES */
 
 #endif /* __cplusplus */
@@ -506,6 +511,9 @@
     (   defined(STLSOFT_COMPILER_IS_COMO) && \
         defined(_MSC_VER)) || \
     defined(STLSOFT_COMPILER_IS_DMC) || \
+    (   defined(STLSOFT_COMPILER_IS_GCC) && \
+        (   defined(__MINGW32__) || \
+            defined(__MINGW64__))) || \
     defined(STLSOFT_COMPILER_IS_INTEL) || \
     defined(STLSOFT_COMPILER_IS_MWERKS) || \
     defined(STLSOFT_COMPILER_IS_MSVC)
@@ -942,7 +950,7 @@ typedef ws_uptrint_t        uptrint_t;
  * used when there is a need to allocate the maximum possible size for a
  * file system path.
  */
-#define WINSTL_CONST_NT_MAX_PATH            (4 + 32767)
+#define WINSTL_CONST_NT_MAX_PATH                            (4 + 32767)
 
 /** \def WINSTL_CONST_MAX_PATH
  *
@@ -950,18 +958,18 @@ typedef ws_uptrint_t        uptrint_t;
 #if 0
 #elif defined(STLSOFT_DOCUMENTATION_SKIP_SECTION)
 
-# define WINSTL_CONST_MAX_PATH              (260)
+# define WINSTL_CONST_MAX_PATH                              (260)
 #elif defined(_MAX_PATH)
 
-# define WINSTL_CONST_MAX_PATH              _MAX_PATH
+# define WINSTL_CONST_MAX_PATH                              _MAX_PATH
 #elif defined(__CYGWIN__) || \
       defined(__MINGW32__) || \
       defined(__MINGW64__)
 
-# define WINSTL_CONST_MAX_PATH              (260)
+# define WINSTL_CONST_MAX_PATH                              (260)
 #else
 
-# error _MAX_PATH not defined, and not CygWin compiler
+# error _MAX_PATH not defined, and not CygWin/MinGW compiler
 #endif
 
 #ifdef __cplusplus
@@ -986,8 +994,8 @@ const ws_size_t CONST_MAX_PATH          =   WINSTL_CONST_MAX_PATH;
 
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 
-#define ws_true_v       ss_true_v
-#define ws_false_v      ss_false_v
+#define ws_true_v                                           ss_true_v
+#define ws_false_v                                          ss_false_v
 
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 /* /////////////////////////////////////////////////////////////////////////
@@ -1094,7 +1102,7 @@ winstl_C_is_memory_status_code(
     DWORD sc
 )
 {
-    switch(sc)
+    switch (sc)
     {
     case ERROR_NOT_ENOUGH_MEMORY:
     case ERROR_OUTOFMEMORY:
@@ -1121,7 +1129,7 @@ namespace winstl = ::stlsoft::winstl_project;
 #endif /* !WINSTL_NO_NAMESPACE */
 
 /* /////////////////////////////////////////////////////////////////////////
- * inclusion
+ * inclusion control
  */
 
 #ifdef STLSOFT_CF_PRAGMA_ONCE_SUPPORT

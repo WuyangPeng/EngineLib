@@ -4,10 +4,11 @@
  * Purpose:     variant class.
  *
  * Created:     12th December 1996
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 1996-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,8 +53,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define _COMSTL_VER_COMSTL_UTIL_HPP_COMSTL_VARIANT_MAJOR      2
 # define _COMSTL_VER_COMSTL_UTIL_HPP_COMSTL_VARIANT_MINOR      3
-# define _COMSTL_VER_COMSTL_UTIL_HPP_COMSTL_VARIANT_REVISION   13
-# define _COMSTL_VER_COMSTL_UTIL_HPP_COMSTL_VARIANT_EDIT       173
+# define _COMSTL_VER_COMSTL_UTIL_HPP_COMSTL_VARIANT_REVISION   14
+# define _COMSTL_VER_COMSTL_UTIL_HPP_COMSTL_VARIANT_EDIT       176
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -90,6 +92,10 @@
 #ifndef WINSTL_INCL_WINSTL_API_external_h_Debugging
 # include <winstl/api/external/Debugging.h>
 #endif /* !WINSTL_INCL_WINSTL_API_external_h_Debugging */
+
+#ifndef STLSOFT_INCL_STLSOFT_API_internal_h_memfns
+# include <stlsoft/api/internal/memfns.h>
+#endif /* !STLSOFT_INCL_STLSOFT_API_internal_h_memfns */
 
 /* /////////////////////////////////////////////////////////////////////////
  * namespace
@@ -523,9 +529,9 @@ inline /* static */ void variant::swap_(VARIANT& lhs, VARIANT& rhs)
 {
     VARIANT t;
 
-    ::memcpy(&t, &lhs, sizeof(VARIANT));
-    ::memcpy(&lhs, &rhs, sizeof(VARIANT));
-    ::memcpy(&rhs, &t, sizeof(VARIANT));
+    STLSOFT_API_INTERNAL_memfns_memcpy(&t, &lhs, sizeof(VARIANT));
+    STLSOFT_API_INTERNAL_memfns_memcpy(&lhs, &rhs, sizeof(VARIANT));
+    STLSOFT_API_INTERNAL_memfns_memcpy(&rhs, &t, sizeof(VARIANT));
 }
 
 
@@ -543,7 +549,7 @@ inline variant::variant(class_type const& rhs)
     class_type& rhs_    =   const_cast<class_type&>(rhs);
     HRESULT     hr      =   ::VariantCopy(this, &rhs_);
 
-    if(FAILED(hr))
+    if (FAILED(hr))
     {
         handle_error_("failed to copy variant", hr);
     }
@@ -555,7 +561,7 @@ inline variant::variant(VARIANT const& rhs)
 
     HRESULT hr = ::VariantCopy(this, const_cast<VARIANT*>(&rhs));
 
-    if(FAILED(hr))
+    if (FAILED(hr))
     {
         handle_error_("failed to copy variant", hr);
     }
@@ -721,7 +727,7 @@ inline variant::variant(LPUNKNOWN punk, bool_type bAddRef)
     this->vt        =   VT_UNKNOWN;
     this->punkVal   =   punk;
 
-    if( bAddRef &&
+    if (bAddRef &&
         NULL != punk)
     {
         punk->AddRef();
@@ -735,7 +741,7 @@ inline variant::variant(LPDISPATCH pdisp, bool_type bAddRef)
     this->vt        =   VT_DISPATCH;
     this->pdispVal  =   pdisp;
 
-    if( bAddRef &&
+    if (bAddRef &&
         NULL != pdisp)
     {
         pdisp->AddRef();
@@ -749,9 +755,9 @@ inline variant::variant(cs_char_a_t const* s, int len /* = -1 */)
     this->vt        =   VT_BSTR;
     this->bstrVal   =   (len < 0) ? bstr_create(s) : bstr_create(s, static_cast<size_type>(len));
 
-    if(NULL == this->bstrVal)
+    if (NULL == this->bstrVal)
     {
-        if( NULL != s &&
+        if (NULL != s &&
             '\0' != 0[s])
         {
             handle_error_("could not initialise from string", E_OUTOFMEMORY);
@@ -766,9 +772,9 @@ inline variant::variant(cs_char_w_t const* s, int len /* = -1 */)
     this->vt        =   VT_BSTR;
     this->bstrVal   =   (len < 0) ? bstr_create(s) : bstr_create(s, static_cast<size_type>(len));
 
-    if(NULL == this->bstrVal)
+    if (NULL == this->bstrVal)
     {
-        if( NULL != s &&
+        if (NULL != s &&
             '\0' != 0[s])
         {
             handle_error_("could not initialise from string", E_OUTOFMEMORY);
@@ -783,7 +789,7 @@ inline variant::variant(VARIANT const& var, VARTYPE vType)
     class_type  copy;
     HRESULT     hr = ::VariantChangeType(&copy, const_cast<VARIANT*>(&var), 0, vType);
 
-    if(FAILED(hr))
+    if (FAILED(hr))
     {
         handle_error_("could not convert variant to requested type", hr);
     }
@@ -802,7 +808,7 @@ inline HRESULT variant::try_conversion_copy(VARIANT const& var, VARTYPE vType)
 {
     HRESULT hr;
 
-    if(vType == this->vt)
+    if (vType == this->vt)
     {
         hr = S_FALSE;
     }
@@ -812,7 +818,7 @@ inline HRESULT variant::try_conversion_copy(VARIANT const& var, VARTYPE vType)
 
         hr  =   ::VariantChangeType(&copy, const_cast<VARIANT*>(&var), 0, vType);
 
-        if(SUCCEEDED(hr))
+        if (SUCCEEDED(hr))
         {
             copy.swap(*this);
         }
@@ -830,7 +836,7 @@ inline variant::class_type& variant::convert(VARTYPE vType)
 {
     HRESULT hr  =   try_convert(vType);
 
-    if(FAILED(hr))
+    if (FAILED(hr))
     {
         handle_error_("could not convert variant to requested type", hr);
     }
@@ -843,7 +849,7 @@ inline HRESULT variant::QueryInterface(REFIID riid, void** ppv) const
 {
     COMSTL_ASSERT(NULL != ppv);
 
-    if( VT_UNKNOWN == this->vt ||
+    if (VT_UNKNOWN == this->vt ||
         VT_DISPATCH == this->vt)
     {
         return (NULL == this->punkVal) ? E_POINTER : this->punkVal->QueryInterface(riid, ppv);
@@ -868,7 +874,7 @@ inline variant::bool_type variant::equal(VARIANT const& rhs) const
     HRESULT comparisonSucceeded;
     int     areEqual = VARIANT_equal(*this, rhs, &comparisonSucceeded);
 
-    if(FAILED(comparisonSucceeded))
+    if (FAILED(comparisonSucceeded))
     {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
         STLSOFT_THROW_X(comstl_exception("support for comparison of variant type not currently supported", comparisonSucceeded));

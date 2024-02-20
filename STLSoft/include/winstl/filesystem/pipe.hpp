@@ -4,12 +4,13 @@
  * Purpose:     pipe class, based on Windows anonymous pipe.
  *
  * Created:     19th June 2004
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Thanks:      iceboy for reporting a defect in close_write()
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2004-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -22,9 +23,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -54,7 +56,7 @@
 # define WINSTL_VER_WINSTL_FILESYSTEM_HPP_PIPE_MAJOR    4
 # define WINSTL_VER_WINSTL_FILESYSTEM_HPP_PIPE_MINOR    1
 # define WINSTL_VER_WINSTL_FILESYSTEM_HPP_PIPE_REVISION 11
-# define WINSTL_VER_WINSTL_FILESYSTEM_HPP_PIPE_EDIT     52
+# define WINSTL_VER_WINSTL_FILESYSTEM_HPP_PIPE_EDIT     54
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -134,7 +136,7 @@ public:
         sa.lpSecurityDescriptor =   NULL;
         sa.bInheritHandle       =   bInheritHandles;
 
-        if(!::CreatePipe(&m_hReadHandle, &m_hWriteHandle, &sa, size))
+        if (!::CreatePipe(&m_hReadHandle, &m_hWriteHandle, &sa, size))
         {
             exception_policy_type()(WINSTL_API_EXTERNAL_ErrorHandling_GetLastError());
         }
@@ -142,11 +144,11 @@ public:
 
     ~pipe() STLSOFT_NOEXCEPT
     {
-        if(NULL != m_hReadHandle)
+        if (NULL != m_hReadHandle)
         {
             WINSTL_API_EXTERNAL_HandleAndObject_CloseHandle(m_hReadHandle);
         }
-        if(NULL != m_hWriteHandle)
+        if (NULL != m_hWriteHandle)
         {
             WINSTL_API_EXTERNAL_HandleAndObject_CloseHandle(m_hWriteHandle);
         }
@@ -173,7 +175,7 @@ public:
     /// Closes the read handle, if not already closed
     void close_read()
     {
-        if(NULL != m_hReadHandle)
+        if (NULL != m_hReadHandle)
         {
             WINSTL_API_EXTERNAL_HandleAndObject_CloseHandle(m_hReadHandle);
 
@@ -185,7 +187,7 @@ public:
     /// Closes the write handle, if not already closed
     void close_write()
     {
-        if(NULL != m_hWriteHandle)
+        if (NULL != m_hWriteHandle)
         {
             WINSTL_API_EXTERNAL_HandleAndObject_CloseHandle(m_hWriteHandle);
 

@@ -5,10 +5,11 @@
  *              Unicode specialisations thereof.
  *
  * Created:     30th April 1999
- * Updated:     13th September 2019
+ * Updated:     29th January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 1999-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -21,9 +22,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,10 +53,10 @@
 #define INETSTL_INCL_INETSTL_FILESYSTEM_HPP_FILESYSTEM_TRAITS
 
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
-# define INETSTL_VER_INETSTL_FILESYSTEM_HPP_FILESYSTEM_TRAITS_MAJOR    4
-# define INETSTL_VER_INETSTL_FILESYSTEM_HPP_FILESYSTEM_TRAITS_MINOR    2
-# define INETSTL_VER_INETSTL_FILESYSTEM_HPP_FILESYSTEM_TRAITS_REVISION 9
-# define INETSTL_VER_INETSTL_FILESYSTEM_HPP_FILESYSTEM_TRAITS_EDIT     91
+# define INETSTL_VER_INETSTL_FILESYSTEM_HPP_FILESYSTEM_TRAITS_MAJOR    5
+# define INETSTL_VER_INETSTL_FILESYSTEM_HPP_FILESYSTEM_TRAITS_MINOR    0
+# define INETSTL_VER_INETSTL_FILESYSTEM_HPP_FILESYSTEM_TRAITS_REVISION 2
+# define INETSTL_VER_INETSTL_FILESYSTEM_HPP_FILESYSTEM_TRAITS_EDIT     95
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -67,6 +69,10 @@
 #ifdef STLSOFT_TRACE_INCLUDE
 # pragma message(__FILE__)
 #endif /* STLSOFT_TRACE_INCLUDE */
+
+#ifndef STLSOFT_INCL_STLSOFT_STRING_HPP_C_STRING_TRAITS
+# include <stlsoft/string/c_string_traits.hpp>
+#endif /* !STLSOFT_INCL_STLSOFT_STRING_HPP_C_STRING_TRAITS */
 
 #ifndef INETSTL_OS_IS_WINDOWS
 # error This file is currently compatible only with the Win32/Win64 API
@@ -142,36 +148,6 @@ public:
     typedef is_bool_t               bool_type;
     /// The type of system error codes
     typedef DWORD                   error_type;
-/// @}
-
-/// \name General string handling
-/// @{
-public:
-    /// Copies a specific number of characters from the source to the destination
-    static char_type*   char_copy(char_type* dest, char_type const* src, size_type n);
-#if !defined(STLSOFT_USING_SAFE_STR_FUNCTIONS) || \
-    defined(_CRT_SECURE_NO_DEPRECATE)
-    /// Copies the contents of \c src to \c dest
-    static char_type*   str_copy(char_type* dest, char_type const* src);
-    /// Copies the contents of \c src to \c dest, up to cch \c characters
-    static char_type*   str_n_copy(char_type* dest, char_type const* src, is_size_t cch);
-    /// Appends the contents of \c src to \c dest
-    static char_type*   str_cat(char_type* dest, char_type const* src);
-#endif /* !STLSOFT_USING_SAFE_STR_FUNCTIONS || _CRT_SECURE_NO_DEPRECATE */
-    /// Compares the contents of \c src and \c dest
-    static int_type     str_compare(char_type const* s1, char_type const* s2);
-    /// Compares the contents of \c src and \c dest in a case-insensitive fashion
-    static int_type     str_compare_no_case(char_type const* s1, char_type const* s2);
-    /// Compares the contents of \c src and \c dest up to \c cch characters
-    static int_type     str_n_compare(char_type const* s1, char_type const* s2, size_type cch);
-    /// Evaluates the length of \c src
-    static size_type    str_len(char_type const* src);
-    /// Finds the given character \c ch in \c s
-    static char_type*   str_chr(char_type const* s, char_type ch);
-    /// Finds the rightmost instance \c ch in \c s
-    static char_type*   str_rchr(char_type const* s, char_type ch);
-    /// Finds the given substring \c sub in \c s
-    static char_type*   str_str(char_type const* s, char_type const* sub);
 /// @}
 
 /// \name File-system entry names
@@ -291,6 +267,7 @@ struct filesystem_traits;
 
 STLSOFT_TEMPLATE_SPECIALISATION
 struct filesystem_traits<is_char_a_t>
+    : public STLSOFT_NS_QUAL(c_string_traits)<is_char_a_t>
 {
 public:
     typedef is_char_a_t                     char_type;
@@ -304,112 +281,16 @@ public:
     typedef DWORD                           error_type;
 
 public:
-    static char_type* char_copy(char_type* dest, char_type const* src, size_type n)
-    {
-        INETSTL_ASSERT(NULL != dest);
-        INETSTL_ASSERT(0 == n || NULL != src);
-
-        return static_cast<char_type*>(::memcpy(dest, src, sizeof(char_type) * n));
-    }
-
-    // General string handling
-#if !defined(STLSOFT_USING_SAFE_STR_FUNCTIONS) || \
-    defined(_CRT_SECURE_NO_DEPRECATE)
-    static char_type* str_copy(char_type* dest, char_type const* src)
-    {
-        INETSTL_ASSERT(NULL != dest);
-        INETSTL_ASSERT(NULL != src);
-
-# ifdef STLSOFT_MIN_CRT
-        return ::lstrcpyA(dest, src);
-# else /*? STLSOFT_MIN_CRT */
-        return ::strcpy(dest, src);
-# endif /* STLSOFT_MIN_CRT */
-    }
-
-    static char_type* str_n_copy(char_type* dest, char_type const* src, is_size_t cch)
-    {
-        INETSTL_ASSERT(NULL != dest);
-        INETSTL_ASSERT(0 == cch || NULL != src);
-
-        return ::strncpy(dest, src, cch);
-    }
-
-    static char_type* str_cat(char_type* dest, char_type const* src)
-    {
-        INETSTL_ASSERT(NULL != dest);
-        INETSTL_ASSERT(NULL != src);
-
-# ifdef STLSOFT_MIN_CRT
-        return ::lstrcatA(dest, src);
-# else /*? STLSOFT_MIN_CRT */
-        return ::strcat(dest, src);
-# endif /* STLSOFT_MIN_CRT */
-    }
-#endif /* !STLSOFT_USING_SAFE_STR_FUNCTIONS || _CRT_SECURE_NO_DEPRECATE */
-
-    static int_type str_compare(char_type const* s1, char_type const* s2)
-    {
-        INETSTL_ASSERT(NULL != s1);
-        INETSTL_ASSERT(NULL != s2);
-
-#ifdef STLSOFT_MIN_CRT
-        return ::lstrcmpA(s1, s2);
-#else /*? STLSOFT_MIN_CRT */
-        return ::strcmp(s1, s2);
-#endif /* STLSOFT_MIN_CRT */
-    }
-
-    static int_type str_compare_no_case(char_type const* s1, char_type const* s2)
-    {
-        INETSTL_ASSERT(NULL != s1);
-        INETSTL_ASSERT(NULL != s2);
-
-        return STLSOFT_API_EXTERNAL_string_stricmp(s1, s2);
-    }
-
-    static int_type str_n_compare(char_type const* s1, char_type const* s2, size_type cch)
-    {
-        INETSTL_ASSERT(NULL != s1);
-        INETSTL_ASSERT(NULL != s2);
-
-        return ::strncmp(s1, s2, cch);
-    }
-
-    static size_type str_len(char_type const* src)
-    {
-#ifdef STLSOFT_MIN_CRT
-        return static_cast<size_type>(::lstrlenA(src));
-#else /*? STLSOFT_MIN_CRT */
-        return ::strlen(src);
-#endif /* STLSOFT_MIN_CRT */
-    }
-
-    static char_type* str_chr(char_type const* s, char_type ch)
-    {
-        return const_cast<char_type*>(::strchr(s, ch));
-    }
-
-    static char_type* str_rchr(char_type const* s, char_type ch)
-    {
-        return const_cast<char_type*>(::strrchr(s, ch));
-    }
-
-    static char_type* str_str(char_type const* s, char_type const* sub)
-    {
-        return const_cast<char_type*>(::strstr(s, sub));
-    }
-
     // File-system entry names
     static char_type* ensure_dir_end(char_type* dir)
     {
         char_type       *end;
         char_type const separator = (NULL == str_chr(dir, '/') && NULL != str_chr(dir, '\\')) ? '\\' : '/';
 
-        for(end = dir; *end != '\0'; ++end)
+        for (end = dir; *end != '\0'; ++end)
         {}
 
-        if( dir < end &&
+        if (dir < end &&
             *(end - 1) != separator)
         {
             *end        =   separator;
@@ -423,10 +304,10 @@ public:
     {
         char_type   *end;
 
-        for(end = dir; *end != '\0'; ++end)
+        for (end = dir; *end != '\0'; ++end)
         {}
 
-        if( dir < end &&
+        if (dir < end &&
             *(end - 1) == path_name_separator())
         {
             *(end - 1)  =   '\0';
@@ -491,11 +372,11 @@ public:
 
         // Deduce the separator
         char_type const separator   =   (NULL == str_chr(fileName, '/') && NULL != str_chr(fileName, '\\')) ? '\\' : '/';
-        char_type       fullPath[1 + _MAX_PATH];
+        char_type       fullPath[1 + INETSTL_CONST_MAX_PATH];
         size_type       len         =   str_len(fileName);
 
         // If we're not rooted, then get the current directory and concatenate
-        if(separator != *fileName)
+        if (separator != *fileName)
         {
             is_size_t   cchBuffer2  =   STLSOFT_NUM_ELEMENTS(fullPath);
             const int   isDot       =   '.' == 0[fileName] && '\0' == 0[fileName];
@@ -504,15 +385,15 @@ public:
 # pragma message(_sscomp_fileline_message("This looks a bit dodgy. Better to use an auto_buffer, and cycle the size, testing the return value from get_current_directory"))
 #endif /* __SYNSOFT_DBS_COMPILER_SUPPORTS_PRAGMA_MESSAGE */
 
-            if(!get_current_directory(hconn, cchBuffer2, fullPath))
+            if (!get_current_directory(hconn, cchBuffer2, fullPath))
             {
                 fullPath[0] = '\0';
             }
             size_type   cchFullPath = str_len(fullPath);
 
-            if(!isDot)
+            if (!isDot)
             {
-                if(!has_dir_end(fullPath))
+                if (!has_dir_end(fullPath))
                 {
                     ensure_dir_end(fullPath);
                     ++cchFullPath;
@@ -524,26 +405,26 @@ public:
             len         +=  cchFullPath;
         }
 
-        if(NULL != buffer)
+        if (NULL != buffer)
         {
-            if(cchBuffer < len)
+            if (cchBuffer < len)
             {
                 len = cchBuffer;
             }
 
             char_copy(buffer, fileName, cchBuffer);
 
-            if(NULL != ppFile)
+            if (NULL != ppFile)
             {
                 char_type const* pRSlash        =   str_rchr(buffer, '/');
                 char_type const* pRBackSlash    =   str_rchr(buffer, '\\');
 
-                if(pRSlash < pRBackSlash)
+                if (pRSlash < pRBackSlash)
                 {
                     pRSlash = pRBackSlash;
                 }
 
-                if(NULL == pRSlash)
+                if (NULL == pRSlash)
                 {
                     *ppFile = NULL;
                 }
@@ -586,15 +467,6 @@ public:
     static HINTERNET find_first_file(HINTERNET hconn, char_type const* spec, find_data_type *findData, is_dword_t flags = 0, is_dword_t context = 0)
     {
         HINTERNET hfind = ::FtpFindFirstFileA(hconn, spec, STLSOFT_NS_QUAL(any_caster)<find_data_type*, LPWIN32_FIND_DATAA, LPWIN32_FIND_DATAW>(findData), flags, context);
-
-#if 0
-        if(NULL == hfind)
-        {
-            findData->cFileName[0] = '\0';
-        }
-
-printf("find_first_file(0x%08x, %s => %s)\n", hfind, spec, findData->cFileName);
-#endif /* 0 */
 
         return hfind;
     }
@@ -674,6 +546,7 @@ printf("find_first_file(0x%08x, %s => %s)\n", hfind, spec, findData->cFileName);
 
 STLSOFT_TEMPLATE_SPECIALISATION
 struct filesystem_traits<is_char_w_t>
+    : public STLSOFT_NS_QUAL(c_string_traits)<is_char_w_t>
 {
 public:
     typedef is_char_w_t                     char_type;
@@ -687,101 +560,6 @@ public:
     typedef DWORD                           error_type;
 
 public:
-    static char_type* char_copy(char_type* dest, char_type const* src, size_type n)
-    {
-        INETSTL_ASSERT(NULL != dest);
-        INETSTL_ASSERT(0 == n || NULL != src);
-
-        return static_cast<char_type*>(::memcpy(dest, src, sizeof(char_type) * n));
-    }
-
-    // General string handling
-#if !defined(STLSOFT_USING_SAFE_STR_FUNCTIONS) || \
-    defined(_CRT_SECURE_NO_DEPRECATE)
-    static char_type* str_copy(char_type* dest, char_type const* src)
-    {
-        INETSTL_ASSERT(NULL != dest);
-        INETSTL_ASSERT(NULL != src);
-
-# ifdef STLSOFT_MIN_CRT
-        return ::lstrcpyW(dest, src);
-# else /*? STLSOFT_MIN_CRT */
-        return ::wcscpy(dest, src);
-# endif /* STLSOFT_MIN_CRT */
-    }
-
-    static char_type* str_n_copy(char_type* dest, char_type const* src, is_size_t cch)
-    {
-        INETSTL_ASSERT(NULL != dest);
-        INETSTL_ASSERT(0 == cch || NULL != src);
-
-        return ::wcsncpy(dest, src, cch);
-    }
-
-    static char_type* str_cat(char_type* dest, char_type const* src)
-    {
-        INETSTL_ASSERT(NULL != dest);
-        INETSTL_ASSERT(NULL != src);
-
-# ifdef STLSOFT_MIN_CRT
-        return ::lstrcatW(dest, src);
-# else /*? STLSOFT_MIN_CRT */
-        return ::wcscat(dest, src);
-# endif /* STLSOFT_MIN_CRT */
-    }
-#endif /* !STLSOFT_USING_SAFE_STR_FUNCTIONS || _CRT_SECURE_NO_DEPRECATE */
-
-    static int_type str_compare(char_type const* s1, char_type const* s2)
-    {
-        INETSTL_ASSERT(NULL != s1);
-        INETSTL_ASSERT(NULL != s2);
-
-#ifdef STLSOFT_MIN_CRT
-        return ::lstrcmpW(s1, s2);
-#else /*? STLSOFT_MIN_CRT */
-        return ::wcscmp(s1, s2);
-#endif /* STLSOFT_MIN_CRT */
-    }
-
-    static int_type str_compare_no_case(char_type const* s1, char_type const* s2)
-    {
-        INETSTL_ASSERT(NULL != s1);
-        INETSTL_ASSERT(NULL != s2);
-
-        return STLSOFT_API_EXTERNAL_string_wcsicmp(s1, s2);
-    }
-
-    static int_type str_n_compare(char_type const* s1, char_type const* s2, size_type cch)
-    {
-        INETSTL_ASSERT(NULL != s1);
-        INETSTL_ASSERT(NULL != s2);
-
-        return ::wcsncmp(s1, s2, cch);
-    }
-
-    static size_type str_len(char_type const* src)
-    {
-#ifdef STLSOFT_MIN_CRT
-        return static_cast<size_type>(::lstrlenW(src));
-#else /*? STLSOFT_MIN_CRT */
-        return ::wcslen(src);
-#endif /* STLSOFT_MIN_CRT */
-    }
-
-    static char_type* str_chr(char_type const* s, char_type ch)
-    {
-        return const_cast<char_type*>(::wcschr(s, ch));
-    }
-
-    static char_type* str_rchr(char_type const* s, char_type ch)
-    {
-        return const_cast<char_type*>(::wcsrchr(s, ch));
-    }
-
-    static char_type* str_str(char_type const* s, char_type const* sub)
-    {
-        return const_cast<char_type*>(::wcsstr(s, sub));
-    }
 
     // File-system entry names
     static char_type* ensure_dir_end(char_type* dir)
@@ -789,10 +567,10 @@ public:
         char_type       *end;
         char_type const separator = (NULL == str_chr(dir, L'/') && NULL != str_chr(dir, L'\\')) ? L'\\' : L'/';
 
-        for(end = dir; *end != L'\0'; ++end)
+        for (end = dir; *end != L'\0'; ++end)
         {}
 
-        if( dir < end &&
+        if (dir < end &&
             *(end - 1) != separator)
         {
             *end        =   separator;
@@ -806,10 +584,10 @@ public:
     {
         char_type   *end;
 
-        for(end = dir; *end != '\0'; ++end)
+        for (end = dir; *end != '\0'; ++end)
         {}
 
-        if( dir < end &&
+        if (dir < end &&
             *(end - 1) == path_name_separator())
         {
             *(end - 1)  =   '\0';
@@ -874,11 +652,11 @@ public:
 
         // Deduce the separator
         char_type const separator   =   (NULL == str_chr(fileName, L'/') && NULL != str_chr(fileName, L'\\')) ? L'\\' : L'/';
-        char_type       fullPath[1 + _MAX_PATH];
+        char_type       fullPath[1 + INETSTL_CONST_MAX_PATH];
         size_type       len         =   str_len(fileName);
 
         // If we're not rooted, then get the current directory and concatenate
-        if(separator != *fileName)
+        if (separator != *fileName)
         {
             is_size_t   cchBuffer2  =   STLSOFT_NUM_ELEMENTS(fullPath);
             const int   isDot       =   L'.' == 0[fileName] && L'\0' == 0[fileName];
@@ -887,15 +665,15 @@ public:
 # pragma message(_sscomp_fileline_message("This looks a bit dodgy. Better to use an auto_buffer, and cycle the size, testing the return value from get_current_directory"))
 #endif /* __SYNSOFT_DBS_COMPILER_SUPPORTS_PRAGMA_MESSAGE */
 
-            if(!get_current_directory(hconn, cchBuffer2, fullPath))
+            if (!get_current_directory(hconn, cchBuffer2, fullPath))
             {
                 fullPath[0] = L'\0';
             }
             size_type   cchFullPath = str_len(fullPath);
 
-            if(!isDot)
+            if (!isDot)
             {
-                if(!has_dir_end(fullPath))
+                if (!has_dir_end(fullPath))
                 {
                     ensure_dir_end(fullPath);
                     ++cchFullPath;
@@ -907,26 +685,26 @@ public:
             len         +=  cchFullPath;
         }
 
-        if(NULL != buffer)
+        if (NULL != buffer)
         {
-            if(cchBuffer < len)
+            if (cchBuffer < len)
             {
                 len = cchBuffer;
             }
 
             char_copy(buffer, fileName, cchBuffer);
 
-            if(NULL != ppFile)
+            if (NULL != ppFile)
             {
                 char_type const* pRSlash        =   str_rchr(buffer, L'/');
                 char_type const* pRBackSlash    =   str_rchr(buffer, L'\\');
 
-                if(pRSlash < pRBackSlash)
+                if (pRSlash < pRBackSlash)
                 {
                     pRSlash = pRBackSlash;
                 }
 
-                if(NULL == pRSlash)
+                if (NULL == pRSlash)
                 {
                     *ppFile = NULL;
                 }

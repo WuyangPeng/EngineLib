@@ -4,10 +4,11 @@
  * Purpose:     Security functions.
  *
  * Created:     7th November 2014
- * Updated:     13th October 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2014-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,8 +53,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define WINSTL_VER_WINSTL_H_FUNCTIONS_MAJOR       1
 # define WINSTL_VER_WINSTL_H_FUNCTIONS_MINOR       0
-# define WINSTL_VER_WINSTL_H_FUNCTIONS_REVISION    3
-# define WINSTL_VER_WINSTL_H_FUNCTIONS_EDIT        3
+# define WINSTL_VER_WINSTL_H_FUNCTIONS_REVISION    4
+# define WINSTL_VER_WINSTL_H_FUNCTIONS_EDIT        6
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -106,12 +108,12 @@ winstl_C_Security_alloc_(
 }
 
 STLSOFT_INLINE
-void*
+void
 winstl_C_Security_free_(
     void*       pv
 )
 {
-    return STLSOFT_C_CAST(SECURITY_DESCRIPTOR*, STLSOFT_NS_GLOBAL(HeapFree)(STLSOFT_NS_GLOBAL(GetProcessHeap)(), 0, pv));
+    STLSOFT_NS_GLOBAL(HeapFree)(STLSOFT_NS_GLOBAL(GetProcessHeap)(), 0, pv);
 }
 
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
@@ -147,7 +149,7 @@ winstl_C_Security_lookup_account_SID_info_m(
     ws_char_a_t*    account;
     ws_char_a_t*    domain;
 
-    if(NULL == pNameUse)
+    if (NULL == pNameUse)
     {
         pNameUse = &nameUseDummy_;
     }
@@ -162,7 +164,7 @@ winstl_C_Security_lookup_account_SID_info_m(
     ,   pNameUse
     );
 
-    switch(STLSOFT_NS_GLOBAL(GetLastError)())
+    switch (STLSOFT_NS_GLOBAL(GetLastError)())
     {
         default:
             return FALSE;
@@ -170,19 +172,19 @@ winstl_C_Security_lookup_account_SID_info_m(
             break;
     }
 
-    if(NULL == (account = STLSOFT_STATIC_CAST(ws_char_a_t*, winstl_C_Security_alloc_(sizeof(ws_char_a_t) * accountNameLen))))
+    if (NULL == (account = STLSOFT_STATIC_CAST(ws_char_a_t*, winstl_C_Security_alloc_(sizeof(ws_char_a_t) * accountNameLen))))
     {
         return FALSE;
     }
 
-    if(NULL == (domain = STLSOFT_STATIC_CAST(ws_char_a_t*, winstl_C_Security_alloc_(sizeof(ws_char_a_t) * domainNameLen))))
+    if (NULL == (domain = STLSOFT_STATIC_CAST(ws_char_a_t*, winstl_C_Security_alloc_(sizeof(ws_char_a_t) * domainNameLen))))
     {
         winstl_C_Security_free_(account);
 
         return FALSE;
     }
 
-    if(!WINSTL_API_EXTERNAL_Authorization_LookupAccountSid(
+    if (!WINSTL_API_EXTERNAL_Authorization_LookupAccountSid(
             systemName
         ,   psid
         ,   &account[0]
@@ -199,24 +201,24 @@ winstl_C_Security_lookup_account_SID_info_m(
         return FALSE;
     }
 
-    if(NULL != pAccountName)
+    if (NULL != pAccountName)
     {
         *pAccountName   =   account;
         account         =   NULL;
     }
 
-    if(NULL != pcchAccountName)
+    if (NULL != pcchAccountName)
     {
         *pcchAccountName    =   accountNameLen;
     }
 
-    if(NULL != pDomainName)
+    if (NULL != pDomainName)
     {
         *pDomainName    =   domain;
         domain          =   NULL;
     }
 
-    if(NULL != pcchDomainName)
+    if (NULL != pcchDomainName)
     {
         *pcchDomainName =   domainNameLen;
     }

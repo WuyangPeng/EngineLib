@@ -4,10 +4,11 @@
  * Purpose:     Directory functions.
  *
  * Created:     1st October 2016
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2016-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,8 +53,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define UNIXSTL_VER_UNIXSTL_SYSTEM_H_DIRECTORY_FUNCTIONS_MAJOR       1
 # define UNIXSTL_VER_UNIXSTL_SYSTEM_H_DIRECTORY_FUNCTIONS_MINOR       0
-# define UNIXSTL_VER_UNIXSTL_SYSTEM_H_DIRECTORY_FUNCTIONS_REVISION    8
-# define UNIXSTL_VER_UNIXSTL_SYSTEM_H_DIRECTORY_FUNCTIONS_EDIT        14
+# define UNIXSTL_VER_UNIXSTL_SYSTEM_H_DIRECTORY_FUNCTIONS_REVISION    9
+# define UNIXSTL_VER_UNIXSTL_SYSTEM_H_DIRECTORY_FUNCTIONS_EDIT        19
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -121,14 +123,14 @@ unixstl_C_get_home_directory_invoke_getenv_a_(
 
     STLSOFT_ASSERT(NULL != ev);
 
-    if( NULL == r &&
+    if (NULL == r &&
         0 == STLSOFT_API_EXTERNAL_string_stricmp("HOME", ev))
     {
         /* See if the synthetic home is present */
 
         r = STLSOFT_NS_GLOBAL(getenv)(s_szHomeUnique);
 
-        if(NULL != r)
+        if (NULL != r)
         {
             return r;
         }
@@ -139,7 +141,7 @@ unixstl_C_get_home_directory_invoke_getenv_a_(
             char const* const   homeDrive   =   STLSOFT_NS_GLOBAL(getenv)("HOMEDRIVE");
             char const* const   homePath    =   STLSOFT_NS_GLOBAL(getenv)("HOMEPATH");
 
-            if( NULL != homeDrive &&
+            if (NULL != homeDrive &&
                 NULL != homePath)
             {
                 us_size_t const cchHomeUnique   =   STLSOFT_NUM_ELEMENTS(s_szHomeUnique) - 1;
@@ -151,7 +153,7 @@ unixstl_C_get_home_directory_invoke_getenv_a_(
 
                 STLSOFT_C_AUTO_BUFFER_INITIALISE_FROM_INTERNAL(buff);
 
-                if(0 != STLSOFT_C_AUTO_BUFFER_RESIZE(buff, 1 + cchTotal))
+                if (0 != STLSOFT_C_AUTO_BUFFER_RESIZE(buff, 1 + cchTotal))
                 {
                     errno = ENOMEM;
 
@@ -192,11 +194,9 @@ unixstl_C_get_home_directory_invoke_getenv_a_(
 }
 
 # include <stlsoft/internal/warnings/pop/suppress_deprecation_.h>
-
 #else
 
-# define unixstl_C_get_home_directory_invoke_getenv_a_          STLSOFT_NS_GLOBAL(getenv)
-
+# define unixstl_C_get_home_directory_invoke_getenv_a_      STLSOFT_NS_GLOBAL(getenv)
 #endif
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -212,7 +212,7 @@ unixstl_C_get_home_directory_a(
 {
     us_char_a_t const* const home = unixstl_C_get_home_directory_invoke_getenv_a_("HOME");
 
-    if(NULL == home)
+    if (NULL == home)
     {
         return 0;
     }
@@ -220,9 +220,9 @@ unixstl_C_get_home_directory_a(
     {
         us_size_t const cchHome = STLSOFT_NS_GLOBAL(strlen)(home);
 
-        if(0 == cchBuffer)
+        if (0 == cchBuffer)
         {
-            return cchHome;
+            return cchHome + 1;
         }
 
         return STLSoft_C_string_copy_with_nul_a(buffer, cchBuffer, home, cchHome);

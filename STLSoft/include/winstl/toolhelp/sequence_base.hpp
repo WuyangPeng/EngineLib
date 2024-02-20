@@ -4,13 +4,14 @@
  * Purpose:     TOOLHELP sequence_base class template.
  *
  * Created:     21st May 2005
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Thanks:      To Pablo for contributing this great library.
  *
  * Home:        http://stlsoft.org/
  *
- * Copyright (c) 2005-2019, Pablo Aguilar
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
+ * Copyright (c) 2005-2007, Pablo Aguilar
  * Copyright (c) 2006-2007, Matthew Wilson
  * All rights reserved.
  *
@@ -23,9 +24,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems,
+ *   nor Pablo Aguilar,  nor the names of any contributors may be used to
+ *   endorse or promote products derived from this software without
+ *   specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -55,8 +57,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define WINSTL_VER_WINSTL_TOOLHELP_HPP_SEQUENCE_BASE_MAJOR     1
 # define WINSTL_VER_WINSTL_TOOLHELP_HPP_SEQUENCE_BASE_MINOR     1
-# define WINSTL_VER_WINSTL_TOOLHELP_HPP_SEQUENCE_BASE_REVISION  11
-# define WINSTL_VER_WINSTL_TOOLHELP_HPP_SEQUENCE_BASE_EDIT      28
+# define WINSTL_VER_WINSTL_TOOLHELP_HPP_SEQUENCE_BASE_REVISION  12
+# define WINSTL_VER_WINSTL_TOOLHELP_HPP_SEQUENCE_BASE_EDIT      32
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -94,6 +96,10 @@
 #ifndef WINSTL_INCL_WINSTL_API_external_h_HandleAndObject
 # include <winstl/api/external/HandleAndObject.h>
 #endif /* !WINSTL_INCL_WINSTL_API_external_h_HandleAndObject */
+
+#ifndef STLSOFT_INCL_STLSOFT_API_internal_h_memfns
+# include <stlsoft/api/internal/memfns.h>
+#endif /* !STLSOFT_INCL_STLSOFT_API_internal_h_memfns */
 
 /* /////////////////////////////////////////////////////////////////////////
  * namespace
@@ -175,11 +181,11 @@ public:
     {
         WINSTL_ASSERT(m_snapshot != traits_type::invalid_handle());
 
-        ::memset(&m_value, 0, sizeof(m_value));
+        STLSOFT_API_INTERNAL_memfns_memset(&m_value, 0, sizeof(m_value));
         m_value.dwSize = sizeof(m_value);
 
         bool ok = traits_type::first(m_snapshot, m_value);
-        if( !ok )
+        if (!ok )
         {
             m_snapshot = traits_type::null_handle();
         }
@@ -207,7 +213,7 @@ public:
     class_type& operator ++()
     {
         bool ok = traits_type::next(m_snapshot, m_value);
-        if( !ok )
+        if (!ok )
             m_snapshot = traits_type::null_handle();
 
         return *this;
@@ -321,7 +327,7 @@ public:
     /// Destructor
     ~th_sequence_base()
     {
-        if(traits_type::invalid_handle() != m_snapshot)
+        if (traits_type::invalid_handle() != m_snapshot)
         {
             WINSTL_API_EXTERNAL_HandleAndObject_CloseHandle(m_snapshot);
         }
@@ -356,7 +362,7 @@ public:
         // NOTE: Not necessarily efficient
         //       First answer could be cached
         //       This is also provided just as a convenience
-        return (begin() == end());
+        return end() == begin();
     }
 /// @}
 
@@ -375,7 +381,7 @@ private:
 
     void verify_construction()
     {
-        if(traits_type::invalid_handle() == m_snapshot)
+        if (traits_type::invalid_handle() == m_snapshot)
         {
             exception_policy    xp;
             DWORD const         dwErr   =   WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();

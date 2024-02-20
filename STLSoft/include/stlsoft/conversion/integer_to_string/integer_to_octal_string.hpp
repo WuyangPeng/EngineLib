@@ -5,10 +5,11 @@
  *              octal representation.
  *
  * Created:     7th April 2002
- * Updated:     14th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2002-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -21,9 +22,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -53,8 +55,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define STLSOFT_VER_STLSOFT_CONVERSION_INTEGER_TO_STRING_HPP_INTEGER_TO_OCTAL_STRING_MAJOR     5
 # define STLSOFT_VER_STLSOFT_CONVERSION_INTEGER_TO_STRING_HPP_INTEGER_TO_OCTAL_STRING_MINOR     0
-# define STLSOFT_VER_STLSOFT_CONVERSION_INTEGER_TO_STRING_HPP_INTEGER_TO_OCTAL_STRING_REVISION  19
-# define STLSOFT_VER_STLSOFT_CONVERSION_INTEGER_TO_STRING_HPP_INTEGER_TO_OCTAL_STRING_EDIT      94
+# define STLSOFT_VER_STLSOFT_CONVERSION_INTEGER_TO_STRING_HPP_INTEGER_TO_OCTAL_STRING_REVISION  22
+# define STLSOFT_VER_STLSOFT_CONVERSION_INTEGER_TO_STRING_HPP_INTEGER_TO_OCTAL_STRING_EDIT      99
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -97,6 +99,10 @@
 #ifndef STLSOFT_INCL_STLSOFT_API_external_h_string
 # include <stlsoft/api/external/string.h>
 #endif /* !STLSOFT_INCL_STLSOFT_API_external_h_string */
+
+#ifndef STLSOFT_INCL_STLSOFT_API_internal_h_memfns
+# include <stlsoft/api/internal/memfns.h>
+#endif /* !STLSOFT_INCL_STLSOFT_API_internal_h_memfns */
 
 /* /////////////////////////////////////////////////////////////////////////
  * namespace
@@ -191,7 +197,7 @@ unsigned_integer_to_octal_string(
 
     STLSOFT_COVER_MARK_LINE();
 
-    if(0 == i)
+    if (0 == i)
     {
         STLSOFT_COVER_MARK_LINE();
 
@@ -209,7 +215,7 @@ unsigned_integer_to_octal_string(
 
         C* p = end;
 
-        for(;;)
+        for (;;)
         {
             STLSOFT_COVER_MARK_LINE();
 
@@ -223,7 +229,7 @@ unsigned_integer_to_octal_string(
 
             i >>= 3;
 
-            if(0 == i)
+            if (0 == i)
             {
                 STLSOFT_COVER_MARK_LINE();
 
@@ -263,7 +269,7 @@ unsigned_integer_to_octal_string(
 
     C const* const r = unsigned_integer_to_octal_string<I, C>(buf, cchBuf, i);
 
-    *numWritten = cchBuf - (r - (buf - 1));
+    *numWritten = cchBuf - ((r - buf) + 1);
 
     STLSOFT_COVER_MARK_LINE();
 
@@ -302,7 +308,7 @@ i2s_handle_signed_minimum_in_octal_2_(
     C* end  =   buf + cchBuf;
     C* r    =   end - STLSOFT_NUM_ELEMENTS(s_minimum);
 
-    ::memcpy(r, s_minimum, sizeof(C) * STLSOFT_NUM_ELEMENTS(s_minimum));
+    STLSOFT_API_INTERNAL_memfns_memcpy(r, s_minimum, sizeof(C) * STLSOFT_NUM_ELEMENTS(s_minimum));
 
     STLSOFT_COVER_MARK_LINE();
 
@@ -330,7 +336,7 @@ i2s_handle_signed_minimum_in_octal_2_(
     C* end  =   buf + cchBuf;
     C* r    =   end - STLSOFT_NUM_ELEMENTS(s_minimum);
 
-    ::memcpy(r, s_minimum, sizeof(C) * STLSOFT_NUM_ELEMENTS(s_minimum));
+    STLSOFT_API_INTERNAL_memfns_memcpy(r, s_minimum, sizeof(C) * STLSOFT_NUM_ELEMENTS(s_minimum));
 
     STLSOFT_COVER_MARK_LINE();
 
@@ -358,7 +364,7 @@ i2s_handle_signed_minimum_in_octal_2_(
     C* end  =   buf + cchBuf;
     C* r    =   end - STLSOFT_NUM_ELEMENTS(s_minimum);
 
-    ::memcpy(r, s_minimum, sizeof(C) * STLSOFT_NUM_ELEMENTS(s_minimum));
+    STLSOFT_API_INTERNAL_memfns_memcpy(r, s_minimum, sizeof(C) * STLSOFT_NUM_ELEMENTS(s_minimum));
 
     STLSOFT_COVER_MARK_LINE();
 
@@ -386,7 +392,7 @@ i2s_handle_signed_minimum_in_octal_2_(
     C* end  =   buf + cchBuf;
     C* r    =   end - STLSOFT_NUM_ELEMENTS(s_minimum);
 
-    ::memcpy(r, s_minimum, sizeof(C) * STLSOFT_NUM_ELEMENTS(s_minimum));
+    STLSOFT_API_INTERNAL_memfns_memcpy(r, s_minimum, sizeof(C) * STLSOFT_NUM_ELEMENTS(s_minimum));
 
     STLSOFT_COVER_MARK_LINE();
 
@@ -440,11 +446,11 @@ signed_integer_to_octal_string(
 
     typedef ss_typename_type_k sign_traits<I>::unsigned_type    unsigned_t;
 
-    if(i < 0)
+    if (i < 0)
     {
         STLSOFT_COVER_MARK_LINE();
 
-        if(i == limit_traits_t::minimum())
+        if (i == limit_traits_t::minimum())
         {
             STLSOFT_COVER_MARK_LINE();
 
@@ -491,7 +497,7 @@ signed_integer_to_octal_string(
 
     C const* const r = signed_integer_to_octal_string<I, C>(buf, cchBuf, i);
 
-    *numWritten = cchBuf - (r - (buf - 1));
+    *numWritten = cchBuf - ((r - buf) + 1);
 
     STLSOFT_COVER_MARK_LINE();
 
@@ -658,18 +664,18 @@ integer_to_octal_string(
 /** Converts an integer value into an octal string representation in the
  * given character buffer.
  *
- * \param ar Reference to a character buffer of size \c N
+ * \param ar Reference to a character buffer of size \c V_dimension
  * \param i The value to be converted to octal string
  */
 template<
     ss_typename_param_k I
 ,   ss_typename_param_k C
-,   ss_size_t           N
+,   ss_size_t           V_dimension
 >
 inline
 C const*
 integer_to_octal_string(
-    C         (&ar)[N]
+    C         (&ar)[V_dimension]
 ,   I const&    i
 )
 {
@@ -677,12 +683,12 @@ integer_to_octal_string(
 
     typedef integral_format_width_limits<I> width_traits_t;
 
-    STLSOFT_MESSAGE_STATIC_ASSERT(N >= 1 + width_traits_t::maxDecimalWidth, "array is of insufficient size for the longest expressable value of the integral type");
+    STLSOFT_MESSAGE_STATIC_ASSERT(V_dimension >= 1 + width_traits_t::maxDecimalWidth, "array is of insufficient size for the longest expressable value of the integral type");
     STLSOFT_SUPPRESS_UNUSED(width_traits_t::maxDecimalWidth);
 
     STLSOFT_COVER_MARK_LINE();
 
-    return integer_to_octal_string(&ar[0], N, i);
+    return integer_to_octal_string(&ar[0], V_dimension, i);
 }
 #endif /* STLSOFT_CF_STATIC_ARRAY_SIZE_DETERMINATION_SUPPORT */
 
@@ -695,7 +701,7 @@ integer_to_octal_string(
 #endif /* STLSOFT_NO_NAMESPACE */
 
 /* /////////////////////////////////////////////////////////////////////////
- * inclusion
+ * inclusion control
  */
 
 #ifdef STLSOFT_CF_PRAGMA_ONCE_SUPPORT

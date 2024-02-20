@@ -4,10 +4,11 @@
  * Purpose:     Contains the basic_environment_block class.
  *
  * Created:     25th June 2004
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2004-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -50,10 +52,10 @@
 #define STLSOFT_INCL_STLSOFT_CONTAINERS_HPP_ENVIRONMENT_BLOCK
 
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
-# define STLSOFT_VER_STLSOFT_CONTAINERS_HPP_ENVIRONMENT_BLOCK_MAJOR    4
-# define STLSOFT_VER_STLSOFT_CONTAINERS_HPP_ENVIRONMENT_BLOCK_MINOR    2
-# define STLSOFT_VER_STLSOFT_CONTAINERS_HPP_ENVIRONMENT_BLOCK_REVISION 9
-# define STLSOFT_VER_STLSOFT_CONTAINERS_HPP_ENVIRONMENT_BLOCK_EDIT     57
+# define STLSOFT_VER_STLSOFT_CONTAINERS_HPP_ENVIRONMENT_BLOCK_MAJOR     4
+# define STLSOFT_VER_STLSOFT_CONTAINERS_HPP_ENVIRONMENT_BLOCK_MINOR     2
+# define STLSOFT_VER_STLSOFT_CONTAINERS_HPP_ENVIRONMENT_BLOCK_REVISION  10
+# define STLSOFT_VER_STLSOFT_CONTAINERS_HPP_ENVIRONMENT_BLOCK_EDIT      61
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -120,21 +122,21 @@ class basic_environment_block
 /// @{
 public:
     /// The value type
-    typedef C                                   value_type;
+    typedef C                                               value_type;
     /// The char type
-    typedef C                                   char_type;
+    typedef C                                               char_type;
     /// The traits type
-    typedef T                                   traits_type;
+    typedef T                                               traits_type;
     /// The allocator type
-    typedef A                                   allocator_type;
-    /// The current parameterisation of the type
-    typedef basic_environment_block<C, T, A>    class_type;
+    typedef A                                               allocator_type;
+    /// The current specialisation of the type
+    typedef basic_environment_block<C, T, A>                class_type;
     /// The mutating (non-const) pointer type
-    typedef char_type*                          pointer;
+    typedef char_type*                                      pointer;
     /// The non-mutating (const) pointer type
-    typedef char_type const*                    const_pointer;
+    typedef char_type const*                                const_pointer;
     /// The size type
-    typedef ss_size_t                           size_type;
+    typedef ss_size_t                                       size_type;
 /// @}
 
 /// \name Construction
@@ -246,7 +248,7 @@ public:
 public:
     char_type const* const* base() const
     {
-        if(m_pointers.size() != m_offsets.size())
+        if (m_pointers.size() != m_offsets.size())
         {
             set_pointers();
         }
@@ -265,9 +267,9 @@ public:
 private:
     void set_pointers()
     {
-        if(m_pointers.resize(m_offsets.size()))
+        if (m_pointers.resize(m_offsets.size()))
         {
-            for(size_type i = 0; i < m_offsets.size(); ++i)
+            for (size_type i = 0; i < m_offsets.size(); ++i)
             {
                 m_pointers[i] = &m_chars[m_offsets[i]];
             }
@@ -281,28 +283,31 @@ private:
 
 // Members
 private:
-    typedef STLSOFT_NS_QUAL(auto_buffer_old)<   char_type
-                                            ,   allocator_type
-                                            ,   1024
-                                            >               char_buffer_type;
+    typedef STLSOFT_NS_QUAL(auto_buffer_old)<
+        char_type
+    ,   allocator_type
+    ,   1024
+    >                                                       char_buffer_type;
 
-    typedef STLSOFT_NS_QUAL(auto_buffer_old)<   size_type
+    typedef STLSOFT_NS_QUAL(auto_buffer_old)<
+        size_type
 #if defined(STLSOFT_LF_ALLOCATOR_REBIND_SUPPORT)
-                                            ,   ss_typename_type_k allocator_type::ss_template_qual_k rebind<size_type>::other
+    ,   ss_typename_type_k allocator_type::ss_template_qual_k rebind<size_type>::other
 #else /* ? STLSOFT_LF_ALLOCATOR_REBIND_SUPPORT */
-                                            ,   ss_typename_type_k allocator_selector<size_type>::allocator_type
+    ,   ss_typename_type_k allocator_selector<size_type>::allocator_type
 #endif /* STLSOFT_LF_ALLOCATOR_REBIND_SUPPORT */
-                                            ,   32
-                                            >               offset_buffer_type;
+    ,   32
+    >                                                       offset_buffer_type;
 
-    typedef STLSOFT_NS_QUAL(auto_buffer_old)<   const_pointer
+    typedef STLSOFT_NS_QUAL(auto_buffer_old)<
+        const_pointer
 #if defined(STLSOFT_LF_ALLOCATOR_REBIND_SUPPORT)
-                                            ,   ss_typename_type_k allocator_type::ss_template_qual_k rebind<pointer>::other
+    ,   ss_typename_type_k allocator_type::ss_template_qual_k rebind<pointer>::other
 #else /* ? STLSOFT_LF_ALLOCATOR_REBIND_SUPPORT */
-                                            ,   ss_typename_type_k allocator_selector<pointer>::allocator_type
+    ,   ss_typename_type_k allocator_selector<pointer>::allocator_type
 #endif /* STLSOFT_LF_ALLOCATOR_REBIND_SUPPORT */
-                                            ,   32
-                                            >               pointer_buffer_type;
+    ,   32
+    >                                                       pointer_buffer_type;
 
     char_buffer_type        m_chars;
     offset_buffer_type      m_offsets;

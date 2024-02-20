@@ -4,12 +4,13 @@
  * Purpose:     Contains the c_str_ptr_extract_iterator template class and c_str_inserter creator function.
  *
  * Created:     12th October 2004
- * Updated:     13th September 2019
+ * Updated:     29th January 2024
  *
  * Thanks to:   Pablo Aguilar for spotting missing inclusions.
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2004-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -22,9 +23,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -55,8 +57,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define STLSOFT_VER_STLSOFT_ITERATORS_HPP_C_STR_INSERTER_MAJOR     2
 # define STLSOFT_VER_STLSOFT_ITERATORS_HPP_C_STR_INSERTER_MINOR     0
-# define STLSOFT_VER_STLSOFT_ITERATORS_HPP_C_STR_INSERTER_REVISION  6
-# define STLSOFT_VER_STLSOFT_ITERATORS_HPP_C_STR_INSERTER_EDIT      42
+# define STLSOFT_VER_STLSOFT_ITERATORS_HPP_C_STR_INSERTER_REVISION  7
+# define STLSOFT_VER_STLSOFT_ITERATORS_HPP_C_STR_INSERTER_EDIT      46
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -92,7 +94,7 @@ namespace stlsoft
 
 /** This iterator adaptor translates the values assigned to it via the
  * c_str_ptr access shim, and passes the result to the function on which it's
- * parameterised.
+ * specialised.
  *
  * \ingroup group__library__Iterator
  *
@@ -122,7 +124,7 @@ private:
     friend class deref_proxy;
 
 public:
-    ss_explicit_k c_str_ptr_extract_iterator(F &f)
+    ss_explicit_k c_str_ptr_extract_iterator(F f)
         : m_f(f)
     {}
 
@@ -145,7 +147,8 @@ private:
     class deref_proxy
     {
     public:
-        deref_proxy(c_str_ptr_extract_iterator *it)
+        ss_explicit_k
+        deref_proxy(c_str_ptr_extract_iterator* it)
             : m_it(it)
         {}
 
@@ -186,7 +189,11 @@ private:
  * \ingroup group__library__Iterator
  */
 template <ss_typename_param_k F>
-inline c_str_ptr_extract_iterator<F> c_str_inserter(F &f)
+inline
+c_str_ptr_extract_iterator<F>
+c_str_inserter(
+    F f
+)
 {
     return c_str_ptr_extract_iterator<F>(f);
 }
@@ -198,7 +205,11 @@ inline c_str_ptr_extract_iterator<F> c_str_inserter(F &f)
  * \deprecated Use stlsoft::c_str_inserter()
  */
 template <ss_typename_param_k F>
-inline c_str_ptr_extract_iterator<F> c_str_ptr_inserter(F &f)
+inline
+c_str_ptr_extract_iterator<F>
+c_str_ptr_inserter(
+    F f
+)
 {
     return c_str_ptr_extract_iterator<F>(f);
 }

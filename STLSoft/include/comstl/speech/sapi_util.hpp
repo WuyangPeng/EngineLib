@@ -4,10 +4,11 @@
  * Purpose:     Definition of SAPI types and constants.
  *
  * Created:     31st August 2006
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2006-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -52,8 +54,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define COMSTL_VER_COMSTL_SPEECH_HPP_SAPI_UTIL_MAJOR       1
 # define COMSTL_VER_COMSTL_SPEECH_HPP_SAPI_UTIL_MINOR       0
-# define COMSTL_VER_COMSTL_SPEECH_HPP_SAPI_UTIL_REVISION    8
-# define COMSTL_VER_COMSTL_SPEECH_HPP_SAPI_UTIL_EDIT        18
+# define COMSTL_VER_COMSTL_SPEECH_HPP_SAPI_UTIL_REVISION    9
+# define COMSTL_VER_COMSTL_SPEECH_HPP_SAPI_UTIL_EDIT        21
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -113,7 +115,9 @@ namespace comstl_project
  * sapi
  */
 
-#ifndef COMSTL_SPEECH_SAPI_UTIL_USE_MS_SAPI_HEADERS
+#ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
+
+# ifndef COMSTL_SPEECH_SAPI_UTIL_USE_MS_SAPI_HEADERS
 
 /** Interface that emulates the vtable of ISpNotifySource
  */
@@ -195,8 +199,8 @@ enum SPEAKFLAGS
     SPF_UNUSED_FLAGS = ~SPF_VOICE_MASK
 };
 
-# define CLSID_SpVoice  COMSTL_NS_QUAL(CLSID_SpVoice_)
-# define ISpVoice       COMSTL_NS_QUAL(ISpVoice_)
+# define CLSID_SpVoice                                      COMSTL_NS_QUAL(CLSID_SpVoice_)
+# define ISpVoice                                           COMSTL_NS_QUAL(ISpVoice_)
 
 namespace
 {
@@ -210,7 +214,8 @@ namespace
 COMSTL_IID_TRAITS_DEFINE__(ISpVoice_, ISpVoice_)
 
 
-#endif /* !COMSTL_SPEECH_SAPI_UTIL_USE_MS_SAPI_HEADERS */
+# endif /* !COMSTL_SPEECH_SAPI_UTIL_USE_MS_SAPI_HEADERS */
+#endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
  * functions

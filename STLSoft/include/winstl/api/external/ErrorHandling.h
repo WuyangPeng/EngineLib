@@ -5,10 +5,11 @@
  *              Handling Functions API.
  *
  * Created:     20th August 2017
- * Updated:     11th September 2019
+ * Updated:     26th December 2020
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2020, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2017-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -21,9 +22,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -87,13 +89,13 @@ FlashWindowEx
  */
 
 #ifndef WINSTL_API_EXTERNAL_ErrorHandling_FormatMessage
-# define WINSTL_API_EXTERNAL_ErrorHandling_FormatMessage                        STLSOFT_NS_GLOBAL_(FormatMessage)
+# define WINSTL_API_EXTERNAL_ErrorHandling_FormatMessage    STLSOFT_NS_GLOBAL_(FormatMessage)
 #endif /* !WINSTL_API_EXTERNAL_ErrorHandling_FormatMessage */
 #ifndef WINSTL_API_EXTERNAL_ErrorHandling_FormatMessageA
-# define WINSTL_API_EXTERNAL_ErrorHandling_FormatMessageA                       STLSOFT_NS_GLOBAL_(FormatMessageA)
+# define WINSTL_API_EXTERNAL_ErrorHandling_FormatMessageA   STLSOFT_NS_GLOBAL_(FormatMessageA)
 #endif /* !WINSTL_API_EXTERNAL_ErrorHandling_FormatMessageA */
 #ifndef WINSTL_API_EXTERNAL_ErrorHandling_FormatMessageW
-# define WINSTL_API_EXTERNAL_ErrorHandling_FormatMessageW                       STLSOFT_NS_GLOBAL_(FormatMessageW)
+# define WINSTL_API_EXTERNAL_ErrorHandling_FormatMessageW   STLSOFT_NS_GLOBAL_(FormatMessageW)
 #endif /* !WINSTL_API_EXTERNAL_ErrorHandling_FormatMessageW */
 
 
@@ -106,7 +108,7 @@ GetErrorMode
  */
 
 #ifndef WINSTL_API_EXTERNAL_ErrorHandling_GetLastError
-# define WINSTL_API_EXTERNAL_ErrorHandling_GetLastError                         STLSOFT_NS_GLOBAL_(GetLastError)
+# define WINSTL_API_EXTERNAL_ErrorHandling_GetLastError     STLSOFT_NS_GLOBAL_(GetLastError)
 #endif /* !WINSTL_API_EXTERNAL_ErrorHandling_GetLastError */
 
 /*
@@ -150,7 +152,7 @@ SetErrorMode
  */
 
 #ifndef WINSTL_API_EXTERNAL_ErrorHandling_SetLastError
-# define WINSTL_API_EXTERNAL_ErrorHandling_SetLastError                         STLSOFT_NS_GLOBAL_(SetLastError)
+# define WINSTL_API_EXTERNAL_ErrorHandling_SetLastError     STLSOFT_NS_GLOBAL_(SetLastError)
 #endif /* !WINSTL_API_EXTERNAL_ErrorHandling_SetLastError */
 
 /*

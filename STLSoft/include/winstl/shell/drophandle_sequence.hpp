@@ -5,10 +5,11 @@
  *              and Unicode specialisations thereof.
  *
  * Created:     13th November 2002
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2002-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -21,9 +22,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -54,7 +56,7 @@
 # define WINSTL_VER_WINSTL_SHELL_HPP_DROPHANDLE_SEQUENCE_MAJOR      4
 # define WINSTL_VER_WINSTL_SHELL_HPP_DROPHANDLE_SEQUENCE_MINOR      1
 # define WINSTL_VER_WINSTL_SHELL_HPP_DROPHANDLE_SEQUENCE_REVISION   12
-# define WINSTL_VER_WINSTL_SHELL_HPP_DROPHANDLE_SEQUENCE_EDIT       110
+# define WINSTL_VER_WINSTL_SHELL_HPP_DROPHANDLE_SEQUENCE_EDIT       114
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -229,7 +231,7 @@ public:
     typedef T                                                   traits_type;
     /// The string type
     typedef _STLSOFT_DROPHANDLE_SEQUENCE_VALUE_TYPE(C)          string_type;
-    /// The current parameterisation of the type
+    /// The current specialisation of the type
     typedef basic_drophandle_sequence_const_iterator<C, T>      class_type;
     /// The value type
     typedef string_type                                         value_type;
@@ -306,7 +308,7 @@ public:
     typedef C                                                                               char_type;
     /// The traits type
     typedef T                                                                               traits_type;
-    /// The current parameterisation of the type
+    /// The current specialisation of the type
     typedef basic_drophandle_sequence<C, T>                                                 class_type;
     /// The non-mutating (const) iterator type
     typedef basic_drophandle_sequence_const_iterator<C, T>                                  const_iterator;
@@ -333,7 +335,7 @@ public:
 public:
     /// Construct a sequence based on the contents of the given drop handle
     ss_explicit_k basic_drophandle_sequence(HDROP hdrop, ws_bool_t bOwnHandle = true);
-    /// Release any resources aquired
+    /// Release any resources acquired
     ~basic_drophandle_sequence() STLSOFT_NOEXCEPT;
 
 // Attributes
@@ -476,7 +478,7 @@ inline ss_typename_type_ret_k basic_drophandle_sequence_const_iterator<C, T>::cl
 
     ws_uint_t const res = traits_type::drag_query_file(m_hdrop, static_cast<ws_uint_t>(m_index + 1), NULL, 0);
 
-    if(res == 0)
+    if (res == 0)
     {
         // Failed, so become 'end'
         m_index = sentinel_();
@@ -496,12 +498,12 @@ template<   ss_typename_param_k C
 inline ss_typename_type_ret_k basic_drophandle_sequence_const_iterator<C, T>::class_type& basic_drophandle_sequence_const_iterator<C, T>::operator --()
 {
     // If currently at 'end' ....
-    if(m_index == sentinel_())
+    if (m_index == sentinel_())
     {
         // ... then determine the new end ...
         m_index = static_cast<index_type>(traits_type::drag_query_file(m_hdrop, static_cast<ws_uint_t>(0xFFFFFFFF), NULL, 0));
 
-        if(m_index == 0xFFFFFFFF)
+        if (m_index == 0xFFFFFFFF)
         {
             // ... failed. Must set to end again!
             m_index = sentinel_();
@@ -555,7 +557,7 @@ inline const ss_typename_type_k basic_drophandle_sequence_const_iterator<C, T>::
     ws_uint_t                               cch =   traits_type::drag_query_file(m_hdrop, static_cast<ws_uint_t>(m_index), NULL, 0);
     STLSOFT_NS_QUAL(auto_buffer)<char_type> sz(1 + cch);
 
-    if( 0 == sz.size() ||
+    if (0 == sz.size() ||
         0 == (cch = traits_type::drag_query_file(m_hdrop, static_cast<ws_uint_t>(m_index), &sz[0], ws_uint_t(sz.size()))))
     {
         sz[0] = '\0';
@@ -585,7 +587,7 @@ inline basic_drophandle_sequence<C, T>::basic_drophandle_sequence(HDROP hdrop, w
 template <ss_typename_param_k C, ss_typename_param_k T>
 inline basic_drophandle_sequence<C, T>::~basic_drophandle_sequence() STLSOFT_NOEXCEPT
 {
-    if(m_bOwnHandle)
+    if (m_bOwnHandle)
     {
         ::DragFinish(m_hdrop);
     }
@@ -600,7 +602,7 @@ inline ws_size_t basic_drophandle_sequence<C, T>::size() const
 template <ss_typename_param_k C, ss_typename_param_k T>
 inline ws_bool_t basic_drophandle_sequence<C, T>::empty() const
 {
-    return size() == 0;
+    return 0 == size();
 }
 
 template <ss_typename_param_k C, ss_typename_param_k T>

@@ -4,10 +4,11 @@
  * Purpose:     Efficient drop-in replacement for strftime().
  *
  * Created:     23rd December 2018
- * Updated:     14th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2018-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,9 +53,9 @@
 
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define STLSOFT_VER_STLSOFT_TIME_HPP_FAST_STRFTIME_MAJOR       1
-# define STLSOFT_VER_STLSOFT_TIME_HPP_FAST_STRFTIME_MINOR       1
+# define STLSOFT_VER_STLSOFT_TIME_HPP_FAST_STRFTIME_MINOR       3
 # define STLSOFT_VER_STLSOFT_TIME_HPP_FAST_STRFTIME_REVISION    1
-# define STLSOFT_VER_STLSOFT_TIME_HPP_FAST_STRFTIME_EDIT        8
+# define STLSOFT_VER_STLSOFT_TIME_HPP_FAST_STRFTIME_EDIT        14
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -397,22 +399,22 @@ fast_strftime_(
     STLSOFT_ASSERT(tm->tm_wday >= 0 && tm->tm_wday < 7);
     STLSOFT_ASSERT(tm->tm_yday >= 0 && tm->tm_yday < 366);
 
-    { for(size_t i = 0; i != STLSOFT_NUM_ELEMENTS(info.weekdays_long); ++i)
+    { for (size_t i = 0; i != STLSOFT_NUM_ELEMENTS(info.weekdays_long); ++i)
     {
         STLSOFT_ASSERT(0 != info.weekdays_long[i].len);
         STLSOFT_ASSERT(NULL != info.weekdays_long[i].ptr);
     }}
-    { for(size_t i = 0; i != STLSOFT_NUM_ELEMENTS(info.weekdays_short); ++i)
+    { for (size_t i = 0; i != STLSOFT_NUM_ELEMENTS(info.weekdays_short); ++i)
     {
         STLSOFT_ASSERT(0 != info.weekdays_short[i].len);
         STLSOFT_ASSERT(NULL != info.weekdays_short[i].ptr);
     }}
-    { for(size_t i = 0; i != STLSOFT_NUM_ELEMENTS(info.months_long); ++i)
+    { for (size_t i = 0; i != STLSOFT_NUM_ELEMENTS(info.months_long); ++i)
     {
         STLSOFT_ASSERT(0 != info.months_long[i].len);
         STLSOFT_ASSERT(NULL != info.months_long[i].ptr);
     }}
-    { for(size_t i = 0; i != STLSOFT_NUM_ELEMENTS(info.months_short); ++i)
+    { for (size_t i = 0; i != STLSOFT_NUM_ELEMENTS(info.months_short); ++i)
     {
         STLSOFT_ASSERT(0 != info.months_short[i].len);
         STLSOFT_ASSERT(NULL != info.months_short[i].ptr);
@@ -444,17 +446,17 @@ fast_strftime_(
 
     slice_t const*      sl;
 
-    for(; b_fmt != e_fmt; ++b_fmt)
+    for (; b_fmt != e_fmt; ++b_fmt)
     {
         T_char const ch = *b_fmt;
 
         STLSOFT_ASSERT(n <= cchDest);
 
-        switch(state)
+        switch (state)
         {
         case state_literal:
 
-            switch(ch)
+            switch (ch)
             {
             case '%':
 
@@ -473,7 +475,7 @@ fast_strftime_(
             break;
         case state_percent:
 
-            if('%' == ch)
+            if ('%' == ch)
             {
 
                 if (!(n + 1 < cchDest))
@@ -485,7 +487,7 @@ fast_strftime_(
                 state = state_literal;
                 break;
             }
-            else if('#' == ch)
+            else if ('#' == ch)
             {
                 state = state_percent_hash;
                 break;
@@ -496,7 +498,7 @@ fast_strftime_(
 
                 hashed = (state_percent_hash == state);
 
-                switch(ch)
+                switch (ch)
                 {
                 case '%':
 
@@ -511,7 +513,7 @@ fast_strftime_(
                 case 0:
 week_number_U:
 
-                    if(tm->tm_yday < wd)
+                    if (tm->tm_yday < wd)
                     {
                         v = 0;
                     }
@@ -527,7 +529,7 @@ week_number_U:
 
 finish_two_digit:
 
-                    if((cchDest - n) < 3)
+                    if ((cchDest - n) < 3)
                     {
                         return 0;
                     }
@@ -536,7 +538,7 @@ finish_two_digit:
 
                     s = tens_and_units[v];
 
-                    if(!hashed || '0' != s[0])
+                    if (!hashed || '0' != s[0])
                     {
                         if (!(n + 1 < cchDest))
                         {
@@ -561,12 +563,12 @@ finish_three_digit:
 
                     STLSOFT_ASSERT(v >= 0 && v < 1000);
 
-                    if((cchDest - n) < 4)
+                    if ((cchDest - n) < 4)
                     {
                         return 0;
                     }
 
-                    if(v > 99)
+                    if (v > 99)
                     {
                         int const       ix0 = v % 100;
                         int const       ix1 = v / 100;
@@ -586,9 +588,9 @@ finish_three_digit:
                     {
                         T_char const* tu0 = tens_and_units[v];
 
-                        if(hashed)
+                        if (hashed)
                         {
-                            if(v > 10)
+                            if (v > 10)
                             {
                                 if (!(n + 1 < cchDest))
                                 {
@@ -624,12 +626,12 @@ finish_three_digit:
 
 finish_sliced_item:
 
-                    if((cchDest - n) < (1 + sl->len))
+                    if ((cchDest - n) < (1 + sl->len))
                     {
                         return 0;
                     }
 
-                    { for(size_t i = 0, l = sl->len; i != l; ++i, ++n)
+                    { for (size_t i = 0, l = sl->len; i != l; ++i, ++n)
                     {
                         dest[n] = sl->ptr[i];
                     }}
@@ -679,7 +681,7 @@ finish_sliced_item:
 
                     v = tm->tm_hour % 12;
 
-                    if(0 == v)
+                    if (0 == v)
                     {
                         v = 12;
                     }
@@ -718,7 +720,7 @@ finish_sliced_item:
 
                 case 'W':
 
-                    if(0 == tm->tm_wday)
+                    if (0 == tm->tm_wday)
                     {
                         wd = 6;
                     }
@@ -733,7 +735,7 @@ finish_sliced_item:
 
                     v = tm->tm_wday;
 
-                    if((cchDest - n) < 2)
+                    if ((cchDest - n) < 2)
                     {
                         return 0;
                     }
@@ -748,7 +750,7 @@ finish_sliced_item:
 
                     v = 1900 + tm->tm_year;
 
-                    if((cchDest - n) < 5)
+                    if ((cchDest - n) < 5)
                     {
                         return 0;
                     }
@@ -795,7 +797,7 @@ finish_sliced_item:
 
                 case 'D': // %m/%d/%y
 
-                    if((cchDest - n) < 9)
+                    if ((cchDest - n) < 9)
                     {
                         return 0;
                     }
@@ -827,16 +829,16 @@ finish_sliced_item:
 
                 case 'e': // space-leading-padded day-of-month
 
-                    if((cchDest - n) < 3)
+                    if ((cchDest - n) < 3)
                     {
                         return 0;
                     }
 
                     s = tens_and_units[tm->tm_mday];
 
-                    if('0' == s[0])
+                    if ('0' == s[0])
                     {
-                        if(!hashed)
+                        if (!hashed)
                         {
                             dest[n++] = ' ';
                         }
@@ -854,7 +856,7 @@ finish_sliced_item:
 
                 case 'F': // %Y-%m-%d
 
-                    if((cchDest - n) < 11)
+                    if ((cchDest - n) < 11)
                     {
                         return 0;
                     }
@@ -876,7 +878,7 @@ finish_sliced_item:
 
                         s = tens_and_units[tm->tm_mon + 1];
 
-                        if(!hashed || '0' != s[0])
+                        if (!hashed || '0' != s[0])
                         {
                             dest[n++] = s[0];
                         }
@@ -887,7 +889,7 @@ finish_sliced_item:
 
                         s = tens_and_units[tm->tm_mday];
 
-                        if(!hashed || '0' != s[0])
+                        if (!hashed || '0' != s[0])
                         {
                             dest[n++] = s[0];
                         }
@@ -909,7 +911,7 @@ finish_sliced_item:
 
                 case 'n': // a '\n'
 
-                    if((cchDest - n) < 2)
+                    if ((cchDest - n) < 2)
                     {
                         return 0;
                     }
@@ -926,7 +928,7 @@ finish_sliced_item:
 
                 case 'R': // %H:%M
 
-                    if((cchDest - n) < 6)
+                    if ((cchDest - n) < 6)
                     {
                         return 0;
                     }
@@ -934,7 +936,7 @@ finish_sliced_item:
                     {
                         s = tens_and_units[tm->tm_hour];
 
-                        if(!hashed || '0' != s[0])
+                        if (!hashed || '0' != s[0])
                         {
                             dest[n++] = s[0];
                         }
@@ -945,7 +947,7 @@ finish_sliced_item:
 
                         s = tens_and_units[tm->tm_min];
 
-                        if(!hashed || '0' != s[0])
+                        if (!hashed || '0' != s[0])
                         {
                             dest[n++] = s[0];
                         }
@@ -963,7 +965,7 @@ finish_sliced_item:
 
                 case 'T': // %H:%M:%S
 
-                    if((cchDest - n) < 9)
+                    if ((cchDest - n) < 9)
                     {
                         return 0;
                     }
@@ -971,7 +973,7 @@ finish_sliced_item:
                     {
                         s = tens_and_units[tm->tm_hour];
 
-                        if(!hashed || '0' != s[0])
+                        if (!hashed || '0' != s[0])
                         {
                             dest[n++] = s[0];
                         }
@@ -982,7 +984,7 @@ finish_sliced_item:
 
                         s = tens_and_units[tm->tm_min];
 
-                        if(!hashed || '0' != s[0])
+                        if (!hashed || '0' != s[0])
                         {
                             dest[n++] = s[0];
                         }
@@ -993,7 +995,7 @@ finish_sliced_item:
 
                         s = tens_and_units[tm->tm_sec];
 
-                        if(!hashed || '0' != s[0])
+                        if (!hashed || '0' != s[0])
                         {
                             dest[n++] = s[0];
                         }
@@ -1007,7 +1009,7 @@ finish_sliced_item:
 
                 case 't': // a '\t'
 
-                    if((cchDest - n) < 2)
+                    if ((cchDest - n) < 2)
                     {
                         return 0;
                     }
@@ -1020,14 +1022,14 @@ finish_sliced_item:
 
                 case 'u': // ISO 8601 weekday (1 - 7, Monday == 1)
 
-                    if((cchDest - n) < 2)
+                    if ((cchDest - n) < 2)
                     {
                         return 0;
                     }
 
                     v = tm->tm_wday;
 
-                    if(0 == v)
+                    if (0 == v)
                     {
                         v = 7;
                     }
@@ -1072,7 +1074,6 @@ finish_sliced_item:
 
     return n;
 }
-
 
 } /* namespace ximpl_fast_strftime_ */
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
@@ -1123,18 +1124,18 @@ finish_sliced_item:
  * \li \c u - weekday, with Monday as 1, as decimal number [1-7]
  *
  * \remarks The following formatting codes are not supported
- * \li \c c - 
- * \li \c g - 
- * \li \c G - 
- * \li \c p - 
- * \li \c r - 
- * \li \c V - 
- * \li \c x - 
- * \li \c X - 
- * \li \c z - 
- * \li \c Z - 
+ * \li \c c -
+ * \li \c g -
+ * \li \c G -
+ * \li \c p -
+ * \li \c r -
+ * \li \c V -
+ * \li \c x -
+ * \li \c X -
+ * \li \c z -
+ * \li \c Z -
  *
- * \remarks The following supported codes are modified by the '#' 
+ * \remarks The following supported codes are modified by the '#'
  *   character - e.g. "%#d" - to remove leading 0, if any:
  * \li \c d
  * \li \c D
@@ -1242,6 +1243,7 @@ fast_strftime(
     return ximpl_fast_strftime_::fast_strftime_(dest, cchDest, fmt, tm, s_info);
 }
 
+/** wide-string form */
 inline
 size_t
 fast_wcsftime(
@@ -1312,6 +1314,37 @@ fast_wcsftime(
     return ximpl_fast_strftime_::fast_strftime_(dest, cchDest, fmt, tm, s_info);
 }
 
+/** wide-string form */
+inline
+size_t
+fast_strftime(
+    wchar_t                     dest[]
+,   size_t                      cchDest
+,   wchar_t const*              fmt
+,   struct tm const*            tm
+)
+{
+    return fast_wcsftime(dest, cchDest, fmt, tm);
+}
+
+#ifdef STLSOFT_CF_STATIC_ARRAY_SIZE_DETERMINATION_SUPPORT
+
+template<
+    ss_typename_param_k T_character
+,   ss_size_t           V_dimension
+>
+inline
+size_t
+fast_strftime(
+    T_character               (&dest)[V_dimension]
+,   T_character const*          fmt
+,   struct tm const*            tm
+)
+{
+    return fast_strftime(dest, V_dimension, fmt, tm);
+}
+#endif /* STLSOFT_CF_STATIC_ARRAY_SIZE_DETERMINATION_SUPPORT */
+
 /* /////////////////////////////////////////////////////////////////////////
 * namespace
 */
@@ -1321,7 +1354,7 @@ fast_wcsftime(
 #endif /* STLSOFT_NO_NAMESPACE */
 
 /* /////////////////////////////////////////////////////////////////////////
- * inclusion
+ * inclusion control
  */
 
 #ifdef STLSOFT_CF_PRAGMA_ONCE_SUPPORT

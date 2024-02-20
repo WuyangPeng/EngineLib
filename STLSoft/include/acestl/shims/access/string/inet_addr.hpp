@@ -4,10 +4,11 @@
  * Purpose:     Helper functions for ACE strings.
  *
  * Created:     23rd September 2004
- * Updated:     2nd February 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2004-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -53,7 +55,7 @@
 # define ACESTL_VER_ACESTL_SHIMS_ACCESS_STRING_HPP_INET_ADDR_MAJOR      2
 # define ACESTL_VER_ACESTL_SHIMS_ACCESS_STRING_HPP_INET_ADDR_MINOR      0
 # define ACESTL_VER_ACESTL_SHIMS_ACCESS_STRING_HPP_INET_ADDR_REVISION   12
-# define ACESTL_VER_ACESTL_SHIMS_ACCESS_STRING_HPP_INET_ADDR_EDIT       57
+# define ACESTL_VER_ACESTL_SHIMS_ACCESS_STRING_HPP_INET_ADDR_EDIT       59
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -132,7 +134,7 @@ namespace acestl_inet_addr_access_string_util
 
         buffer_t    buffer(buffer_t::internal_size());
 
-        for(; 0 != addr.addr_to_string(&buffer[0], buffer.size()); buffer.resize(2 * buffer.size()))
+        for (; 0 != addr.addr_to_string(&buffer[0], buffer.size()); buffer.resize(2 * buffer.size()))
         {}
 
         buffer.resize(buffer.size() + 1);
@@ -181,7 +183,7 @@ namespace acestl_inet_addr_access_string_util
 # endif /* ACE_USES_WCHAR */
         int                                 res =   addr.addr_to_string(&buff[0], buff.size(), fmt);
 
-        if(0 == res)
+        if (0 == res)
         {
             ACESTL_ASSERT(static_cast<ss_size_t>(res) < buff.size());
 
@@ -234,7 +236,7 @@ namespace acestl_inet_addr_access_string_util
 #if _STLSOFT_VER >= 0x010a0181
         ::stlsoft::basic_shim_string<char_t>&   buffer = retVal;
 
-        for(; 0 != invoke_addr_to_string(addr, &buffer.data()[0], buffer.size()); buffer.resize((3 * buffer.size()) / 2))
+        for (; 0 != invoke_addr_to_string(addr, &buffer.data()[0], buffer.size()); buffer.resize((3 * buffer.size()) / 2))
         {}
 
         buffer.resize(buffer.size() + 1);
@@ -242,7 +244,7 @@ namespace acestl_inet_addr_access_string_util
 #else
         buffer_t&                               buffer = retVal.get_buffer();
 
-        for(; 0 != invoke_addr_to_string(addr, &buffer[0], buffer.size()); buffer.resize((3 * buffer.size()) / 2))
+        for (; 0 != invoke_addr_to_string(addr, &buffer[0], buffer.size()); buffer.resize((3 * buffer.size()) / 2))
         {}
 
         buffer.resize(buffer.size() + 1);

@@ -4,10 +4,11 @@
  * Purpose:     Basic functionals.
  *
  * Created:     19th January 2002
- * Updated:     2nd February 2019
+ * Updated:     29th January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2002-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -50,7 +52,7 @@
 # define STLSOFT_VER_STLSOFT_OBSOLETE_HPP_FUNCTIONALS_MAJOR     3
 # define STLSOFT_VER_STLSOFT_OBSOLETE_HPP_FUNCTIONALS_MINOR     0
 # define STLSOFT_VER_STLSOFT_OBSOLETE_HPP_FUNCTIONALS_REVISION  7
-# define STLSOFT_VER_STLSOFT_OBSOLETE_HPP_FUNCTIONALS_EDIT      55
+# define STLSOFT_VER_STLSOFT_OBSOLETE_HPP_FUNCTIONALS_EDIT      57
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -140,13 +142,13 @@ public:
 // struct selector1st
 
 /** Selects the <b><code>first</code></b> member of an instance and applies the
- * parameterising functional to it. This functional selects the \c first member
+ * specialising functional to it. This functional selects the \c first member
  * of an instance (obviously this is usually the \c std::pair type), and
- * applies the parameterising functional to it.
+ * applies the specialising functional to it.
  *
  * \ingroup group__library__Functional
  *
- * \param F The parameterising functional
+ * \param F The specialising functional
  *
  * For example, if you have a std::map and wish to write out the keys
  * with a dump_key functional, you could achieve this with the following:
@@ -182,7 +184,7 @@ public:
         : m_f(f)
     {}
 
-    /// Function call operator, which applies the parameterising function class
+    /// Function call operator, which applies the specialising function class
     /// to the \c first part of the pair \c t
     ///
     /// \param t An instance of a \c pair like type, to whose \c first member will be applied the function F
@@ -215,14 +217,14 @@ inline selector1st<F> select1st(F f)
 // struct selector2nd
 //
 /** Selects the <b><code>second</code></b> member of an instance and
- * applies the parameterising functional to it.
+ * applies the specialising functional to it.
  *
  * \ingroup group__library__Functional
  *
- * \param F The parameterising functional
+ * \param F The specialising functional
  *
  * This functional selects the "second" member of an instance (obviously
- * this is usually the std::pair type), and applies the parameterising
+ * this is usually the std::pair type), and applies the specialising
  * functional to it.
  *
  * For example, if you have a std::map and wish to write out the values
@@ -260,7 +262,7 @@ public:
         : m_f(f)
     {}
 
-    /// Function call operator, which applies the parameterising function class
+    /// Function call operator, which applies the specialising function class
     /// to the \c second part of the pair \c t
     ///
     /// \param t An instance of a \c pair like type, to whose \c second member will be applied the function F
@@ -284,13 +286,13 @@ private:
 // struct select_1st
 
 /** Selects the <b><code>first</code></b> member of an instance and applies the
- * parameterising functional to it. This functional selects the \c first member
+ * specialising functional to it. This functional selects the \c first member
  * of an instance (obviously this is usually the \c std::pair type), and
- * applies the parameterising functional to it.
+ * applies the specialising functional to it.
  *
  * \ingroup group__library__Functional
  *
- * \param F The parameterising functional
+ * \param F The specialising functional
  *
  * For example, if you have a std::map and wish to write out the keys
  * with a dump_key functional, you could achieve this with the following:
@@ -321,7 +323,7 @@ public:
         : m_f(f)
     {}
 
-    /// Function call operator, which applies the parameterising function class
+    /// Function call operator, which applies the specialising function class
     /// to the \c first part of the pair \c t
     ///
     /// \param t An instance of a \c pair like type, to whose \c first member will be applied the function F
@@ -355,14 +357,14 @@ inline select_1st<F> make_1st_selector(F f)
 // struct select_2nd
 //
 /** Selects the <b><code>second</code></b> member of an instance and
- * applies the parameterising functional to it.
+ * applies the specialising functional to it.
  *
  * \ingroup group__library__Functional
  *
- * \param F The parameterising functional
+ * \param F The specialising functional
  *
  * This functional selects the "second" member of an instance (obviously
- * this is usually the std::pair type), and applies the parameterising
+ * this is usually the std::pair type), and applies the specialising
  * functional to it.
  *
  * For example, if you have a std::map and wish to write out the values
@@ -394,7 +396,7 @@ public:
         : m_f(f)
     {}
 
-    /// Function call operator, which applies the parameterising function class
+    /// Function call operator, which applies the specialising function class
     /// to the \c second part of the pair \c t
     ///
     /// \param t An instance of a \c pair like type, to whose \c second member will be applied the function F
@@ -418,7 +420,7 @@ private:
 //
 /** This functional selects both the \c first and \c second members of an instance
  * (obviously this is usually the std::pair type), and applies the respective
- * parameterising functionals to them.
+ * specialising functionals to them.
  *
  * \ingroup group__library__Functional
  *
@@ -462,7 +464,7 @@ public:
         , m_f2(f2)
     {}
 
-    /// Function call operator, which applies the parameterising function classes
+    /// Function call operator, which applies the specialising function classes
     /// to the \c first and \c second parts of the pair \c t
     ///
     /// \param t An instance of a \c pair like type, to whose \c first and \c second members will be applied the functions F1 and F2

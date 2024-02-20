@@ -4,10 +4,11 @@
  * Purpose:     Allocator commmon features.
  *
  * Created:     20th August 2003
- * Updated:     13th September 2019
+ * Updated:     20th January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2003-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -52,8 +54,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define STLSOFT_VER_STLSOFT_MEMORY_HPP_ALLOCATOR_BASE_MAJOR    4
 # define STLSOFT_VER_STLSOFT_MEMORY_HPP_ALLOCATOR_BASE_MINOR    1
-# define STLSOFT_VER_STLSOFT_MEMORY_HPP_ALLOCATOR_BASE_REVISION 12
-# define STLSOFT_VER_STLSOFT_MEMORY_HPP_ALLOCATOR_BASE_EDIT     61
+# define STLSOFT_VER_STLSOFT_MEMORY_HPP_ALLOCATOR_BASE_REVISION 16
+# define STLSOFT_VER_STLSOFT_MEMORY_HPP_ALLOCATOR_BASE_EDIT     66
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -109,14 +111,14 @@ namespace stlsoft
  * functionality of allocator classes, requiring that a derived type defines
  * only a simple set of non-static member functions:
  *
- * - <code>void *do_allocate(size_type n, void const* hint);</code> - allocates
+ * - <code>void* do_allocate(size_type n, void const* hint);</code> - allocates
  *    <code>n</code> bytes, optionally taking into account the locality
  *    <code>hint</code>. Return <code>NULL</code> or throw
  *    <code>std::bad_alloc</code> if the allocation fails.
- * - <code>void do_deallocate(void *pv, size_type n);</code> - deallocates
+ * - <code>void do_deallocate(void* pv, size_type n);</code> - deallocates
  *    the memory block pointed to by <code>pv</code>, which is <code>n</code>
  *    bytes in size.
- * - <code>void do_deallocate(void *pv);</code> - deallocates the memory block
+ * - <code>void do_deallocate(void* pv);</code> - deallocates the memory block
  *    pointed to by <code>pv</code>.
  *
  * \see stlsoft::malloc_allocator |
@@ -131,7 +133,7 @@ namespace stlsoft
  *
  * \remarks This uses the SCTP/CRTP (Simulated Compile-time Polymorphism / Curiously
  * Recurring Template Pattern) technique, such that derived classes inherit from
- * parameterisations of the adaptor template which specify their fully derived
+ * specialisations of the adaptor template which specify their fully derived
  * template-id as the first parameter
  *
  * \note By default, an allocation failure results in a thrown std::bad_alloc. If
@@ -150,7 +152,7 @@ class allocator_base
 public:
     /// The value type
     typedef T                                   value_type;
-    /// The type of the current parameterisation
+    /// The current specialisation of the type
     typedef allocator_base<T, A>                class_type;
     /// The pointer type
     typedef value_type*                         pointer;
@@ -177,7 +179,7 @@ private:
 #else /* ? STLSOFT_CF_COMPILER_SUPPORTS_CRTP */
     typedef class_type                          concrete_allocator_type;
 private:
-    virtual void    *do_allocate(size_type n, void const* hint) = 0;
+    virtual void*   do_allocate(size_type n, void const* hint) = 0;
     virtual void    do_deallocate(void* pv, size_type n) = 0;
     virtual void    do_deallocate(void* pv) = 0;
 #endif /* !STLSOFT_CF_COMPILER_SUPPORTS_CRTP */
@@ -199,7 +201,7 @@ public:
     /// Returns the address corresponding to the given reference
     ///
     /// \param x A reference to a \c value_type instance whose address will be calculated
-    pointer address(reference x) const STLSOFT_NOEXCEPT
+    pointer address(reference x) STLSOFT_NOEXCEPT
     {
         return &x;
     }
@@ -223,12 +225,12 @@ public:
     ///   translator does not support throwing exceptions upon memory exhaustion)
     pointer allocate(size_type n, void const* hint = NULL)
     {
-        void* p = static_cast<concrete_allocator_type*>(this)->do_allocate(n, hint);
+        void* const p = static_cast<concrete_allocator_type*>(this)->do_allocate(n, hint);
 
 #if !defined(STLSOFT_FORCE_ATORS_RETURN_NULL) && \
     (   defined(STLSOFT_FORCE_ATORS_THROW_BAD_ALLOC) || \
         defined(STLSOFT_CF_THROW_BAD_ALLOC))
-        if(p == NULL)
+        if (p == NULL)
         {
             STLSOFT_THROW_X(STLSOFT_NS_QUAL(out_of_memory_exception)(STLSoftProjectIdentifier_STLSoft, STLSoftLibraryIdentifier_Memory));
         }
@@ -249,7 +251,11 @@ public:
     ///   \ref STLSOFT_CF_ALLOCATOR_CHARALLOC_METHOD is defined.
     char* _Charalloc(size_type n)
     {
+# ifdef STLSOFT_LF_ALLOCATOR_ALLOCATE_HAS_HINT
         return sap_cast<char*>(allocate(n, NULL));
+# else /* ? STLSOFT_LF_ALLOCATOR_ALLOCATE_HAS_HINT */
+        return sap_cast<char*>(allocate(n));
+# endif /* STLSOFT_LF_ALLOCATOR_ALLOCATE_HAS_HINT */
     }
 #endif /* STLSOFT_CF_ALLOCATOR_CHARALLOC_METHOD */
 

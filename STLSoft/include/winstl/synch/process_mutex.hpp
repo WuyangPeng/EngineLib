@@ -4,10 +4,11 @@
  * Purpose:     Inter-process mutex, based on Windows MUTEX.
  *
  * Created:     15th May 2002
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2002-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -52,7 +54,7 @@
 # define WINSTL_VER_WINSTL_SYNCH_HPP_PROCESS_MUTEX_MAJOR    4
 # define WINSTL_VER_WINSTL_SYNCH_HPP_PROCESS_MUTEX_MINOR    4
 # define WINSTL_VER_WINSTL_SYNCH_HPP_PROCESS_MUTEX_REVISION 2
-# define WINSTL_VER_WINSTL_SYNCH_HPP_PROCESS_MUTEX_EDIT     81
+# define WINSTL_VER_WINSTL_SYNCH_HPP_PROCESS_MUTEX_EDIT     83
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -241,7 +243,7 @@ public:
     /// Destroys an instance of the mutex
     ~process_mutex() STLSOFT_NOEXCEPT
     {
-        if( ss_nullptr_k != m_mx &&
+        if (ss_nullptr_k != m_mx &&
             m_bOwnHandle)
         {
             WINSTL_API_EXTERNAL_HandleAndObject_CloseHandle(m_mx);
@@ -255,16 +257,16 @@ private:
 /// \name Operations
 /// @{
 public:
-    /// Acquires a lock on the mutex, pending the thread until the lock is aquired
+    /// Acquires a lock on the mutex, pending the thread until the lock is acquired
     void lock()
     {
         WINSTL_ASSERT(ss_nullptr_k != m_mx);
 
         DWORD const dwRes = WINSTL_API_EXTERNAL_Synchronization_WaitForSingleObject(m_mx, INFINITE);
 
-        if(WAIT_ABANDONED == dwRes)
+        if (WAIT_ABANDONED == dwRes)
         {
-            if(ss_nullptr_k != m_evAbandoned)
+            if (ss_nullptr_k != m_evAbandoned)
             {
                 ::SetEvent(m_evAbandoned);
             }
@@ -275,7 +277,7 @@ public:
         {
             m_bAbandoned = false;
 
-            if(WAIT_OBJECT_0 != dwRes)
+            if (WAIT_OBJECT_0 != dwRes)
             {
                 DWORD const e = WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();
 
@@ -287,16 +289,16 @@ public:
             }
         }
     }
-    /// Acquires a lock on the mutex, pending the thread until the lock is aquired
+    /// Acquires a lock on the mutex, pending the thread until the lock is acquired
     bool_type lock(ws_dword_t wait)
     {
         WINSTL_ASSERT(ss_nullptr_k != m_mx);
 
         DWORD const dwRes = WINSTL_API_EXTERNAL_Synchronization_WaitForSingleObject(m_mx, wait);
 
-        if(WAIT_ABANDONED == dwRes)
+        if (WAIT_ABANDONED == dwRes)
         {
-            if(ss_nullptr_k != m_evAbandoned)
+            if (ss_nullptr_k != m_evAbandoned)
             {
                 ::SetEvent(m_evAbandoned);
             }
@@ -309,13 +311,13 @@ public:
         {
             m_bAbandoned = false;
 
-            if(WAIT_TIMEOUT == dwRes)
+            if (WAIT_TIMEOUT == dwRes)
             {
                 return false;
             }
             else
             {
-                if(WAIT_OBJECT_0 != dwRes)
+                if (WAIT_OBJECT_0 != dwRes)
                 {
                     DWORD const e = WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();
 
@@ -332,17 +334,17 @@ public:
     }
     /// Attempts to lock the mutex
     ///
-    /// \return <b>true</b> if the mutex was aquired, or <b>false</b> if not
+    /// \return <b>true</b> if the mutex was acquired, or <b>false</b> if not
     bool_type try_lock()
     {
         return lock(0);
     }
-    /// Releases an aquired lock on the mutex
+    /// Releases an acquired lock on the mutex
     void unlock()
     {
         WINSTL_ASSERT(ss_nullptr_k != m_mx);
 
-        if(!WINSTL_API_EXTERNAL_Synchronization_ReleaseMutex(m_mx))
+        if (!WINSTL_API_EXTERNAL_Synchronization_ReleaseMutex(m_mx))
         {
             DWORD const e = WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();
 
@@ -402,7 +404,7 @@ private:
     {
         HANDLE const mx = WINSTL_API_EXTERNAL_Synchronization_CreateMutexA(psa, bInitialOwner, name);
 
-        if(ss_nullptr_k == mx)
+        if (ss_nullptr_k == mx)
         {
             DWORD const e = WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();
 
@@ -421,7 +423,7 @@ private:
     {
         HANDLE const mx = WINSTL_API_EXTERNAL_Synchronization_CreateMutexW(psa, bInitialOwner, name);
 
-        if(ss_nullptr_k == mx)
+        if (ss_nullptr_k == mx)
         {
             DWORD const e = WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();
 
@@ -440,7 +442,7 @@ private:
     {
         HANDLE const mx = WINSTL_API_EXTERNAL_Synchronization_OpenMutexA(access, bInheritHandle, name);
 
-        if(ss_nullptr_k == mx)
+        if (ss_nullptr_k == mx)
         {
             DWORD const e = WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();
 
@@ -459,7 +461,7 @@ private:
     {
         HANDLE const mx = WINSTL_API_EXTERNAL_Synchronization_OpenMutexW(access, bInheritHandle, name);
 
-        if(ss_nullptr_k == mx)
+        if (ss_nullptr_k == mx)
         {
             DWORD const e = WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();
 
@@ -542,11 +544,11 @@ get_kernel_handle(
  * control shims
  */
 
-/** This \ref group__concept__Shim "control shim" aquires a lock on the given mutex
+/** This \ref group__concept__Shim "control shim" acquires a lock on the given mutex
  *
  * \ingroup group__concept__Shim__synchronisation_control
  *
- * \param mx The mutex on which to aquire the lock.
+ * \param mx The mutex on which to acquire the lock.
  */
 inline
 void

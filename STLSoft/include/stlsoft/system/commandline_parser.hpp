@@ -4,10 +4,11 @@
  * Purpose:     commandline_parser class.
  *
  * Created:     20th May 2000
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2000-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -52,8 +54,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define STLSOFT_VER_STLSOFT_SYSTEM_HPP_COMMANDLINE_PARSER_MAJOR    2
 # define STLSOFT_VER_STLSOFT_SYSTEM_HPP_COMMANDLINE_PARSER_MINOR    1
-# define STLSOFT_VER_STLSOFT_SYSTEM_HPP_COMMANDLINE_PARSER_REVISION 8
-# define STLSOFT_VER_STLSOFT_SYSTEM_HPP_COMMANDLINE_PARSER_EDIT     49
+# define STLSOFT_VER_STLSOFT_SYSTEM_HPP_COMMANDLINE_PARSER_REVISION 9
+# define STLSOFT_VER_STLSOFT_SYSTEM_HPP_COMMANDLINE_PARSER_EDIT     51
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -194,26 +196,26 @@ public:
 
         state_t         state   =   space;
         iterator        b       =   m_buffer.begin();
-        const iterator  e       =   m_buffer.end() - 1;
+        iterator const  e       =   m_buffer.end() - 1;
 
-        for(; b != e; ++b)
+        for (; b != e; ++b)
         {
             const char_type ch  =   *b;
 
             STLSOFT_ASSERT('\0' != ch);
 
-            if('"' == ch)
+            if ('"' == ch)
             {
-                if(quotedArgumentStart == state)
+                if (quotedArgumentStart == state)
                 {
                     state   =   space;
                 }
-                else if(quotedArgument == state)
+                else if (quotedArgument == state)
                 {
                     *b      =   '\0';
                     state   =   space;
                 }
-                else if(space == state)
+                else if (space == state)
                 {
                     state   =   quotedArgumentStart;
                 }
@@ -221,18 +223,18 @@ public:
                 {
                 }
             }
-            else if(isspace(ch))
+            else if (isspace(ch))
             {
-                if(quotedArgumentStart == state)
+                if (quotedArgumentStart == state)
                 {
                     state   =   quotedArgument;
 
                     add_pointer(&*b);
                 }
-                else if(quotedArgument == state)
+                else if (quotedArgument == state)
                 {
                 }
-                else if(space == state)
+                else if (space == state)
                 {
                 }
                 else
@@ -246,13 +248,13 @@ public:
             }
             else
             {
-                if(quotedArgumentStart == state)
+                if (quotedArgumentStart == state)
                 {
                     state   =   quotedArgument;
 
                     add_pointer(&*b);
                 }
-                else if(space == state)
+                else if (space == state)
                 {
                     state   =   argument;
 
@@ -308,7 +310,7 @@ public:
 private:
     ss_bool_t   add_pointer(pointer_type p)
     {
-        if(!m_pointers.resize(1 + m_pointers.size()))
+        if (!m_pointers.resize(1 + m_pointers.size()))
         {
             return false;
         }

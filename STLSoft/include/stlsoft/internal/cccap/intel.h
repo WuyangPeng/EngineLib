@@ -4,13 +4,14 @@
  * Purpose:     Compiler feature discrimination for Intel C/C++.
  *
  * Created:     7th February 2003
- * Updated:     2nd February 2019
+ * Updated:     22nd January 2024
  *
  * Thanks:      To Derek Baikie for working on the
  *              Win64-compatibility.
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2003-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -23,9 +24,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -67,7 +69,7 @@
 # define  STLSOFT_VER_H_STLSOFT_CCCAP_INTEL_MAJOR       3
 # define  STLSOFT_VER_H_STLSOFT_CCCAP_INTEL_MINOR       20
 # define  STLSOFT_VER_H_STLSOFT_CCCAP_INTEL_REVISION    4
-# define  STLSOFT_VER_H_STLSOFT_CCCAP_INTEL_EDIT        90
+# define  STLSOFT_VER_H_STLSOFT_CCCAP_INTEL_EDIT        92
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -226,7 +228,7 @@
 
 /* #define STLSOFT_CF_C99_INLINE_SUPPORT */
 
-#define STLSOFT_CUSTOM_C_INLINE     __inline
+#define STLSOFT_CUSTOM_C_INLINE                             __inline
 
 /* /////////////////////////////////////////////////////////////////////////
  * Support for C++ language features - 1
@@ -433,11 +435,11 @@
 # endif /* !_MANAGED */
 # define STLSOFT_CF_STDCALL_SUPPORTED
 
-# define STLSOFT_CDECL                  __cdecl
+# define STLSOFT_CDECL                                      __cdecl
 # ifndef _MANAGED
-#  define STLSOFT_FASTCALL              __fastcall
+#  define STLSOFT_FASTCALL                                  __fastcall
 # endif /* !_MANAGED */
-# define STLSOFT_STDCALL                __stdcall
+# define STLSOFT_STDCALL                                    __stdcall
 
 #elif defined(_M_IA64) || \
       defined(_M_X64)
@@ -462,18 +464,18 @@
  */
 
 #if defined(__LP64__)
-# define _STLSOFT_SIZEOF_CHAR           (1)
-# define _STLSOFT_SIZEOF_SHORT          (2)
-# define _STLSOFT_SIZEOF_INT            (4)
-# define _STLSOFT_SIZEOF_LONG           (8)
-# define _STLSOFT_SIZEOF_LONG_LONG      (8)
+# define _STLSOFT_SIZEOF_CHAR                               (1)
+# define _STLSOFT_SIZEOF_SHORT                              (2)
+# define _STLSOFT_SIZEOF_INT                                (4)
+# define _STLSOFT_SIZEOF_LONG                               (8)
+# define _STLSOFT_SIZEOF_LONG_LONG                          (8)
 #elif defined(_WIN32) || \
       defined(_WIN64)
-# define _STLSOFT_SIZEOF_CHAR           (1)
-# define _STLSOFT_SIZEOF_SHORT          (2)
-# define _STLSOFT_SIZEOF_INT            (4)
-# define _STLSOFT_SIZEOF_LONG           (4)
-# define _STLSOFT_SIZEOF_LONG_LONG      (8)
+# define _STLSOFT_SIZEOF_CHAR                               (1)
+# define _STLSOFT_SIZEOF_SHORT                              (2)
+# define _STLSOFT_SIZEOF_INT                                (4)
+# define _STLSOFT_SIZEOF_LONG                               (4)
+# define _STLSOFT_SIZEOF_LONG_LONG                          (8)
 #else /* ? data model */
 # error Use of Intel C/C++ has not been verified on any operation system other than Win32. Please contact Synesis Software
 #endif /* data model */
@@ -502,24 +504,24 @@
 
 /* 8-bit integer */
 #define STLSOFT_CF_8BIT_INT_SUPPORT
-#define STLSOFT_SI08_T_BASE_TYPE    signed      __int8
-#define STLSOFT_UI08_T_BASE_TYPE    unsigned    __int8
+#define STLSOFT_SI08_T_BASE_TYPE                            signed      __int8
+#define STLSOFT_UI08_T_BASE_TYPE                            unsigned    __int8
 #if _MSC_VER == 1200
 # define STLSOFT_CF_CHAR_DISTINCT_INT_TYPE
 #endif /* _MSC_VER */
 
 /* 16-bit integer */
 #define STLSOFT_CF_16BIT_INT_SUPPORT
-#define STLSOFT_SI16_T_BASE_TYPE    signed      __int16
-#define STLSOFT_UI16_T_BASE_TYPE    unsigned    __int16
+#define STLSOFT_SI16_T_BASE_TYPE                            signed      __int16
+#define STLSOFT_UI16_T_BASE_TYPE                            unsigned    __int16
 #if _MSC_VER == 1200
 # define STLSOFT_CF_SHORT_DISTINCT_INT_TYPE
 #endif /* _MSC_VER */
 
 /* 32-bit integer */
 #define STLSOFT_CF_32BIT_INT_SUPPORT
-#define STLSOFT_SI32_T_BASE_TYPE    signed      __int32
-#define STLSOFT_UI32_T_BASE_TYPE    unsigned    __int32
+#define STLSOFT_SI32_T_BASE_TYPE                            signed      __int32
+#define STLSOFT_UI32_T_BASE_TYPE                            unsigned    __int32
 #if _MSC_VER == 1200
 # define STLSOFT_CF_INT_DISTINCT_INT_TYPE
 #endif /* _MSC_VER */
@@ -528,8 +530,8 @@
 /* 64-bit integer */
 #define STLSOFT_CF_64BIT_INT_SUPPORT
 #define STLSOFT_CF_64BIT_INT_IS___int64
-#define STLSOFT_SI64_T_BASE_TYPE    signed      __int64
-#define STLSOFT_UI64_T_BASE_TYPE    unsigned    __int64
+#define STLSOFT_SI64_T_BASE_TYPE                            signed      __int64
+#define STLSOFT_UI64_T_BASE_TYPE                            unsigned    __int64
 
 /* /////////////////////////////////////////////////////////////////////////
  * Still to-be-determined features
@@ -618,7 +620,7 @@
 # define STLSOFT_CF_ASSERT_SUPPORT
 # define STLSOFT_ASSERT(expr)                   _STLSOFT_CUSTOM_ASSERT(expr)
 # if defined(_STLSOFT_CUSTOM_ASSERT_INCLUDE)
-#  define   __STLSOFT_CF_ASSERT_INCLUDE_NAME    _STLSOFT_CUSTOM_ASSERT_INCLUDE
+#  define   __STLSOFT_CF_ASSERT_INCLUDE_NAME                _STLSOFT_CUSTOM_ASSERT_INCLUDE
 # else /* ? _STLSOFT_CUSTOM_ASSERT_INCLUDE */
 #  error You must define _STLSOFT_CUSTOM_ASSERT_INCLUDE along with _STLSOFT_CUSTOM_ASSERT()
 # endif /* !_STLSOFT_CUSTOM_ASSERT_INCLUDE */
@@ -633,10 +635,10 @@
                    * <crtdbg.h>, which results in balking on exception specifications on op new
                    */
 #  endif /* C++ && _MSC_VER >= 1300 */
-#  define __STLSOFT_CF_ASSERT_INCLUDE_NAME      <crtdbg.h>
+#  define __STLSOFT_CF_ASSERT_INCLUDE_NAME                  <crtdbg.h>
 #  define STLSOFT_ASSERT(expr)                  _ASSERTE(expr)
 # else /* _MSC_VER */
-#  define __STLSOFT_CF_ASSERT_INCLUDE_NAME      <assert.h>
+#  define __STLSOFT_CF_ASSERT_INCLUDE_NAME                  <assert.h>
 #  define STLSOFT_ASSERT(expr)                  assert(expr)
 # endif /* _MSC_VER */
 #endif /* _STLSOFT_CUSTOM_ASSERT */

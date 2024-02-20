@@ -5,13 +5,14 @@
  *              and Unicode specialisations thereof.
  *
  * Created:     7th February 2002
- * Updated:     13th September 2019
+ * Updated:     20th January 2024
  *
  * Thanks to:   Pablo Aguilar for discovering the Borland weirdness which is now
  *              addressed with the calc_path_max_() method.
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2002-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -24,9 +25,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -56,8 +58,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define WINSTL_VER_WINSTL_FILESYSTEM_HPP_FILE_PATH_BUFFER_MAJOR    4
 # define WINSTL_VER_WINSTL_FILESYSTEM_HPP_FILE_PATH_BUFFER_MINOR    6
-# define WINSTL_VER_WINSTL_FILESYSTEM_HPP_FILE_PATH_BUFFER_REVISION 10
-# define WINSTL_VER_WINSTL_FILESYSTEM_HPP_FILE_PATH_BUFFER_EDIT     143
+# define WINSTL_VER_WINSTL_FILESYSTEM_HPP_FILE_PATH_BUFFER_REVISION 15
+# define WINSTL_VER_WINSTL_FILESYSTEM_HPP_FILE_PATH_BUFFER_EDIT     150
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -70,6 +72,10 @@
 #ifdef STLSOFT_TRACE_INCLUDE
 # pragma message(__FILE__)
 #endif /* STLSOFT_TRACE_INCLUDE */
+
+#ifdef STLSOFT_PPF_pragma_message_SUPPORT
+# pragma message(STLSOFT_FILELINE_MESSAGE("This file and the (basic_)file_path_buffer<> component are deprecated, and will be removed from a future version"))
+#endif /* STLSOFT_PPF_pragma_message_SUPPORT */
 
 #ifndef WINSTL_FILE_PATH_BUFFER_NO_USE_AUTO_BUFFER
 # define WINSTL_FILE_PATH_BUFFER_USE_AUTO_BUFFER
@@ -89,9 +95,9 @@
 # include <stlsoft/shims/access/string.hpp>
 #endif /* !STLSOFT_INCL_STLSOFT_SHIMS_ACCESS_HPP_STRING */
 #ifdef WINSTL_FILE_PATH_BUFFER_USE_AUTO_BUFFER
-# ifndef STLSOFT_INCL_STLSOFT_HPP_MEMORY_AUTO_BUFFER
+# ifndef STLSOFT_INCL_STLSOFT_MEMORY_HPP_AUTO_BUFFER
 #  include <stlsoft/memory/auto_buffer.hpp>
-# endif /* !STLSOFT_INCL_STLSOFT_HPP_MEMORY_AUTO_BUFFER */
+# endif /* !STLSOFT_INCL_STLSOFT_MEMORY_HPP_AUTO_BUFFER */
 #else /* ? WINSTL_FILE_PATH_BUFFER_USE_AUTO_BUFFER */
 # include <vector>
 #endif /* WINSTL_FILE_PATH_BUFFER_USE_AUTO_BUFFER */
@@ -108,6 +114,10 @@
 #ifdef STLSOFT_DEBUG
 # include <stlsoft/algorithms/pod.hpp>
 #endif
+
+#ifndef STLSOFT_INCL_STLSOFT_API_internal_h_memfns
+# include <stlsoft/api/internal/memfns.h>
+#endif /* !STLSOFT_INCL_STLSOFT_API_internal_h_memfns */
 
 /* /////////////////////////////////////////////////////////////////////////
  * namespace
@@ -159,17 +169,17 @@ struct is_ansi<ws_char_a_t>
  * of the get_drivesvar_() method, although it can be reset by calling the
  * refresh() method on the buffer class.
  *
- * \param C The character type
- * \param A The allocator type
- * \param CCH The size of the internal member path structure. On translators that support default template arguments this default to (\c 1 + \c WINSTL_CONST_MAX_PATH)
+ * \tparam C The character type
+ * \tparam A The allocator type
  */
-template<   ss_typename_param_k C
+template <
+    ss_typename_param_k C
 #ifdef STLSOFT_CF_TEMPLATE_CLASS_DEFAULT_CLASS_ARGUMENT_SUPPORT
-        ,   ss_typename_param_k A = processheap_allocator<C>
+,   ss_typename_param_k A = processheap_allocator<C>
 #else /* ? STLSOFT_CF_TEMPLATE_CLASS_DEFAULT_CLASS_ARGUMENT_SUPPORT */
-        ,   ss_typename_param_k A /* = processheap_allocator<C> */
+,   ss_typename_param_k A /* = processheap_allocator<C> */
 #endif /* STLSOFT_CF_TEMPLATE_CLASS_DEFAULT_CLASS_ARGUMENT_SUPPORT */
-        >
+>
 class basic_file_path_buffer
 {
 /// \name Member Constants
@@ -188,18 +198,19 @@ private:
 
     /// The buffer type
 #ifdef WINSTL_FILE_PATH_BUFFER_USE_AUTO_BUFFER
-    typedef STLSOFT_NS_QUAL(auto_buffer)<   C
+    typedef STLSOFT_NS_QUAL(auto_buffer)<
+        C
 # if defined(STLSOFT_COMPILER_IS_BORLAND)
     // This is necessary, since Borland will attempt an auto_buffer with what
     // seems like 0 size, or maybe it just can't define the type. Who can tell?
-                                            ,   1 + WINSTL_CONST_MAX_PATH
+    ,   1 + WINSTL_CONST_MAX_PATH
 # else /* ? compiler */
-                                            ,   internalBufferSize
+    ,   internalBufferSize
 # endif /* compiler */
-                                            ,   A
-                                            >                       buffer_type;
+    ,   A
+    >                                                       buffer_type;
 #else /* ? WINSTL_FILE_PATH_BUFFER_USE_AUTO_BUFFER */
-    typedef STLSOFT_NS_QUAL_STD(vector)<C, A>                       buffer_type;
+    typedef STLSOFT_NS_QUAL_STD(vector)<C, A>               buffer_type;
 #endif /* WINSTL_FILE_PATH_BUFFER_USE_AUTO_BUFFER */
 /// @}
 
@@ -207,25 +218,26 @@ private:
 /// @{
 public:
     /// The character type
-    typedef C                                                       char_type;
+    typedef C                                               char_type;
     /// The allocator type
-    typedef A                                                       allocator_type;
-    /// The current parameterisation of the type
-    typedef basic_file_path_buffer<C, A>                            class_type;
+    typedef A                                               allocator_type;
+    /// The current specialisation of the type
+    typedef basic_file_path_buffer<C, A>                    class_type;
     /// The value type
-    typedef ss_typename_type_k buffer_type::value_type              value_type;
+    typedef ss_typename_type_k buffer_type::value_type      value_type;
     /// The reference type
-    typedef value_type&                                             reference;
+    typedef value_type&                                     reference;
     /// The non-mutating (const) reference type
-    typedef value_type const&                                       const_reference;
+    typedef value_type const&                               const_reference;
     /// The size type
-    typedef ss_typename_type_k buffer_type::size_type               size_type;
+    typedef ss_typename_type_k buffer_type::size_type       size_type;
 /// @}
 
 /// \name Construction
 /// @{
 public:
     /// Default constructor
+    STLSOFT_DEPRECATED_("basic_file_path_buffer is deprecated, and will be removed from a future release") // applied here rather than on template because above class_type precipitates
     basic_file_path_buffer()
         : m_buffer(1 + calc_path_max_internal_())
     {
@@ -282,6 +294,9 @@ public:
     {
         m_buffer.swap(rhs.m_buffer);
     }
+
+    void resize(size_type )
+    {}
 /// @}
 
 /// \name Accessors
@@ -409,7 +424,7 @@ private:
         size_type const         n   =   m_buffer.size() - ecs;
         char_type *             p   =   &m_buffer[0] + n;
 
-        ::memcpy(p, ec, sizeof(char_type) * ecs);
+        STLSOFT_API_INTERNAL_memfns_memcpy(p, ec, sizeof(char_type) * ecs);
     }
 
     static
@@ -433,7 +448,7 @@ private:
             size_type const         n   =   m_buffer.size() - ecs;
             char_type const*        p   =   &m_buffer[0] + n;
 
-            if(0 != ::memcmp(p, ec, sizeof(char_type) * ecs))
+            if (0 != ::memcmp(p, ec, sizeof(char_type) * ecs))
             {
                 return false;
             }
@@ -450,7 +465,7 @@ private:
     {
         size_type   n;
 
-        if(winstl_C_internal_IsWindows9x(NULL, NULL, NULL))
+        if (winstl_C_internal_IsWindows9x(NULL, NULL, NULL))
         {
             n = CCH_9x;
         }
@@ -506,17 +521,26 @@ private:
  *
  * \ingroup group__library__FileSystem
  */
-typedef basic_file_path_buffer<ws_char_a_t, processheap_allocator<ws_char_a_t> >    file_path_buffer_a;
+typedef basic_file_path_buffer<
+    ws_char_a_t
+,   processheap_allocator<ws_char_a_t>
+>                                                           file_path_buffer_a;
 /** Specialisation of the basic_file_path_buffer template for the Unicode character type \c wchar_t
  *
  * \ingroup group__library__FileSystem
  */
-typedef basic_file_path_buffer<ws_char_w_t, processheap_allocator<ws_char_w_t> >    file_path_buffer_w;
-/** Specialisation of the basic_file_path_buffer template for the ambeint character type \c TCHAR
+typedef basic_file_path_buffer<
+    ws_char_w_t
+,   processheap_allocator<ws_char_w_t>
+>                                                           file_path_buffer_w;
+/** Specialisation of the basic_file_path_buffer template for the ambient character type \c TCHAR
  *
  * \ingroup group__library__FileSystem
  */
-typedef basic_file_path_buffer<TCHAR, processheap_allocator<TCHAR> >                file_path_buffer;
+typedef basic_file_path_buffer<
+    TCHAR
+,   processheap_allocator<TCHAR>
+>                                                           file_path_buffer;
 
 /* /////////////////////////////////////////////////////////////////////////
  * Support for PlatformSTL redefinition by inheritance+namespace, for confused

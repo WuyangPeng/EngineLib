@@ -5,10 +5,11 @@
  *              enumerator interfaces.
  *
  * Created:     17th September 1998
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 1998-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -21,9 +22,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -53,7 +55,7 @@
 # define COMSTL_VER_COMSTL_UTIL_HPP_VALUE_POLICIES_MAJOR    5
 # define COMSTL_VER_COMSTL_UTIL_HPP_VALUE_POLICIES_MINOR    1
 # define COMSTL_VER_COMSTL_UTIL_HPP_VALUE_POLICIES_REVISION 8
-# define COMSTL_VER_COMSTL_UTIL_HPP_VALUE_POLICIES_EDIT     177
+# define COMSTL_VER_COMSTL_UTIL_HPP_VALUE_POLICIES_EDIT     179
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -171,7 +173,7 @@ public:
         *dest = ::SysAllocString(*src);
 
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
-        if( NULL == *dest &&
+        if (NULL == *dest &&
             NULL != *src &&
             L'\0' != (*src)[0])
         {
@@ -224,7 +226,7 @@ public:
         *dest = olestring_dup(*src);
 
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
-        if( NULL == *dest &&
+        if (NULL == *dest &&
             NULL != *src)
         {
             STLSOFT_THROW_X(comstl_exception("failed to copy OLE string", E_OUTOFMEMORY));
@@ -275,7 +277,7 @@ public:
     {
         HRESULT hr = ::VariantCopy(dest, const_cast<VARIANT*>(src));
 
-        if(FAILED(hr))
+        if (FAILED(hr))
         {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
             STLSOFT_THROW_X(comstl_exception("failed to copy VARIANT", hr));
@@ -326,7 +328,7 @@ public:
     static void copy(value_type* dest, value_type const* src)
     {
         *dest = *src;
-        if(NULL != *dest)
+        if (NULL != *dest)
         {
             (*dest)->AddRef();
         }
@@ -338,7 +340,7 @@ public:
     /// (unless it is already NULL)
     static void clear(value_type* p) STLSOFT_NOEXCEPT
     {
-        if(NULL != *p)
+        if (NULL != *p)
         {
             (*p)->Release();
             *p = NULL;
@@ -376,7 +378,7 @@ public:
     static void copy(value_type* dest, value_type const* src)
     {
         *dest = *src;
-        if(NULL != *dest)
+        if (NULL != *dest)
         {
             (*dest)->AddRef();
         }
@@ -388,7 +390,7 @@ public:
     /// (unless it is already NULL)
     static void clear(value_type* p) STLSOFT_NOEXCEPT
     {
-        if(NULL != *p)
+        if (NULL != *p)
         {
             (*p)->Release();
             *p = NULL;
@@ -431,12 +433,12 @@ public:
     static void copy(value_type* dest, value_type const* src)
     {
         *dest = *src;
-        if(NULL != src->pwcsName)
+        if (NULL != src->pwcsName)
         {
             dest->pwcsName = olestring_dup(src->pwcsName);
 
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
-            if(NULL == dest->pwcsName)
+            if (NULL == dest->pwcsName)
             {
                 STLSOFT_THROW_X(comstl_exception("failed to copy OLE string when copying STATSTG", E_OUTOFMEMORY));
             }
@@ -488,11 +490,11 @@ public:
     static void copy(value_type* dest, value_type const* src)
     {
         *dest = *src;
-        if(NULL != dest->ptd)
+        if (NULL != dest->ptd)
         {
             dest->ptd = static_cast<DVTARGETDEVICE*>(::CoTaskMemAlloc(src->ptd->tdSize));
 
-            if(NULL == dest->ptd)
+            if (NULL == dest->ptd)
             {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
                 STLSOFT_THROW_X(comstl_exception("failed to copy DVTARGETDEVICE when copying FORMATETC", E_OUTOFMEMORY));
@@ -504,7 +506,7 @@ public:
                 BYTE const* src_end     =   src_begin + src->ptd->tdSize;
                 BYTE*       dest_begin  =   STLSOFT_NS_QUAL(sap_cast)<BYTE*>(&dest->ptd);
 
-                for(; src_begin != src_end; ++src_begin, ++dest_begin)
+                for (; src_begin != src_end; ++src_begin, ++dest_begin)
                 {
                     *dest_begin = *src_begin;
                 }

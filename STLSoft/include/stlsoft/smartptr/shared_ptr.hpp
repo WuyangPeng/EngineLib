@@ -4,10 +4,11 @@
  * Purpose:     Contains the shared_ptr template class.
  *
  * Created:     17th June 2002
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2002-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -53,7 +55,7 @@
 # define STLSOFT_VER_STLSOFT_SMARTPTR_HPP_SHARED_PTR_MAJOR       3
 # define STLSOFT_VER_STLSOFT_SMARTPTR_HPP_SHARED_PTR_MINOR       5
 # define STLSOFT_VER_STLSOFT_SMARTPTR_HPP_SHARED_PTR_REVISION    4
-# define STLSOFT_VER_STLSOFT_SMARTPTR_HPP_SHARED_PTR_EDIT        58
+# define STLSOFT_VER_STLSOFT_SMARTPTR_HPP_SHARED_PTR_EDIT        60
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -229,7 +231,7 @@ public:
         //
         // if the count cannot be allocated
 
-        if(NULL != p)
+        if (NULL != p)
         {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
             try
@@ -242,7 +244,7 @@ public:
             }
             catch(std::bad_alloc&)
 #else /* ? STLSOFT_CF_EXCEPTION_SUPPORT */
-            if(NULL == m_pc)
+            if (NULL == m_pc)
 #endif /* STLSOFT_CF_EXCEPTION_SUPPORT */
             {
                 delete m_p;
@@ -263,7 +265,7 @@ public:
     {
         STLSOFT_ASSERT(rhs.is_valid());
 
-        if(NULL != m_pc)
+        if (NULL != m_pc)
         {
             increment_(m_pc);
         }
@@ -283,7 +285,7 @@ public:
 
         STLSOFT_ASSERT((NULL == m_p) == (NULL == m_pc));
 
-        if(NULL != m_pc)
+        if (NULL != m_pc)
         {
             increment_(m_pc);
         }
@@ -300,7 +302,7 @@ public:
         STLSOFT_ASSERT((NULL == m_p) == (NULL == m_pc));
         STLSOFT_ASSERT((NULL == m_pc) || (0 < *m_pc));
 
-        if( NULL != m_pc &&
+        if (NULL != m_pc &&
             0 == pre_decrement_(m_pc))
         {
             delete m_p;
@@ -357,7 +359,7 @@ public:
 
         STLSOFT_ASSERT(is_valid());
 
-        if(NULL != m_pc)
+        if (NULL != m_pc)
         {
             pointer                 p   =   m_p;
             internal_counter_type_* pc  =   m_pc;
@@ -370,7 +372,7 @@ public:
             m_p     =   NULL;
             m_pc    =   NULL;
 
-            if(0 == pre_decrement_(pc))
+            if (0 == pre_decrement_(pc))
             {
                 delete p;
                 delete pc;
@@ -400,9 +402,9 @@ public:
 
         pointer p   =   NULL;
 
-        if(NULL != m_pc)
+        if (NULL != m_pc)
         {
-            if(0 == pre_decrement_(m_pc))
+            if (0 == pre_decrement_(m_pc))
             {
                 delete m_pc;
 
@@ -579,12 +581,12 @@ private:
 
     ss_bool_t is_valid() const STLSOFT_NOEXCEPT
     {
-        if((NULL == m_p) != (NULL == m_pc))
+        if ((NULL == m_p) != (NULL == m_pc))
         {
             return false;
         }
 
-        if( NULL != m_pc &&
+        if (NULL != m_pc &&
             *m_pc < 1)
         {
             return false;
@@ -715,7 +717,7 @@ namespace std
 #endif /* STLSOFT_CF_std_NAMESPACE */
 
 /* /////////////////////////////////////////////////////////////////////////
- * inclusion
+ * inclusion control
  */
 
 #ifdef STLSOFT_CF_PRAGMA_ONCE_SUPPORT

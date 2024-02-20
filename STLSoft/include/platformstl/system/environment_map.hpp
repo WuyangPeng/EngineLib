@@ -4,10 +4,11 @@
  * Purpose:     Definition of the environment_map class.
  *
  * Created:     14th November 2005
- * Updated:     13th October 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2005-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -52,8 +54,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define PLATFORMSTL_VER_PLATFORMSTL_SYSTEM_HPP_ENVIRONMENT_MAP_MAJOR       2
 # define PLATFORMSTL_VER_PLATFORMSTL_SYSTEM_HPP_ENVIRONMENT_MAP_MINOR       5
-# define PLATFORMSTL_VER_PLATFORMSTL_SYSTEM_HPP_ENVIRONMENT_MAP_REVISION    1
-# define PLATFORMSTL_VER_PLATFORMSTL_SYSTEM_HPP_ENVIRONMENT_MAP_EDIT        71
+# define PLATFORMSTL_VER_PLATFORMSTL_SYSTEM_HPP_ENVIRONMENT_MAP_REVISION    2
+# define PLATFORMSTL_VER_PLATFORMSTL_SYSTEM_HPP_ENVIRONMENT_MAP_EDIT        74
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -207,14 +209,14 @@ private:
         snapshot();
 
     public: // Operations
-        ss_bool_t erase(    first_type const&   name) throw();
-        void erase(         iterator            it) throw();
+        ss_bool_t erase(    first_type const&   name) STLSOFT_NOEXCEPT;
+        void erase(         iterator            it) STLSOFT_NOEXCEPT;
         void insert(        first_type const    &name
                         ,   second_type const&  value);
         void set(           first_type const&   name
                         ,   second_type const&  value);
         ss_bool_t lookup(   first_type const&   name
-                        ,   second_type*&       pvalue) throw();
+                        ,   second_type*&       pvalue) STLSOFT_NOEXCEPT;
 
     public: // Iteration
         iterator    begin();
@@ -592,7 +594,7 @@ inline environment_map::second_type environment_map::operator [](char const* nam
 {
     char const  *value  =   traits_type::get_variable(name);
 
-    if(NULL == value)
+    if (NULL == value)
     {
         STLSOFT_THROW_X(STLSOFT_NS_QUAL_STD(out_of_range)("variable does not exist"));
     }
@@ -635,7 +637,7 @@ inline void environment_map::insert(environment_map::first_type const& name, env
 
     second_type *pstr   =   NULL;
 
-    if( 1 < m_snapshot.use_count() &&
+    if (1 < m_snapshot.use_count() &&
         m_snapshot->lookup(name, pstr))
     {
         // If it exists, then:
@@ -646,7 +648,7 @@ inline void environment_map::insert(environment_map::first_type const& name, env
         pstr->reserve(value.size());
 
         // 2. Insert into the host environment
-        if(0 != traits_type::set_variable(name.c_str(), value.c_str()))
+        if (0 != traits_type::set_variable(name.c_str(), value.c_str()))
         {
             STLSOFT_THROW_X(STLSOFT_NS_QUAL_STD(runtime_error)("Cannot set environment variable"));
         }
@@ -659,14 +661,14 @@ inline void environment_map::insert(environment_map::first_type const& name, env
         // If it does not exist, then we add it first, and remove
         // again if the set_variable() call fails to also put it
         // in the host environment
-        if(1 < m_snapshot.use_count())
+        if (1 < m_snapshot.use_count())
         {
             m_snapshot->insert(name, value);
         }
 
-        if(0 != traits_type::set_variable(name.c_str(), value.c_str()))
+        if (0 != traits_type::set_variable(name.c_str(), value.c_str()))
         {
-            if(1 < m_snapshot.use_count())
+            if (1 < m_snapshot.use_count())
             {
                 m_snapshot->erase(name);
             }
@@ -699,7 +701,7 @@ inline environment_map::size_type environment_map::erase(environment_map::first_
 
     size_type   b   =   0;
 
-    if(0 != traits_type::erase_variable(name.c_str()))
+    if (0 != traits_type::erase_variable(name.c_str()))
     {
 #if 0
         // Failure to erase might be if some external part of the
@@ -709,7 +711,7 @@ inline environment_map::size_type environment_map::erase(environment_map::first_
         // still exists (rather than knowing what value(s) to check
         // the return value of erase_variable() for).
 
-        if(NULL != traits_type::get_variable(name.c_str()))
+        if (NULL != traits_type::get_variable(name.c_str()))
 #endif /* 0 */
         {
             STLSOFT_THROW_X(STLSOFT_NS_QUAL_STD(runtime_error)("Cannot erase environment variable"));
@@ -720,9 +722,9 @@ inline environment_map::size_type environment_map::erase(environment_map::first_
         b = 1;
     }
 
-    if(1 < m_snapshot.use_count())
+    if (1 < m_snapshot.use_count())
     {
-        if(m_snapshot->erase(name))
+        if (m_snapshot->erase(name))
         {
             b = 1;
         }
@@ -751,7 +753,7 @@ inline void environment_map::erase(environment_map::const_iterator it)
     first_type const    &name   =   (*it.m_it).first;   // Avoid CUR
 #endif /* 0 */
 
-    if(0 != traits_type::erase_variable(name.c_str()))
+    if (0 != traits_type::erase_variable(name.c_str()))
     {
 #if 0
         // Failure to erase might be if some external part of the
@@ -761,7 +763,7 @@ inline void environment_map::erase(environment_map::const_iterator it)
         // still exists (rather than knowing what value(s) to check
         // the return value of erase_variable() for).
 
-        if(NULL != traits_type::get_variable(name.c_str()))
+        if (NULL != traits_type::get_variable(name.c_str()))
 #endif /* 0 */
         {
             STLSOFT_THROW_X(STLSOFT_NS_QUAL_STD(runtime_error)("Cannot erase environment variable"));
@@ -776,7 +778,7 @@ inline void environment_map::erase(environment_map::const_iterator it)
 
 inline environment_map::const_iterator environment_map::begin() const
 {
-	return cbegin();
+    return cbegin();
 }
 
 inline environment_map::const_iterator environment_map::cbegin() const
@@ -794,7 +796,7 @@ inline environment_map::const_iterator environment_map::cbegin() const
 
 inline environment_map::const_iterator environment_map::end() const
 {
-	return cend();
+    return cend();
 }
 
 inline environment_map::const_iterator environment_map::cend() const
@@ -839,7 +841,7 @@ inline environment_map::const_reverse_iterator environment_map::crend() const
 
 inline void environment_map::check_refresh_snapshot_() const
 {
-    if(m_snapshot.use_count() < 2)
+    if (m_snapshot.use_count() < 2)
     {
         m_snapshot = snapshot::ref_type(new snapshot());
     }
@@ -858,7 +860,7 @@ inline environment_map::snapshot::snapshot()
     stlsoft::scoped_handle<char const**>    env(    traits_type::get_environ()
                                                 ,   &traits_type::release_environ);
 
-    { for(char const** p = env.get(); NULL != *p; ++p)
+    { for (char const** p = env.get(); NULL != *p; ++p)
     {
         stlsoft::split(*p, '=', name, value);
 
@@ -876,11 +878,11 @@ inline environment_map::snapshot::iterator environment_map::snapshot::end()
     return m_variables.end();
 }
 
-inline ss_bool_t environment_map::snapshot::erase(first_type const& name) throw()
+inline ss_bool_t environment_map::snapshot::erase(first_type const& name) STLSOFT_NOEXCEPT
 {
     variables_type_::iterator it  =   m_variables.find(name);
 
-    if(m_variables.end() != it)
+    if (m_variables.end() != it)
     {
         m_variables.erase(it);
 
@@ -890,7 +892,7 @@ inline ss_bool_t environment_map::snapshot::erase(first_type const& name) throw(
     return false;
 }
 
-inline void environment_map::snapshot::erase(environment_map::snapshot::iterator it) throw()
+inline void environment_map::snapshot::erase(environment_map::snapshot::iterator it) STLSOFT_NOEXCEPT
 {
     m_variables.erase(it);
 }
@@ -930,11 +932,11 @@ inline void environment_map::snapshot::set(first_type const& name, second_type c
 
 }
 
-inline ss_bool_t environment_map::snapshot::lookup(first_type const& name, second_type *&pvalue) throw()
+inline ss_bool_t environment_map::snapshot::lookup(first_type const& name, second_type *&pvalue) STLSOFT_NOEXCEPT
 {
     variables_type_::iterator it  =   m_variables.find(name);
 
-    if(m_variables.end() == it)
+    if (m_variables.end() == it)
     {
         return false;
     }

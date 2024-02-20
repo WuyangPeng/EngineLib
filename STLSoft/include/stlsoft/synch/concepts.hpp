@@ -4,10 +4,11 @@
  * Purpose:     Synchronisation concept tags.
  *
  * Created:     16th January 2006
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2006-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,8 +53,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define STLSOFT_VER_STLSOFT_HPP_SYNCH_HPP_CONCEPTS_FWD_MAJOR       1
 # define STLSOFT_VER_STLSOFT_HPP_SYNCH_HPP_CONCEPTS_FWD_MINOR       0
-# define STLSOFT_VER_STLSOFT_HPP_SYNCH_HPP_CONCEPTS_FWD_REVISION    6
-# define STLSOFT_VER_STLSOFT_HPP_SYNCH_HPP_CONCEPTS_FWD_EDIT        21
+# define STLSOFT_VER_STLSOFT_HPP_SYNCH_HPP_CONCEPTS_FWD_REVISION    7
+# define STLSOFT_VER_STLSOFT_HPP_SYNCH_HPP_CONCEPTS_FWD_EDIT        25
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -166,11 +168,11 @@ struct critical_section
 };
 
 
-#define STLSOFT_CRITICAL_SECTION_IS_RECURSIVE       (1)
-#define STLSOFT_CRITICAL_SECTION_ISNOT_RECURSIVE    (0)
+#define STLSOFT_CRITICAL_SECTION_IS_RECURSIVE               (1)
+#define STLSOFT_CRITICAL_SECTION_ISNOT_RECURSIVE            (0)
 
-#define STLSOFT_CRITICAL_SECTION_IS_TRYABLE         (1)
-#define STLSOFT_CRITICAL_SECTION_ISNOT_TRYABLE      (0)
+#define STLSOFT_CRITICAL_SECTION_IS_TRYABLE                 (1)
+#define STLSOFT_CRITICAL_SECTION_ISNOT_TRYABLE              (0)
 
 
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
@@ -185,34 +187,34 @@ typedef synchronisable_object_tag       synchronizable_object_tag;
 namespace concept_check
 {
     template <ss_typename_param_k S>
-    void synch_conformance_synch_obj(S &s, synchronisable_object_tag const*)
+    void synch_conformance_synch_obj(S& s, synchronisable_object_tag const*)
     {
         s.handle();
 
         s.is_signalled();
 
-        static_cast<int>(s.is_signalled()); // Checks that return type evaluatable as truth
+        STLSOFT_SUPPRESS_UNUSED(static_cast<int>(s.is_signalled())); // Checks that return type evaluatable as truth
     }
     template <ss_typename_param_k S>
-    void synch_conformance_synch_obj(S &s, ...)
+    void synch_conformance_synch_obj(S& /* s */, ...)
     {}
 
 
     template <ss_typename_param_k S>
-    void synch_conformance_try_lock(S &s, yes_type)
+    void synch_conformance_try_lock(S& s, yes_type)
     {
-        if(s.try_lock())
+        if (s.try_lock())
         {
             s.unlock();
         }
     }
     template <ss_typename_param_k S>
-    void synch_conformance_try_lock(S &s, no_type)
+    void synch_conformance_try_lock(S& /* s */, no_type)
     {}
 
 
     template <ss_typename_param_k S>
-    void synch_conformance_recursive_lock(S &s, yes_type)
+    void synch_conformance_recursive_lock(S& s, yes_type)
     {
         s.lock();
         s.lock();
@@ -220,11 +222,11 @@ namespace concept_check
         s.unlock();
     }
     template <ss_typename_param_k S>
-    void synch_conformance_recursive_lock(S &s, no_type)
+    void synch_conformance_recursive_lock(S& /* s */, no_type)
     {}
 
     template <ss_typename_param_k S>
-    void synch_conformance_lock(S &s, critical_section_tag const*)
+    void synch_conformance_lock(S& s, critical_section_tag const*)
     {
         s.lock();
         s.unlock();
@@ -238,13 +240,13 @@ namespace concept_check
         synch_conformance_recursive_lock(s, is_recursive_type());
     }
     template <ss_typename_param_k S>
-    void synch_conformance_lock(S &s, ...)
+    void synch_conformance_lock(S& /* s */, ...)
     {}
 
 
 
     template <ss_typename_param_k S>
-    void synch_conformance(S &s)
+    void synch_conformance(S& s)
     {
         synch_conformance_synch_obj(s,&s);
         synch_conformance_lock(s, &s);

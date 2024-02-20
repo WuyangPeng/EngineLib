@@ -4,13 +4,14 @@
  * Purpose:     Special string instance class template.
  *
  * Created:     3rd June 2006
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Thanks to:   Pablo Aguilar for spotting my omission of string access shims
  *              for special_string_instance_1.
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2006-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -23,9 +24,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -55,8 +57,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define STLSOFT_VER_STLSOFT_STRING_HPP_SPECIAL_STRING_INSTANCE_MAJOR       1
 # define STLSOFT_VER_STLSOFT_STRING_HPP_SPECIAL_STRING_INSTANCE_MINOR       5
-# define STLSOFT_VER_STLSOFT_STRING_HPP_SPECIAL_STRING_INSTANCE_REVISION    2
-# define STLSOFT_VER_STLSOFT_STRING_HPP_SPECIAL_STRING_INSTANCE_EDIT        39
+# define STLSOFT_VER_STLSOFT_STRING_HPP_SPECIAL_STRING_INSTANCE_REVISION    4
+# define STLSOFT_VER_STLSOFT_STRING_HPP_SPECIAL_STRING_INSTANCE_EDIT        43
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -101,6 +103,10 @@
 #ifndef STLSOFT_INCL_STLSOFT_API_external_h_string
 # include <stlsoft/api/external/string.h>
 #endif /* !STLSOFT_INCL_STLSOFT_API_external_h_string */
+
+#ifndef STLSOFT_INCL_STLSOFT_API_internal_h_memfns
+# include <stlsoft/api/internal/memfns.h>
+#endif /* !STLSOFT_INCL_STLSOFT_API_internal_h_memfns */
 
 /* /////////////////////////////////////////////////////////////////////////
  * namespace
@@ -177,7 +183,7 @@ public:
         : m_len(rhs.m_len)
         , m_buffer(rhs.m_len + 1)
     {
-        ::memcpy(&m_buffer[0], &rhs.m_buffer[0], sizeof(char_type) * (1u + m_len));
+        STLSOFT_API_INTERNAL_memfns_memcpy(&m_buffer[0], &rhs.m_buffer[0], sizeof(char_type) * (1u + m_len));
     }
 #endif /* compiler */
 
@@ -192,7 +198,7 @@ public:
 #if 1
         size_type cch = pfn(&m_buffer[0], m_buffer.size());
 
-        if(cch < m_buffer.size())
+        if (cch < m_buffer.size())
         {
             m_len = cch;
 
@@ -206,20 +212,20 @@ public:
         size_type cch   =   pfn(&empty, 0);
 #endif
 
-        if(m_buffer.resize(1 + cch))
+        if (m_buffer.resize(1 + cch))
         {
-            for(;;)
+            for (;;)
             {
                 cch = pfn(&m_buffer[0], m_buffer.size());
 
-                if(cch < m_buffer.size())
+                if (cch < m_buffer.size())
                 {
                     m_len = cch;
                     break;
                 }
                 else
                 {
-                    if(!m_buffer.resize(2 * m_buffer.size()))
+                    if (!m_buffer.resize(2 * m_buffer.size()))
                     {
                         m_buffer.resize(0);
                         break;
@@ -243,7 +249,7 @@ public:
 #if 1
         size_type cch = pfn(arg0, &m_buffer[0], m_buffer.size());
 
-        if(cch < m_buffer.size())
+        if (cch < m_buffer.size())
         {
             m_len = cch;
 
@@ -257,20 +263,20 @@ public:
         size_type   cch     =   pfn(arg0, &empty, 0);
 #endif
 
-        if(m_buffer.resize(1 + cch))
+        if (m_buffer.resize(1 + cch))
         {
-            for(;;)
+            for (;;)
             {
                 cch = pfn(arg0, &m_buffer[0], m_buffer.size());
 
-                if(cch < m_buffer.size())
+                if (cch < m_buffer.size())
                 {
                     m_len = cch;
                     break;
                 }
                 else
                 {
-                    if(!m_buffer.resize(2 * m_buffer.size()))
+                    if (!m_buffer.resize(2 * m_buffer.size()))
                     {
                         m_buffer.resize(0);
                         break;
@@ -449,7 +455,7 @@ private:
 
         static ssi_buffer_type                  s_buffer;
 
-        if(!s_bInit)
+        if (!s_bInit)
         {
             s_buffer.init(initial, pfn);
 
@@ -467,7 +473,7 @@ private:
 
         static ssi_buffer_type                  s_buffer;
 
-        if(!s_bInit)
+        if (!s_bInit)
         {
             s_buffer.init(initial, pfn, a0);
 
@@ -542,7 +548,7 @@ private: // implementation
     {
         typedef ss_typename_type_k value_to_yesno_type<caseSensitive>::type   yesno_t;
 
-        if(cch1 != cch2)
+        if (cch1 != cch2)
         {
             return false;
         }
@@ -607,9 +613,13 @@ private: // implementation
     ,   ss_char_a_t const*    s2
     ,   size_type          /* cch2 */
     ) const
+#ifdef STLSOFT_API_EXTERNAL_string_strnicmp
     {
         return 0 == STLSOFT_API_EXTERNAL_string_strnicmp(s1, s2, cch1);
     }
+#else
+    ;
+#endif
 
     bool
     equal_caseinsensitive_(
@@ -618,9 +628,13 @@ private: // implementation
     ,   ss_char_w_t const*    s2
     ,   size_type          /* cch2 */
     ) const
+#ifdef STLSOFT_API_EXTERNAL_string_wcsnicmp
     {
         return 0 == STLSOFT_API_EXTERNAL_string_wcsnicmp(s1, s2, cch1);
     }
+#else
+    ;
+#endif
 };
 
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */

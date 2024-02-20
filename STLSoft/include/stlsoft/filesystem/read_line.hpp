@@ -4,10 +4,11 @@
  * Purpose:     Definition of stlsoft::read_line() function template.
  *
  * Created:     2nd January 2007
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2007-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -53,7 +55,7 @@
 # define STLSOFT_VER_STLSOFT_FILESYSTEM_HPP_READ_LINE_MAJOR     2
 # define STLSOFT_VER_STLSOFT_FILESYSTEM_HPP_READ_LINE_MINOR     1
 # define STLSOFT_VER_STLSOFT_FILESYSTEM_HPP_READ_LINE_REVISION  5
-# define STLSOFT_VER_STLSOFT_FILESYSTEM_HPP_READ_LINE_EDIT      23
+# define STLSOFT_VER_STLSOFT_FILESYSTEM_HPP_READ_LINE_EDIT      25
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -154,7 +156,7 @@ namespace readers
         {
             int ch = ::fgetc(m_stm);
 
-            if(EOF != ch)
+            if (EOF != ch)
             {
                 ::ungetc(ch, m_stm);
             }
@@ -189,7 +191,7 @@ namespace readers
     public: // Operations
         int read_char()
         {
-            if(m_from == m_to)
+            if (m_from == m_to)
             {
                 return -1;
             }
@@ -201,7 +203,7 @@ namespace readers
 
         int peek_next_char()
         {
-            if(m_from == m_to)
+            if (m_from == m_to)
             {
                 return -1;
             }
@@ -235,13 +237,13 @@ namespace readers
     private:
         static ss_size_t calc_length_(char const* buffer, int size)
         {
-            if(size < 0)
+            if (size < 0)
             {
                 size_t len = 0;
 
-                if(NULL != buffer)
+                if (NULL != buffer)
                 {
-                    for(; '\0' != *buffer; ++len, ++buffer)
+                    for (; '\0' != *buffer; ++len, ++buffer)
                     {}
                 }
 
@@ -257,7 +259,7 @@ namespace readers
     public: // Operations
         int read_char()
         {
-            if(m_current == m_size)
+            if (m_current == m_size)
             {
                 return -1;
             }
@@ -269,7 +271,7 @@ namespace readers
 
         int peek_next_char()
         {
-            if(m_current == m_size)
+            if (m_current == m_size)
             {
                 return -1;
             }
@@ -296,7 +298,7 @@ namespace read_line_impl
     {
         ss_size_t numCr = 0;
 
-        if(0 == (read_line_flags::mask & flags))
+        if (0 == (read_line_flags::mask & flags))
         {
             flags = read_line_flags::recogniseAll;
         }
@@ -305,7 +307,7 @@ namespace read_line_impl
 
         { for (int ch; EOF != (ch = policy.read_char()); )
         {
-            switch(ch)
+            switch (ch)
             {
                 case    '\r':
                     // Options:
@@ -315,15 +317,15 @@ namespace read_line_impl
 
                     // If we're recognising either
 
-                    if(0 != ((read_line_flags::recogniseCrAsEOL | read_line_flags::recogniseCrLfAsEOL) & flags))
+                    if (0 != ((read_line_flags::recogniseCrAsEOL | read_line_flags::recogniseCrLfAsEOL) & flags))
                     {
-                        if(read_line_flags::recogniseCrLfAsEOL & flags)
+                        if (read_line_flags::recogniseCrLfAsEOL & flags)
                         {
                             // We need to look ahead in order to work out whether
                             // this might be the start of a \r\n pair
                             int ch2 = policy.peek_next_char();
 
-                            if('\n' == ch2)
+                            if ('\n' == ch2)
                             {
                                 policy.read_char();
 
@@ -333,7 +335,7 @@ namespace read_line_impl
                             }
                         }
 
-                        if(read_line_flags::recogniseCrAsEOL & flags)
+                        if (read_line_flags::recogniseCrAsEOL & flags)
                         {
                             return true;
                         }
@@ -350,7 +352,7 @@ namespace read_line_impl
                     //
                     //  We check CRLF first
 
-                    if( numCr > 0 &&
+                    if (numCr > 0 &&
                         (read_line_flags::recogniseCrLfAsEOL & flags))
                     {
                         // Here we will digest any excess CRs as literal
@@ -361,7 +363,7 @@ namespace read_line_impl
 
                         return true;
                     }
-                    else if(read_line_flags::recogniseLfAsEOL & flags)
+                    else if (read_line_flags::recogniseLfAsEOL & flags)
                     {
                         line.append(numCr, '\r');
 
@@ -369,7 +371,7 @@ namespace read_line_impl
                     }
                     break;
                 default:
-                    if(numCr > 0)
+                    if (numCr > 0)
                     {
                         line.append(numCr, '\r');
                         numCr = 0;

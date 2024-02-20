@@ -5,10 +5,11 @@
  *              information about the host system version.
  *
  * Created:     10th February 2002
- * Updated:     13th September 2019
+ * Updated:     23rd January 2021
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2021, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2002-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -21,9 +22,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -53,8 +55,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define WINSTL_VER_WINSTL_SYSTEM_HPP_SYSTEM_VERSION_MAJOR      4
 # define WINSTL_VER_WINSTL_SYSTEM_HPP_SYSTEM_VERSION_MINOR      0
-# define WINSTL_VER_WINSTL_SYSTEM_HPP_SYSTEM_VERSION_REVISION   10
-# define WINSTL_VER_WINSTL_SYSTEM_HPP_SYSTEM_VERSION_EDIT       71
+# define WINSTL_VER_WINSTL_SYSTEM_HPP_SYSTEM_VERSION_REVISION   12
+# define WINSTL_VER_WINSTL_SYSTEM_HPP_SYSTEM_VERSION_EDIT       74
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -159,15 +161,18 @@ system_version::get_versioninfo_()
     /// and 5.51) into Internal compiler errors so the s_init variable in
     /// get_versioninfo_() is int rather than bool when compiling for borland.
 
-#if !defined(STLSOFT_STRICT) && \
-    defined(STLSOFT_COMPILER_IS_MSVC) && \
-    _MSC_VER >= 1310
-# pragma warning(push)
-# pragma warning(disable : 4640)   /* "construction of local static object is not thread-safe" - since it is here! (As long as one uses a 'conformant' allocator) - maybe use a spin_mutex in future */
-# if _MSC_VER >= 1600
-#  pragma warning(disable : 4996)
+#if _STLSOFT_VER < 0x01100000
+# ifndef STLSOFT_STRICT
+#  if defined(STLSOFT_COMPILER_IS_MSVC) && \
+      _MSC_VER >= 1310
+#   pragma warning(push)
+#   pragma warning(disable : 4640)   /* "construction of local static object is not thread-safe" - since it is here! (As long as one uses a 'conformant' allocator) - maybe use a spin_mutex in future */
+#   if _MSC_VER >= 1600
+#    pragma warning(disable : 4996)
+#   endif
+#  endif /* compiler */
 # endif
-#endif /* compiler */
+#endif
 
     static OSVERSIONINFO    s_versioninfo;
 #if defined(STLSOFT_COMPILER_IS_BORLAND)
@@ -177,11 +182,14 @@ system_version::get_versioninfo_()
     static ws_bool_t        s_init = (s_versioninfo.dwOSVersionInfoSize = sizeof(s_versioninfo), winstl_C_internal_GetVersionEx(&s_versioninfo), ws_true_v);
 #endif /* compiler */
 
-#if !defined(STLSOFT_STRICT) && \
-    defined(STLSOFT_COMPILER_IS_MSVC) && \
-    _MSC_VER >= 1310
-# pragma warning(pop)
-#endif /* compiler */
+#if _STLSOFT_VER < 0x01100000
+# ifndef STLSOFT_STRICT
+#  if defined(STLSOFT_COMPILER_IS_MSVC) && \
+      _MSC_VER >= 1310
+#   pragma warning(pop)
+#  endif /* compiler */
+# endif
+#endif
 
     STLSOFT_SUPPRESS_UNUSED(s_init); // Placate GCC
 

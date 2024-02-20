@@ -4,12 +4,13 @@
  * Purpose:     Contains classes for initialising COM/OLE.
  *
  * Created:     8th February 1999
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Thanks:      To Adi Shavit, for demanding better documentation of COMSTL.
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 1999-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -22,9 +23,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -54,8 +56,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define COMSTL_VER_COMSTL_UTIL_HPP_INITIALISERS_MAJOR      3
 # define COMSTL_VER_COMSTL_UTIL_HPP_INITIALISERS_MINOR      3
-# define COMSTL_VER_COMSTL_UTIL_HPP_INITIALISERS_REVISION   9
-# define COMSTL_VER_COMSTL_UTIL_HPP_INITIALISERS_EDIT       93
+# define COMSTL_VER_COMSTL_UTIL_HPP_INITIALISERS_REVISION   10
+# define COMSTL_VER_COMSTL_UTIL_HPP_INITIALISERS_EDIT       96
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -131,7 +133,7 @@ public:
 /// \name Implementation
 /// @{
 private:
-    virtual char const* real_what_() const throw()
+    virtual char const* real_what_() const STLSOFT_NOEXCEPT
     {
         return "COM initialisation failure";
     }
@@ -416,7 +418,7 @@ template<   ss_typename_param_k IP
 inline initialiser<IP, XP>::initialiser()
     : m_hr(initialisation_policy_type::init())
 {
-    if(FAILED(m_hr))
+    if (FAILED(m_hr))
     {
         exception_policy_type   xp;
 
@@ -431,7 +433,7 @@ template<   ss_typename_param_k IP
 inline initialiser<IP, XP>::initialiser(cs_dword_t coInit)
     : m_hr(initialisation_policy_type::init(coInit))
 {
-    if(FAILED(m_hr))
+    if (FAILED(m_hr))
     {
         exception_policy_type   xp;
 
@@ -445,7 +447,7 @@ template<   ss_typename_param_k IP
         >
 inline initialiser<IP, XP>::~initialiser() STLSOFT_NOEXCEPT
 {
-    if(is_initialised())
+    if (is_initialised())
     {
         initialisation_policy_type::uninit();
     }

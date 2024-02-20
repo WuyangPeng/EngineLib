@@ -4,10 +4,11 @@
  * Purpose:     WinSTL integer to string conversions.
  *
  * Created:     31st July 2002
- * Updated:     13th September 2019
+ * Updated:     29th January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2002-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -52,8 +54,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define _WINSTL_VER_WINSTL_CONVERSION_HPP_INT_TO_STRING_MAJOR      2
 # define _WINSTL_VER_WINSTL_CONVERSION_HPP_INT_TO_STRING_MINOR      1
-# define _WINSTL_VER_WINSTL_CONVERSION_HPP_INT_TO_STRING_REVISION   14
-# define _WINSTL_VER_WINSTL_CONVERSION_HPP_INT_TO_STRING_EDIT       57
+# define _WINSTL_VER_WINSTL_CONVERSION_HPP_INT_TO_STRING_REVISION   15
+# define _WINSTL_VER_WINSTL_CONVERSION_HPP_INT_TO_STRING_EDIT       61
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -160,9 +162,10 @@ public:
 };
 
 
-template< ss_typename_param_k C
-        , ws_size_t           CCH
-        >
+template<
+    ss_typename_param_k C
+,   ws_size_t           V_internalSize
+>
 struct Slot
 {
     Slot(Slot* next)
@@ -195,16 +198,17 @@ struct Slot
         WINSTL_API_EXTERNAL_MemoryManagement_HeapFree(WINSTL_API_EXTERNAL_MemoryManagement_GetProcessHeap(), 0, pv);
     }
 
-    C       buff[CCH];
+    C       buff[V_internalSize];
     Slot*   next;
 };
 
-template< ss_typename_param_k C
-        , ws_size_t           CCH
-        >
+template<
+    ss_typename_param_k C
+,   ws_size_t           V_internalSize
+>
 struct Key
 {
-    typedef Slot<C, CCH>    Slot;
+    typedef Slot<C, V_internalSize>                         Slot;
 
     // This is admittedly totally gross, but it works and will be portable
     // across different compilers. The reason it works is that s_index is
@@ -233,7 +237,7 @@ struct Key
         spin_mutex32                                smx(&m_ctor);
         STLSOFT_NS_QUAL(lock_scope)<spin_mutex32>   lock(smx);
 
-        if(0 == m_init++) // The test on this variable is always guarded by m_ctor
+        if (0 == m_init++) // The test on this variable is always guarded by m_ctor
         {
             // Initialisation.
 
@@ -257,9 +261,9 @@ struct Key
             // meaningful way
             // 2. Do not want to couple to C++ exception-handling
             // and there is no graceful way to allow this to be
-            // parameterisable. (May allow a pp-discriminated
+            // specialisable. (May allow a pp-discriminated
             // mechanism in next version.)
-            if(TLS_OUT_OF_INDEXES == m_index)
+            if (TLS_OUT_OF_INDEXES == m_index)
             {
                 ::RaiseException(STATUS_NO_MEMORY, EXCEPTION_NONCONTINUABLE, 0, 0);
             }
@@ -268,7 +272,7 @@ struct Key
 
     ~Key() STLSOFT_NOEXCEPT
     {
-        if(0 == WINSTL_API_EXTERNAL_Synchronization_InterlockedDecrement((LPLONG)&m_init))
+        if (0 == WINSTL_API_EXTERNAL_Synchronization_InterlockedDecrement((LPLONG)&m_init))
         {
             // Walk the slot list and free. This can be as slow as
             // you like, since performance is not important here
@@ -335,29 +339,30 @@ private:
 #endif /* STLSOFT_CF_NAMESPACE_SUPPORT */
 
 
-template< ss_typename_param_k C
-        , ws_size_t           CCH
-        >
+template<
+    ss_typename_param_k C
+,   ws_size_t           V_internalSize
+>
 inline C* i2str_get_tss_buffer()
 {
 #if defined(_WINSTL_INT_TO_STRING_USE_DECLSPECTHREAD_FOR_EXES)
-    __declspec(thread) static C s_buffer[CCH];
+    __declspec(thread) static C s_buffer[V_internalSize];
 
     return s_buffer;
 #else
 
-#ifdef STLSOFT_CF_NAMESPACE_SUPPORT
-    typedef int_to_string_tls::Key<C, CCH>      Key;
-    typedef int_to_string_tls::Slot<C, CCH>     Slot;
-#else
-    typedef Key<C, CCH>                         Key;
-    typedef Slot<C, CCH>                        Slot;
-#endif /* STLSOFT_CF_NAMESPACE_SUPPORT */
+# ifdef STLSOFT_CF_NAMESPACE_SUPPORT
+    typedef int_to_string_tls::Key<C, V_internalSize>       Key;
+    typedef int_to_string_tls::Slot<C, V_internalSize>      Slot;
+# else
+    typedef Key<C, V_internalSize>                          Key;
+    typedef Slot<C, V_internalSize>                         Slot;
+# endif /* STLSOFT_CF_NAMESPACE_SUPPORT */
 
     static Key  s_index;
     Slot*       slot = s_index.GetSlot();
 
-    if(NULL == slot)
+    if (NULL == slot)
     {
         slot = s_index.AllocSlot();
     }
@@ -365,7 +370,6 @@ inline C* i2str_get_tss_buffer()
     return slot->buff;
 #endif /* dll */
 }
-
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /** Converts a signed 8-bit integer to a character string

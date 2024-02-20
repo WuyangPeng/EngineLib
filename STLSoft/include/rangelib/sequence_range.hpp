@@ -4,13 +4,14 @@
  * Purpose:     Sequence container range adaptor.
  *
  * Created:     4th November 2003
- * Updated:     2nd February 2019
+ * Updated:     29th January 2024
  *
  * Thanks:      To Luoyi (whom I could not thank by email), for pointing out
  *              some gaps with the sequence_range
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2003-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -23,9 +24,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,7 +53,7 @@
 # define RANGELIB_VER_RANGELIB_HPP_SEQUENCE_RANGE_MAJOR    2
 # define RANGELIB_VER_RANGELIB_HPP_SEQUENCE_RANGE_MINOR    12
 # define RANGELIB_VER_RANGELIB_HPP_SEQUENCE_RANGE_REVISION 6
-# define RANGELIB_VER_RANGELIB_HPP_SEQUENCE_RANGE_EDIT     72
+# define RANGELIB_VER_RANGELIB_HPP_SEQUENCE_RANGE_EDIT     75
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -141,7 +143,7 @@ template<   ss_typename_param_k S
 struct sequence_range_traits
 {
 private:
-    /// Indicates whether the parameterising sequence type has a \c reference member
+    /// Indicates whether the specialising sequence type has a \c reference member
     ///
     /// \note We can't use the type fixer in a fully correct way here, because
     /// most compilers do not detect reference / const_reference members, so we
@@ -294,7 +296,7 @@ public:
 \code
   void dump_elements(std::vector<int> const& numbers)
   {
-    for(sequence_range<std::vector<int> > r(numbers); r; ++r)
+    for (sequence_range<std::vector<int> > r(numbers); r; ++r)
     {
       std::cout << &r; // Dump the current value to stdout
     }

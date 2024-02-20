@@ -5,10 +5,11 @@
  *              and platform discriminations, and definitions of types.
  *
  * Created:     12th May 2003
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2003-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -21,9 +22,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -48,8 +50,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define _WTLSTL_VER_WTLSTL_HPP_WTLSTL_MAJOR    2
 # define _WTLSTL_VER_WTLSTL_HPP_WTLSTL_MINOR    4
-# define _WTLSTL_VER_WTLSTL_HPP_WTLSTL_REVISION 2
-# define _WTLSTL_VER_WTLSTL_HPP_WTLSTL_EDIT     57
+# define _WTLSTL_VER_WTLSTL_HPP_WTLSTL_REVISION 3
+# define _WTLSTL_VER_WTLSTL_HPP_WTLSTL_EDIT     60
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /** \file wtlstl/wtlstl.hpp
@@ -114,11 +116,12 @@
 #define _WTLSTL_VER_1_2_1       0x00010201  /*!< Version 1.2.1 */
 #define _WTLSTL_VER_1_2_2       0x00010202  /*!< Version 1.2.2 (with STLSoft 1.9.25) */
 #define _WTLSTL_VER_1_2_3       0x00010203  /*!< Version 1.2.3 (with STLSoft 1.10.1 b1) */
+#define _WTLSTL_VER_1_2_4       0x00010204  /*!< Version 1.2.4 (with STLSoft 1.10.1 b 26) */
 
 #define _WTLSTL_VER_MAJOR       1
 #define _WTLSTL_VER_MINOR       2
 #define _WTLSTL_VER_REVISION    3
-#define _WTLSTL_VER             _WTLSTL_VER_1_2_3
+#define _WTLSTL_VER             _WTLSTL_VER_1_2_4
 
 /* /////////////////////////////////////////////////////////////////////////
  * includes
@@ -144,11 +147,11 @@
 # endif /* !MIDL_INTERFACE */
 
 # ifndef LONG_PTR
-#  define LONG_PTR                  LONG
+#  define LONG_PTR                                          LONG
 # endif /* !LONG_PTR */
 
 # ifndef UINT_PTR
-#  define UINT_PTR                  unsigned int
+#  define UINT_PTR                                          unsigned int
 # endif /* !UINT_PTR */
 
 # ifndef _ATL_NO_MSIMG
@@ -156,11 +159,11 @@
 # endif /* !_ATL_NO_MSIMG */
 
 # ifndef ATLASSERT
-#  define ATLASSERT                 _ASSERTE
+#  define ATLASSERT                                         _ASSERTE
 # endif /* !ATLASSERT */
 
 # ifndef _WIN32_IE
-#  define _WIN32_IE                 0x0300
+#  define _WIN32_IE                                         0x0300
 # endif /* !_WIN32_IE */
 
 #endif /* _MSC_VER < 1200 */
@@ -190,8 +193,8 @@
  * STLSoft version compatibility check(s)
  */
 
-#if _STLSOFT_VER < 0x010a0181
-# error This version of the WTLSTL libraries requires STLSoft version 1.10.1 beta 1, or later
+#if _STLSOFT_VER < 0x010a019a
+# error This version of the WTLSTL libraries requires STLSoft version 1.10.1 beta 26, or later
 #endif /* _STLSOFT_VER */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -529,8 +532,8 @@ typedef STLSOFT_NS_QUAL(ss_streamoff_t)     ws_streamoff_t; //!< streamoff
 
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 
-#define ws_true_v       ss_true_v
-#define ws_false_v      ss_false_v
+#define ws_true_v                                           ss_true_v
+#define ws_false_v                                          ss_false_v
 
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 /* /////////////////////////////////////////////////////////////////////////
@@ -581,7 +584,7 @@ namespace wtlstl = ::stlsoft::wtlstl_project;
 #endif /* !WTLSTL_NO_NAMESPACE */
 
 /* /////////////////////////////////////////////////////////////////////////
- * inclusion
+ * inclusion control
  */
 
 #ifdef STLSOFT_CF_PRAGMA_ONCE_SUPPORT

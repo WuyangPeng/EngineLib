@@ -4,10 +4,11 @@
  * Purpose:     Allocator commmon features.
  *
  * Created:     20th August 2003
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2003-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -50,9 +52,9 @@
 
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define STLSOFT_VER_STLSOFT_MEMORY_UTIL_HPP_ALLOCATOR_FEATURES_MAJOR       6
-# define STLSOFT_VER_STLSOFT_MEMORY_UTIL_HPP_ALLOCATOR_FEATURES_MINOR       0
-# define STLSOFT_VER_STLSOFT_MEMORY_UTIL_HPP_ALLOCATOR_FEATURES_REVISION    2
-# define STLSOFT_VER_STLSOFT_MEMORY_UTIL_HPP_ALLOCATOR_FEATURES_EDIT        51
+# define STLSOFT_VER_STLSOFT_MEMORY_UTIL_HPP_ALLOCATOR_FEATURES_MINOR       1
+# define STLSOFT_VER_STLSOFT_MEMORY_UTIL_HPP_ALLOCATOR_FEATURES_REVISION    1
+# define STLSOFT_VER_STLSOFT_MEMORY_UTIL_HPP_ALLOCATOR_FEATURES_EDIT        56
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -134,13 +136,16 @@
  * TODO: This should be resolving solely on the library (and version), and not
  * involving the compiler.
  */
-#define STLSOFT_LF_ALLOCATOR_ALLOCATE_HAS_HINT  /* This is standard behaviour */
 
-#if defined(STLSOFT_COMPILER_IS_DMC)
-# if defined(STLSOFT_CF_STD_LIBRARY_IS_HP_SGI)
-#  undef STLSOFT_LF_ALLOCATOR_ALLOCATE_HAS_HINT
-# endif /* std library */
-#endif /* compiler */
+#if __cplusplus < 201703L
+# define STLSOFT_LF_ALLOCATOR_ALLOCATE_HAS_HINT  /* This is standard behaviour */
+
+# if defined(STLSOFT_COMPILER_IS_DMC)
+#  if defined(STLSOFT_CF_STD_LIBRARY_IS_HP_SGI)
+#   undef STLSOFT_LF_ALLOCATOR_ALLOCATE_HAS_HINT
+#  endif /* std library */
+# endif /* compiler */
+#endif /* C++ version */
 
 
 /** \def STLSOFT_LF_ALLOCATOR_DEALLOCATE_HAS_COUNT
@@ -200,6 +205,8 @@
  * \note Effectively, this can be used to determine whether <i>any</i>
  *   allocator supports rebind.
  *
+ * \note This is not defined for any compiler when `__cplusplus >= 1103L`.
+ *
  * Use this symbol when determining whether to use <code>rebind</code> on an
  * allocator.
  */
@@ -227,6 +234,38 @@
 #  error Standard library not recognised
 # endif /* library */
 #endif /* STLSOFT_LF_ALLOCATOR_REBIND_SUPPORT */
+
+#ifdef STLSOFT_LF_ALLOCATOR_REBIND_SUPPORT
+# if __cplusplus >= 201703L
+#  undef STLSOFT_LF_ALLOCATOR_REBIND_SUPPORT
+# endif /* C++ version */
+#endif /* STLSOFT_LF_ALLOCATOR_REBIND_SUPPORT */
+
+
+/** \def STLSOFT_LF_ALLOCATOR_TRAITS_SUPPORT
+ *
+ * \ingroup group__library__Memory
+ *
+ * Indicates, when defined, that <code>std::allocator_traits</code> are
+ * defined and well-supported.
+ */
+
+#if 0
+#elif __cplusplus >= 201703L
+
+# define STLSOFT_LF_ALLOCATOR_TRAITS_SUPPORT
+#elif __cplusplus >= 201403L
+
+# if 0 || \
+     defined(STLSOFT_COMPILER_IS_CLANG) || \
+     defined(STLSOFT_COMPILER_IS_GCC) || \
+     0
+
+#  define STLSOFT_LF_ALLOCATOR_TRAITS_SUPPORT
+# endif
+#else
+#endif
+
 
 /* /////////////////////////////////////////////////////////////////////////
  * obsolete forwarding #defines

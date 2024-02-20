@@ -4,7 +4,7 @@
  * Purpose:     COM instance creation helper functions
  *
  * Created:     21st September 2005
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Thanks:      To Adi Shavit for demanding more usability in these
  *              functions, which led to the adoption of stlsoft::ref_ptr<X>
@@ -12,6 +12,7 @@
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2005-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -24,9 +25,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -56,7 +58,7 @@
 # define COMSTL_VER_COMSTL_UTIL_HPP_CREATION_FUNCTIONS_MAJOR    2
 # define COMSTL_VER_COMSTL_UTIL_HPP_CREATION_FUNCTIONS_MINOR    3
 # define COMSTL_VER_COMSTL_UTIL_HPP_CREATION_FUNCTIONS_REVISION 6
-# define COMSTL_VER_COMSTL_UTIL_HPP_CREATION_FUNCTIONS_EDIT     35
+# define COMSTL_VER_COMSTL_UTIL_HPP_CREATION_FUNCTIONS_EDIT     37
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -116,7 +118,7 @@ namespace comstl_project
 const CLSID CLSID_pantheios_COM_LoggerManager  = { 0x4E7D5C47, 0x8F96, 0x45DE, { 0x90, 0x5D, 0xAA, 0x3E, 0x9E, 0x59, 0x2D, 0xE3 } };
 
 IDispatch* logmgr;
-if(SUCCEEDED(comstl::co_create_instance(CLSID_pantheios_COM_LoggerManager, &logmgr)))
+if (SUCCEEDED(comstl::co_create_instance(CLSID_pantheios_COM_LoggerManager, &logmgr)))
 {
   logmgr->Release();
 }
@@ -151,7 +153,7 @@ co_create_instance(
  * interface:
 \code
 IDispatch* logmgr;
-if(SUCCEEDED(comstl::co_create_instance(L"{4E7D5C47-8F96-45DE-905D-AA3E9E592DE3}", &logmgr)))
+if (SUCCEEDED(comstl::co_create_instance(L"{4E7D5C47-8F96-45DE-905D-AA3E9E592DE3}", &logmgr)))
 {
   logmgr->Release();
 }
@@ -163,7 +165,7 @@ if(SUCCEEDED(comstl::co_create_instance(L"{4E7D5C47-8F96-45DE-905D-AA3E9E592DE3}
  * interface:
 \code
 IDispatch* logmgr;
-if(SUCCEEDED(comstl::co_create_instance(L"Pantheios.COM.LoggerManager", &logmgr)))
+if (SUCCEEDED(comstl::co_create_instance(L"Pantheios.COM.LoggerManager", &logmgr)))
 {
   logmgr->Release();
 }
@@ -181,12 +183,12 @@ co_create_instance(
     CLSID   clsid;
     HRESULT hr = ::CLSIDFromProgID(id, &clsid);
 
-    if(FAILED(hr))
+    if (FAILED(hr))
     {
         hr = ::CLSIDFromString(const_cast<LPOLESTR>(id), &clsid);
     }
 
-    if(SUCCEEDED(hr))
+    if (SUCCEEDED(hr))
     {
         hr = co_create_instance(clsid, ppi, dwClsContext);
     }
@@ -214,7 +216,7 @@ co_create_instance(
 const CLSID CLSID_pantheios_COM_LoggerManager  = { 0x4E7D5C47, 0x8F96, 0x45DE, { 0x90, 0x5D, 0xAA, 0x3E, 0x9E, 0x59, 0x2D, 0xE3 } };
 
 stlsoft::ref_ptr<IDispatch> logmgr;
-if(SUCCEEDED(comstl::co_create_instance(CLSID_pantheios_COM_LoggerManager, logmgr)))
+if (SUCCEEDED(comstl::co_create_instance(CLSID_pantheios_COM_LoggerManager, logmgr)))
 {
   . . .
 } // Release() automatically invoked here
@@ -235,7 +237,7 @@ co_create_instance(
     I*      pi;
     HRESULT hr = co_create_instance(clsid, &pi, dwClsContext);
 
-    if(FAILED(hr))
+    if (FAILED(hr))
     {
         pi = NULL;
     }
@@ -265,7 +267,7 @@ co_create_instance(
  * interface:
 \code
 stlsoft::ref_ptr<IDispatch> logmgr;
-if(SUCCEEDED(comstl::co_create_instance(L"{4E7D5C47-8F96-45DE-905D-AA3E9E592DE3}", logmgr)))
+if (SUCCEEDED(comstl::co_create_instance(L"{4E7D5C47-8F96-45DE-905D-AA3E9E592DE3}", logmgr)))
 {
   . . .
 } // Release() automatically invoked here
@@ -277,7 +279,7 @@ if(SUCCEEDED(comstl::co_create_instance(L"{4E7D5C47-8F96-45DE-905D-AA3E9E592DE3}
  * interface:
 \code
 stlsoft::ref_ptr<IDispatch> logmgr;
-if(SUCCEEDED(comstl::co_create_instance(L"Pantheios.COM.LoggerManager", logmgr)))
+if (SUCCEEDED(comstl::co_create_instance(L"Pantheios.COM.LoggerManager", logmgr)))
 {
   . . .
 } // Release() automatically invoked here
@@ -298,7 +300,7 @@ co_create_instance(
     I*      pi;
     HRESULT hr = co_create_instance(id, &pi, dwClsContext);
 
-    if(FAILED(hr))
+    if (FAILED(hr))
     {
         pi = NULL;
     }

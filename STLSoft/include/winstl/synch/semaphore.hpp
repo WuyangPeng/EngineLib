@@ -4,10 +4,11 @@
  * Purpose:     Semaphore class, based on Win32 kernel semaphore object.
  *
  * Created:     30th May 2006
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2006-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -52,7 +54,7 @@
 # define WINSTL_VER_WINSTL_SYNCH_HPP_SEMAPHORE_MAJOR    1
 # define WINSTL_VER_WINSTL_SYNCH_HPP_SEMAPHORE_MINOR    3
 # define WINSTL_VER_WINSTL_SYNCH_HPP_SEMAPHORE_REVISION 16
-# define WINSTL_VER_WINSTL_SYNCH_HPP_SEMAPHORE_EDIT     42
+# define WINSTL_VER_WINSTL_SYNCH_HPP_SEMAPHORE_EDIT     44
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -189,7 +191,7 @@ public:
     /// Destroys an instance of the semaphore
     ~semaphore() STLSOFT_NOEXCEPT
     {
-        if( NULL != m_sem &&
+        if (NULL != m_sem &&
             m_bOwnHandle)
         {
             WINSTL_API_EXTERNAL_HandleAndObject_CloseHandle(m_sem);
@@ -203,14 +205,14 @@ private:
 /// \name Operations
 /// @{
 public:
-    /// Acquires a lock on the semaphore, pending the thread until the lock is aquired
+    /// Acquires a lock on the semaphore, pending the thread until the lock is acquired
     void lock()
     {
         WINSTL_ASSERT(NULL != m_sem);
 
         DWORD const dwRes = WINSTL_API_EXTERNAL_Synchronization_WaitForSingleObject(m_sem, INFINITE);
 
-        if(WAIT_OBJECT_0 != dwRes)
+        if (WAIT_OBJECT_0 != dwRes)
         {
             DWORD const e = WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();
 
@@ -221,14 +223,14 @@ public:
 #endif /* STLSOFT_CF_EXCEPTION_SUPPORT */
         }
     }
-    /// Acquires a lock on the semaphore, pending the thread until the lock is aquired
+    /// Acquires a lock on the semaphore, pending the thread until the lock is acquired
     bool_type lock(ws_dword_t wait)
     {
         WINSTL_ASSERT(NULL != m_sem);
 
         DWORD const dwRes = WINSTL_API_EXTERNAL_Synchronization_WaitForSingleObject(m_sem, wait);
 
-        if( WAIT_OBJECT_0 != dwRes &&
+        if (WAIT_OBJECT_0 != dwRes &&
             WAIT_TIMEOUT != dwRes)
         {
             DWORD const e = WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();
@@ -244,12 +246,12 @@ public:
     }
     /// Attempts to lock the semaphore
     ///
-    /// \return <b>true</b> if the semaphore was aquired, or <b>false</b> if not
+    /// \return <b>true</b> if the semaphore was acquired, or <b>false</b> if not
     bool_type try_lock()
     {
         return lock(0);
     }
-    /// Releases an aquired lock on the semaphore, increasing the
+    /// Releases an acquired lock on the semaphore, increasing the
     ///  semaphore's counter by one.
     ///
     /// \note Equivalent to \link winstl::semaphore::unlock(count_type) unlock()\endlink.
@@ -257,7 +259,7 @@ public:
     {
         WINSTL_ASSERT(NULL != m_sem);
 
-        if(!::ReleaseSemaphore(m_sem, 1, NULL))
+        if (!::ReleaseSemaphore(m_sem, 1, NULL))
         {
             DWORD const e = WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();
 
@@ -268,7 +270,7 @@ public:
 #endif /* STLSOFT_CF_EXCEPTION_SUPPORT */
         }
     }
-    /// Releases a number of aquired "locks" on the semaphore,
+    /// Releases a number of acquired "locks" on the semaphore,
     ///  increasing the semaphore's counter by the given value.
     ///
     /// \param numLocksToRelease The number by which to increment the
@@ -288,7 +290,7 @@ public:
 
         LONG    previousCount   =   0;
 
-        if(!::ReleaseSemaphore(m_sem, static_cast<LONG>(numLocksToRelease), &previousCount))
+        if (!::ReleaseSemaphore(m_sem, static_cast<LONG>(numLocksToRelease), &previousCount))
         {
             DWORD const e = WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();
 
@@ -354,7 +356,7 @@ private:
 
         synch_handle_type sem = CreateSemaphore_A_arguments_adjusted_(psa, initialCount, maxCount, name);
 
-        if(NULL == sem)
+        if (NULL == sem)
         {
             DWORD const e = WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();
 
@@ -379,7 +381,7 @@ private:
 
         synch_handle_type sem = CreateSemaphore_W_arguments_adjusted_(psa, initialCount, maxCount, name);
 
-        if(NULL == sem)
+        if (NULL == sem)
         {
             DWORD const e = WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();
 
@@ -440,11 +442,11 @@ inline HANDLE get_kernel_handle(semaphore &sem)
 # endif /* STLSOFT_NO_NAMESPACE */
 #endif /* !WINSTL_NO_NAMESPACE */
 
-/** This \ref group__concept__Shim "control shim" aquires a lock on the given semaphore
+/** This \ref group__concept__Shim "control shim" acquires a lock on the given semaphore
  *
  * \ingroup group__concept__Shim__synchronisation_control
  *
- * \param sem The semaphore on which to aquire the lock.
+ * \param sem The semaphore on which to acquire the lock.
  */
 inline void lock_instance(WINSTL_NS_QUAL(semaphore) &sem)
 {

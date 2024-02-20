@@ -5,10 +5,11 @@
  *              Management Functions API.
  *
  * Created:     18th July 2014
- * Updated:     2nd February 2019
+ * Updated:     26th December 2020
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2020, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2014-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -21,9 +22,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -72,15 +74,15 @@
  */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_CopyMemory
-# define WINSTL_API_EXTERNAL_MemoryManagement_CopyMemory                        STLSOFT_NS_GLOBAL_(CopyMemory)
+# define WINSTL_API_EXTERNAL_MemoryManagement_CopyMemory    STLSOFT_NS_GLOBAL_(CopyMemory)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_CopyMemory */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_FillMemory
-# define WINSTL_API_EXTERNAL_MemoryManagement_FillMemory                        STLSOFT_NS_GLOBAL_(FillMemory)
+# define WINSTL_API_EXTERNAL_MemoryManagement_FillMemory    STLSOFT_NS_GLOBAL_(FillMemory)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_FillMemory */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_GetWriteWatch
-# define WINSTL_API_EXTERNAL_MemoryManagement_GetWriteWatch                     STLSOFT_NS_GLOBAL_(GetWriteWatch)
+# define WINSTL_API_EXTERNAL_MemoryManagement_GetWriteWatch STLSOFT_NS_GLOBAL_(GetWriteWatch)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_GetWriteWatch */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_GlobalMemoryStatus
@@ -94,7 +96,7 @@
 /* IsBad???Ptr never used! */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_MoveMemory
-# define WINSTL_API_EXTERNAL_MemoryManagement_MoveMemory                        STLSOFT_NS_GLOBAL_(MoveMemory)
+# define WINSTL_API_EXTERNAL_MemoryManagement_MoveMemory    STLSOFT_NS_GLOBAL_(MoveMemory)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_MoveMemory */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_ResetWriteWatch
@@ -102,7 +104,7 @@
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_ResetWriteWatch */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_ZeroMemory
-# define WINSTL_API_EXTERNAL_MemoryManagement_ZeroMemory                        STLSOFT_NS_GLOBAL_(ZeroMemory)
+# define WINSTL_API_EXTERNAL_MemoryManagement_ZeroMemory    STLSOFT_NS_GLOBAL_(ZeroMemory)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_ZeroMemory */
 
 
@@ -152,7 +154,7 @@
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_GetMappedFileNameW */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_MapViewOfFile
-# define WINSTL_API_EXTERNAL_MemoryManagement_MapViewOfFile                     STLSOFT_NS_GLOBAL_(MapViewOfFile)
+# define WINSTL_API_EXTERNAL_MemoryManagement_MapViewOfFile STLSOFT_NS_GLOBAL_(MapViewOfFile)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_MapViewOfFile */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_MapViewOfFileEx
@@ -216,27 +218,27 @@
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_GetProcessHeaps */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_HeapAlloc
-# define WINSTL_API_EXTERNAL_MemoryManagement_HeapAlloc                         STLSOFT_NS_GLOBAL_(HeapAlloc)
+# define WINSTL_API_EXTERNAL_MemoryManagement_HeapAlloc     STLSOFT_NS_GLOBAL_(HeapAlloc)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_HeapAlloc */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_HeapCompact
-# define WINSTL_API_EXTERNAL_MemoryManagement_HeapCompact                       STLSOFT_NS_GLOBAL_(HeapCompact)
+# define WINSTL_API_EXTERNAL_MemoryManagement_HeapCompact   STLSOFT_NS_GLOBAL_(HeapCompact)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_HeapCompact */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_HeapCreate
-# define WINSTL_API_EXTERNAL_MemoryManagement_HeapCreate                        STLSOFT_NS_GLOBAL_(HeapCreate)
+# define WINSTL_API_EXTERNAL_MemoryManagement_HeapCreate    STLSOFT_NS_GLOBAL_(HeapCreate)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_HeapCreate */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_HeapDestroy
-# define WINSTL_API_EXTERNAL_MemoryManagement_HeapDestroy                       STLSOFT_NS_GLOBAL_(HeapDestroy)
+# define WINSTL_API_EXTERNAL_MemoryManagement_HeapDestroy   STLSOFT_NS_GLOBAL_(HeapDestroy)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_HeapDestroy */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_HeapFree
-# define WINSTL_API_EXTERNAL_MemoryManagement_HeapFree                          STLSOFT_NS_GLOBAL_(HeapFree)
+# define WINSTL_API_EXTERNAL_MemoryManagement_HeapFree      STLSOFT_NS_GLOBAL_(HeapFree)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_HeapFree */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_HeapLock
-# define WINSTL_API_EXTERNAL_MemoryManagement_HeapLock                          STLSOFT_NS_GLOBAL_(HeapLock)
+# define WINSTL_API_EXTERNAL_MemoryManagement_HeapLock      STLSOFT_NS_GLOBAL_(HeapLock)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_HeapLock */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_HeapQueryInformation
@@ -244,7 +246,7 @@
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_HeapQueryInformation */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_HeapReAlloc
-# define WINSTL_API_EXTERNAL_MemoryManagement_HeapReAlloc                       STLSOFT_NS_GLOBAL_(HeapReAlloc)
+# define WINSTL_API_EXTERNAL_MemoryManagement_HeapReAlloc   STLSOFT_NS_GLOBAL_(HeapReAlloc)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_HeapReAlloc */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_HeapSetInformation
@@ -252,19 +254,19 @@
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_HeapSetInformation */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_HeapSize
-# define WINSTL_API_EXTERNAL_MemoryManagement_HeapSize                          STLSOFT_NS_GLOBAL_(HeapSize)
+# define WINSTL_API_EXTERNAL_MemoryManagement_HeapSize      STLSOFT_NS_GLOBAL_(HeapSize)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_HeapSize */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_HeapUnlock
-# define WINSTL_API_EXTERNAL_MemoryManagement_HeapUnlock                        STLSOFT_NS_GLOBAL_(HeapUnlock)
+# define WINSTL_API_EXTERNAL_MemoryManagement_HeapUnlock    STLSOFT_NS_GLOBAL_(HeapUnlock)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_HeapUnlock */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_HeapValidate
-# define WINSTL_API_EXTERNAL_MemoryManagement_HeapValidate                      STLSOFT_NS_GLOBAL_(HeapValidate)
+# define WINSTL_API_EXTERNAL_MemoryManagement_HeapValidate  STLSOFT_NS_GLOBAL_(HeapValidate)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_HeapValidate */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_HeapWalk
-# define WINSTL_API_EXTERNAL_MemoryManagement_HeapWalk                          STLSOFT_NS_GLOBAL_(HeapWalk)
+# define WINSTL_API_EXTERNAL_MemoryManagement_HeapWalk      STLSOFT_NS_GLOBAL_(HeapWalk)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_HeapWalk */
 
 
@@ -273,7 +275,7 @@
  */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_VirtualAlloc
-# define WINSTL_API_EXTERNAL_MemoryManagement_VirtualAlloc                      STLSOFT_NS_GLOBAL_(VirtualAlloc)
+# define WINSTL_API_EXTERNAL_MemoryManagement_VirtualAlloc  STLSOFT_NS_GLOBAL_(VirtualAlloc)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_VirtualAlloc */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_VirtualAllocEx
@@ -281,15 +283,15 @@
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_VirtualAllocEx */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_VirtualFree
-# define WINSTL_API_EXTERNAL_MemoryManagement_VirtualFree                       STLSOFT_NS_GLOBAL_(VirtualFree)
+# define WINSTL_API_EXTERNAL_MemoryManagement_VirtualFree   STLSOFT_NS_GLOBAL_(VirtualFree)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_VirtualFree */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_VirtualFreeEx
-# define WINSTL_API_EXTERNAL_MemoryManagement_VirtualFreeEx                     STLSOFT_NS_GLOBAL_(VirtualFreeEx)
+# define WINSTL_API_EXTERNAL_MemoryManagement_VirtualFreeEx STLSOFT_NS_GLOBAL_(VirtualFreeEx)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_VirtualFreeEx */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_VirtualLock
-# define WINSTL_API_EXTERNAL_MemoryManagement_VirtualLock                       STLSOFT_NS_GLOBAL_(VirtualLock)
+# define WINSTL_API_EXTERNAL_MemoryManagement_VirtualLock   STLSOFT_NS_GLOBAL_(VirtualLock)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_VirtualLock */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_VirtualProtect
@@ -301,7 +303,7 @@
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_VirtualProtectEx */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_VirtualQuery
-# define WINSTL_API_EXTERNAL_MemoryManagement_VirtualQuery                      STLSOFT_NS_GLOBAL_(VirtualQuery)
+# define WINSTL_API_EXTERNAL_MemoryManagement_VirtualQuery  STLSOFT_NS_GLOBAL_(VirtualQuery)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_VirtualQuery */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_VirtualQueryEx
@@ -309,7 +311,7 @@
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_VirtualQueryEx */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_VirtualUnlock
-# define WINSTL_API_EXTERNAL_MemoryManagement_VirtualUnlock                     STLSOFT_NS_GLOBAL_(VirtualUnlock)
+# define WINSTL_API_EXTERNAL_MemoryManagement_VirtualUnlock STLSOFT_NS_GLOBAL_(VirtualUnlock)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_VirtualUnlock */
 
 
@@ -318,75 +320,75 @@
  */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_GlobalAlloc
-# define WINSTL_API_EXTERNAL_MemoryManagement_GlobalAlloc                       STLSOFT_NS_GLOBAL_(GlobalAlloc)
+# define WINSTL_API_EXTERNAL_MemoryManagement_GlobalAlloc   STLSOFT_NS_GLOBAL_(GlobalAlloc)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_GlobalAlloc */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_GlobalDiscard
-# define WINSTL_API_EXTERNAL_MemoryManagement_GlobalDiscard                     STLSOFT_NS_GLOBAL_(GlobalDiscard)
+# define WINSTL_API_EXTERNAL_MemoryManagement_GlobalDiscard STLSOFT_NS_GLOBAL_(GlobalDiscard)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_GlobalDiscard */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_GlobalFlags
-# define WINSTL_API_EXTERNAL_MemoryManagement_GlobalFlags                       STLSOFT_NS_GLOBAL_(GlobalFlags)
+# define WINSTL_API_EXTERNAL_MemoryManagement_GlobalFlags   STLSOFT_NS_GLOBAL_(GlobalFlags)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_GlobalFlags */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_GlobalFree
-# define WINSTL_API_EXTERNAL_MemoryManagement_GlobalFree                        STLSOFT_NS_GLOBAL_(GlobalFree)
+# define WINSTL_API_EXTERNAL_MemoryManagement_GlobalFree    STLSOFT_NS_GLOBAL_(GlobalFree)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_GlobalFree */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_GlobalHandle
-# define WINSTL_API_EXTERNAL_MemoryManagement_GlobalHandle                      STLSOFT_NS_GLOBAL_(GlobalHandle)
+# define WINSTL_API_EXTERNAL_MemoryManagement_GlobalHandle  STLSOFT_NS_GLOBAL_(GlobalHandle)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_GlobalHandle */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_GlobalLock
-# define WINSTL_API_EXTERNAL_MemoryManagement_GlobalLock                        STLSOFT_NS_GLOBAL_(GlobalLock)
+# define WINSTL_API_EXTERNAL_MemoryManagement_GlobalLock    STLSOFT_NS_GLOBAL_(GlobalLock)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_GlobalLock */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_GlobalReAlloc
-# define WINSTL_API_EXTERNAL_MemoryManagement_GlobalReAlloc                     STLSOFT_NS_GLOBAL_(GlobalReAlloc)
+# define WINSTL_API_EXTERNAL_MemoryManagement_GlobalReAlloc STLSOFT_NS_GLOBAL_(GlobalReAlloc)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_GlobalReAlloc */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_GlobalSize
-# define WINSTL_API_EXTERNAL_MemoryManagement_GlobalSize                        STLSOFT_NS_GLOBAL_(GlobalSize)
+# define WINSTL_API_EXTERNAL_MemoryManagement_GlobalSize    STLSOFT_NS_GLOBAL_(GlobalSize)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_GlobalSize */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_GlobalUnlock
-# define WINSTL_API_EXTERNAL_MemoryManagement_GlobalUnlock                      STLSOFT_NS_GLOBAL_(GlobalUnlock)
+# define WINSTL_API_EXTERNAL_MemoryManagement_GlobalUnlock  STLSOFT_NS_GLOBAL_(GlobalUnlock)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_GlobalUnlock */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_LocalAlloc
-# define WINSTL_API_EXTERNAL_MemoryManagement_LocalAlloc                        STLSOFT_NS_GLOBAL_(LocalAlloc)
+# define WINSTL_API_EXTERNAL_MemoryManagement_LocalAlloc    STLSOFT_NS_GLOBAL_(LocalAlloc)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_LocalAlloc */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_LocalDiscard
-# define WINSTL_API_EXTERNAL_MemoryManagement_LocalDiscard                      STLSOFT_NS_GLOBAL_(LocalDiscard)
+# define WINSTL_API_EXTERNAL_MemoryManagement_LocalDiscard  STLSOFT_NS_GLOBAL_(LocalDiscard)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_LocalDiscard */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_LocalFlags
-# define WINSTL_API_EXTERNAL_MemoryManagement_LocalFlags                        STLSOFT_NS_GLOBAL_(LocalFlags)
+# define WINSTL_API_EXTERNAL_MemoryManagement_LocalFlags    STLSOFT_NS_GLOBAL_(LocalFlags)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_LocalFlags */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_LocalFree
-# define WINSTL_API_EXTERNAL_MemoryManagement_LocalFree                         STLSOFT_NS_GLOBAL_(LocalFree)
+# define WINSTL_API_EXTERNAL_MemoryManagement_LocalFree     STLSOFT_NS_GLOBAL_(LocalFree)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_LocalFree */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_LocalHandle
-# define WINSTL_API_EXTERNAL_MemoryManagement_LocalHandle                       STLSOFT_NS_GLOBAL_(LocalHandle)
+# define WINSTL_API_EXTERNAL_MemoryManagement_LocalHandle   STLSOFT_NS_GLOBAL_(LocalHandle)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_LocalHandle */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_LocalLock
-# define WINSTL_API_EXTERNAL_MemoryManagement_LocalLock                         STLSOFT_NS_GLOBAL_(LocalLock)
+# define WINSTL_API_EXTERNAL_MemoryManagement_LocalLock     STLSOFT_NS_GLOBAL_(LocalLock)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_LocalLock */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_LocalReAlloc
-# define WINSTL_API_EXTERNAL_MemoryManagement_LocalReAlloc                      STLSOFT_NS_GLOBAL_(LocalReAlloc)
+# define WINSTL_API_EXTERNAL_MemoryManagement_LocalReAlloc  STLSOFT_NS_GLOBAL_(LocalReAlloc)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_LocalReAlloc */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_LocalSize
-# define WINSTL_API_EXTERNAL_MemoryManagement_LocalSize                         STLSOFT_NS_GLOBAL_(LocalSize)
+# define WINSTL_API_EXTERNAL_MemoryManagement_LocalSize     STLSOFT_NS_GLOBAL_(LocalSize)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_LocalSize */
 
 #ifndef WINSTL_API_EXTERNAL_MemoryManagement_LocalUnlock
-# define WINSTL_API_EXTERNAL_MemoryManagement_LocalUnlock                       STLSOFT_NS_GLOBAL_(LocalUnlock)
+# define WINSTL_API_EXTERNAL_MemoryManagement_LocalUnlock   STLSOFT_NS_GLOBAL_(LocalUnlock)
 #endif /* !WINSTL_API_EXTERNAL_MemoryManagement_LocalUnlock */
 
 

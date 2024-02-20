@@ -4,10 +4,11 @@
  * Purpose:     winstl_C_identify_operating_system() function.
  *
  * Created:     18th May 1995
- * Updated:     21st September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 1995-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,8 +53,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define WINSTL_VER_WINSTL_SYSTEM_H_OS_VERSION_MAJOR    1
 # define WINSTL_VER_WINSTL_SYSTEM_H_OS_VERSION_MINOR    0
-# define WINSTL_VER_WINSTL_SYSTEM_H_OS_VERSION_REVISION 6
-# define WINSTL_VER_WINSTL_SYSTEM_H_OS_VERSION_EDIT     12
+# define WINSTL_VER_WINSTL_SYSTEM_H_OS_VERSION_REVISION 8
+# define WINSTL_VER_WINSTL_SYSTEM_H_OS_VERSION_EDIT     15
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -202,7 +204,7 @@ winstl_C_identify_operating_system(
     WORD const*     suiteMask   =   (sizeof(ovix.wReserved) == sizeof(WORD[2])) ? (WORD const*)(&ovix.wServicePackMinor + 1) : (WORD const*)(&ovix.wReserved - 3);
     BYTE const*     productType =   (sizeof(ovix.wReserved) == sizeof(WORD[2])) ? (BYTE const*)(&ovix.wServicePackMinor + 2) : (BYTE const*)(&ovix.wReserved - 1);
 
-    if(NULL == pfn)
+    if (NULL == pfn)
     {
 #if defined(_WIN32_WINNT) && \
     _WIN32_WINNT >= 0x0501
@@ -214,11 +216,11 @@ winstl_C_identify_operating_system(
         HMODULE     h   =   WINSTL_API_EXTERNAL_DynamicLinkLibrary_LoadLibraryA("KERNEL32");
         GNSI_fn_t   pfn =   NULL;
 
-        if(NULL != h)
+        if (NULL != h)
         {
-            pfn = (GNSI_fn_t)STLSOFT_NS_GLOBAL(GetProcAddress)(h, "GetNativeSystemInfo");
+            pfn = (GNSI_fn_t)WINSTL_API_EXTERNAL_DynamicLinkLibrary_GetProcAddress(h, "GetNativeSystemInfo");
 
-            if(NULL != pfn)
+            if (NULL != pfn)
             {
                 (*pfn)(&si);
             }
@@ -226,7 +228,7 @@ winstl_C_identify_operating_system(
             WINSTL_API_EXTERNAL_DynamicLinkLibrary_FreeLibrary(h);
         }
 
-        if(NULL == pfn)
+        if (NULL == pfn)
         {
             STLSOFT_NS_GLOBAL(GetSystemInfo)(&si);
         }
@@ -238,19 +240,19 @@ winstl_C_identify_operating_system(
     }
 
     ovix.dwOSVersionInfoSize  = sizeof(ovix);
-    if(!STLSOFT_NS_GLOBAL(GetVersionEx)((LPOSVERSIONINFO)&ovix))
+    if (!STLSOFT_NS_GLOBAL(GetVersionEx)((LPOSVERSIONINFO)&ovix))
     {
         return WinSTL_OperatingSystemIdentifier_Invalid;
     }
     else
     {
-        switch(ovix.dwMajorVersion)
+        switch (ovix.dwMajorVersion)
         {
             case    4:
-                switch(ovix.dwPlatformId)
+                switch (ovix.dwPlatformId)
                 {
                     case    1:
-                        switch(ovix.dwMinorVersion)
+                        switch (ovix.dwMinorVersion)
                         {
                             case    0:
                                 return WinSTL_OperatingSystemIdentifier_Windows_95;
@@ -263,7 +265,7 @@ winstl_C_identify_operating_system(
                         }
                         break;
                     case    2:
-                        switch(ovix.dwMinorVersion)
+                        switch (ovix.dwMinorVersion)
                         {
                             case    0:
                                 return WinSTL_OperatingSystemIdentifier_Windows_NT4;
@@ -276,25 +278,25 @@ winstl_C_identify_operating_system(
                 }
                 break;
             case    5:
-                switch(ovix.dwMinorVersion)
+                switch (ovix.dwMinorVersion)
                 {
                     case    0:
                         return WinSTL_OperatingSystemIdentifier_Windows_2000;
                     case    1:
                         return WinSTL_OperatingSystemIdentifier_Windows_XP;
                     case    2:
-                        if( VER_NT_WORKSTATION == *productType &&
+                        if (VER_NT_WORKSTATION == *productType &&
                             PROCESSOR_ARCHITECTURE_AMD64 == si.wProcessorArchitecture)
                         {
                             return WinSTL_OperatingSystemIdentifier_Windows_XP_Professional_x64;
                         }
-                        else if(VER_SUITE_WH_SERVER == *suiteMask)
+                        else if (VER_SUITE_WH_SERVER == *suiteMask)
                         {
                             return WinSTL_OperatingSystemIdentifier_Windows_Home_Server;
                         }
                         else
                         {
-                            if(0 != smsvrr2)
+                            if (0 != smsvrr2)
                             {
                                 return WinSTL_OperatingSystemIdentifier_Windows_Server_2003_R2;
                             }
@@ -309,10 +311,10 @@ winstl_C_identify_operating_system(
                 }
                 break;
             case    6:
-                switch(ovix.dwMinorVersion)
+                switch (ovix.dwMinorVersion)
                 {
                     case    0:
-                        if(VER_NT_WORKSTATION == *productType)
+                        if (VER_NT_WORKSTATION == *productType)
                         {
                             return WinSTL_OperatingSystemIdentifier_Windows_Vista;
                         }
@@ -322,7 +324,7 @@ winstl_C_identify_operating_system(
                         }
                         break;
                     case    1:
-                        if(VER_NT_WORKSTATION == *productType)
+                        if (VER_NT_WORKSTATION == *productType)
                         {
                             return WinSTL_OperatingSystemIdentifier_Windows_7;
                         }
@@ -332,7 +334,7 @@ winstl_C_identify_operating_system(
                         }
                         break;
                     case    2:
-                        if(VER_NT_WORKSTATION == *productType)
+                        if (VER_NT_WORKSTATION == *productType)
                         {
                             return WinSTL_OperatingSystemIdentifier_Windows_8;
                         }
@@ -342,7 +344,7 @@ winstl_C_identify_operating_system(
                         }
                         break;
                     case    3:
-                        if(VER_NT_WORKSTATION == *productType)
+                        if (VER_NT_WORKSTATION == *productType)
                         {
                             return WinSTL_OperatingSystemIdentifier_Windows_8_1;
                         }
@@ -403,7 +405,7 @@ c_str_data_a(
 
 # define WINSTL_SYSTEM_OS_VERSION_c_str_data_a_ITEM_(x) case  WinSTL_OperatingSystemIdentifier_##x: return #x
 
-    switch(osid)
+    switch (osid)
     {
 WINSTL_SYSTEM_OS_VERSION_c_str_data_a_ITEM_(Unknown);
 WINSTL_SYSTEM_OS_VERSION_c_str_data_a_ITEM_(Windows_95);
@@ -425,6 +427,9 @@ WINSTL_SYSTEM_OS_VERSION_c_str_data_a_ITEM_(Windows_8);
 WINSTL_SYSTEM_OS_VERSION_c_str_data_a_ITEM_(Windows_Server_2012_R2);
 WINSTL_SYSTEM_OS_VERSION_c_str_data_a_ITEM_(Windows_8_1);
 
+    case WinSTL_OperatingSystemIdentifier_Invalid:
+
+        break;
     }
 
 # undef WINSTL_SYSTEM_OS_VERSION_c_str_data_a_ITEM_

@@ -4,14 +4,14 @@
  * Purpose:     Shell file operations.
  *
  * Created:     12th December 1996
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Thanks:      To Pablo Aguilar for default folder enhancements.
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 1996-2019, Matthew Wilson and Synesis Software
- * Copyright (c) 2005, Pablo Aguilar
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,9 +23,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -55,7 +56,7 @@
 # define WINSTL_VER_WINSTL_SHELL_HPP_FILE_OPERATIONS_MAJOR      2
 # define WINSTL_VER_WINSTL_SHELL_HPP_FILE_OPERATIONS_MINOR      1
 # define WINSTL_VER_WINSTL_SHELL_HPP_FILE_OPERATIONS_REVISION   9
-# define WINSTL_VER_WINSTL_SHELL_HPP_FILE_OPERATIONS_EDIT       101
+# define WINSTL_VER_WINSTL_SHELL_HPP_FILE_OPERATIONS_EDIT       103
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -133,7 +134,7 @@ shell_delete_a_(
     ws_size_t   cch =   static_cast<ws_size_t>(::lstrlenA(from));
     buffer_t    buff(1 + cch + 1);
 
-    if(buff.empty())
+    if (buff.empty())
     {
         WINSTL_API_EXTERNAL_ErrorHandling_SetLastError(ERROR_NOT_ENOUGH_MEMORY);
 
@@ -160,9 +161,9 @@ shell_delete_a_(
 
         int res =   ::SHFileOperationA(&sos);
 
-        if(0 == res)
+        if (0 == res)
         {
-            if(NULL != pbAborted)
+            if (NULL != pbAborted)
             {
                 *pbAborted = (FALSE != sos.fAnyOperationsAborted);
             }
@@ -189,7 +190,7 @@ shell_delete_w_(
     ws_size_t   cch =   static_cast<ws_size_t>(::lstrlenW(from));
     buffer_t    buff(1 + cch + 1);
 
-    if(buff.empty())
+    if (buff.empty())
     {
         WINSTL_API_EXTERNAL_ErrorHandling_SetLastError(ERROR_NOT_ENOUGH_MEMORY);
 
@@ -216,9 +217,9 @@ shell_delete_w_(
 
         int res =   ::SHFileOperationW(&sos);
 
-        if(0 == res)
+        if (0 == res)
         {
-            if(NULL != pbAborted)
+            if (NULL != pbAborted)
             {
                 *pbAborted = (FALSE != sos.fAnyOperationsAborted);
             }

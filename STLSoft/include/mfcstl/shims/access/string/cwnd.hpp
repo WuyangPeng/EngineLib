@@ -1,13 +1,14 @@
 /* /////////////////////////////////////////////////////////////////////////
- * File:        mfcstl/shims/access/string/cwnd.hpp
+ * File:        mfcstl/shims/access/string/CWnd.hpp
  *
- * Purpose:     Contains classes and functions for dealing with MFC strings.
+ * Purpose:     String access shims for CWnd
  *
  * Created:     24th May 2002
- * Updated:     2nd February 2019
+ * Updated:     28th November 2020
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2020, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2002-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -39,10 +41,9 @@
  * ////////////////////////////////////////////////////////////////////// */
 
 
-/** \file mfcstl/shims/access/string/cwnd.hpp
+/** \file mfcstl/shims/access/string/CWnd.hpp
  *
- * \brief [C++] Definition of the string access shims for
- *   <code>CWnd</code>
+ * \brief [C++] String access shims for <code>CWnd</code>
  *   (\ref group__concept__Shim__string_access "String Access Shims" Concept).
  */
 
@@ -52,8 +53,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define MFCSTL_VER_MFCSTL_SHIMS_ACCESS_STRING_HPP_CWND_MAJOR       4
 # define MFCSTL_VER_MFCSTL_SHIMS_ACCESS_STRING_HPP_CWND_MINOR       0
-# define MFCSTL_VER_MFCSTL_SHIMS_ACCESS_STRING_HPP_CWND_REVISION    12
-# define MFCSTL_VER_MFCSTL_SHIMS_ACCESS_STRING_HPP_CWND_EDIT        104
+# define MFCSTL_VER_MFCSTL_SHIMS_ACCESS_STRING_HPP_CWND_REVISION    14
+# define MFCSTL_VER_MFCSTL_SHIMS_ACCESS_STRING_HPP_CWND_EDIT        107
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -129,13 +130,12 @@ namespace mfcstl_project
 #endif /* !MFCSTL_NO_NAMESPACE */
 
 /* /////////////////////////////////////////////////////////////////////////
- * functions
+ * helpers
  */
 
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 
-namespace impl
-{
+STLSOFT_OPEN_WORKER_NS_(ximpl_mfcstl_CWnd_)
 
 inline ms_size_t GetWindowTextLength_T_(CWnd const& w)
 {
@@ -149,12 +149,11 @@ inline ms_size_t GetWindowText_T_(CWnd const& w, LPTSTR buffer, ms_size_t cchBuf
     return static_cast<ms_size_t>(w.GetWindowText(buffer, static_cast<int>(cchBuffer)));
 }
 
-
 inline ms_size_t GetWindowTextLength_T_(CListBox const& w)
 {
     int sel;
 
-    if( 0 == (w.GetStyle() & (LBS_MULTIPLESEL | LBS_EXTENDEDSEL)) &&
+    if (0 == (w.GetStyle() & (LBS_MULTIPLESEL | LBS_EXTENDEDSEL)) &&
         LB_ERR != (sel = w.GetCurSel()))
     {
         return static_cast<ms_size_t>(w.GetTextLen(sel));
@@ -169,7 +168,7 @@ inline ms_size_t GetWindowText_T_(CListBox const& w, LPTSTR buffer, ms_size_t cc
 {
     int sel = -1;
 
-    if( 0 == (w.GetStyle() & (LBS_MULTIPLESEL | LBS_EXTENDEDSEL)) &&
+    if (0 == (w.GetStyle() & (LBS_MULTIPLESEL | LBS_EXTENDEDSEL)) &&
         LB_ERR != (sel = w.GetCurSel()))
     {
         ms_size_t cch = static_cast<ms_size_t>(w.GetText(sel, buffer));
@@ -189,7 +188,7 @@ inline ms_size_t GetWindowText_T_(CListBox const& w, LPTSTR buffer, ms_size_t cc
 # if _MFC_VER >= 0x0600
 inline ms_size_t GetWindowTextLength_T_(CListCtrl const& w)
 {
-    if(1 == w.GetSelectedCount())
+    if (1 == w.GetSelectedCount())
     {
         POSITION    pos =   w.GetFirstSelectedItemPosition();
         int         sel =   w.GetNextSelectedItem(pos);
@@ -204,7 +203,7 @@ inline ms_size_t GetWindowTextLength_T_(CListCtrl const& w)
 
 inline ms_size_t GetWindowText_T_(CListCtrl const& w, LPTSTR buffer, ms_size_t cchBuffer)
 {
-    if(1 == w.GetSelectedCount())
+    if (1 == w.GetSelectedCount())
     {
         POSITION    pos =   w.GetFirstSelectedItemPosition();
         int         sel =   w.GetNextSelectedItem(pos);
@@ -231,8 +230,7 @@ inline ms_size_t GetWindowText_T_(CListView const& w, LPTSTR buffer, ms_size_t c
 # endif /* _MFC_VER >= 0x0600 */
 #endif /* __AFXCMN_H__ */
 
-} /* namespace impl */
-
+STLSOFT_CLOSE_WORKER_NS_(ximpl_mfcstl_CWnd_)
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -250,10 +248,12 @@ inline ms_size_t GetWindowText_T_(CListView const& w, LPTSTR buffer, ms_size_t c
  */
 class c_str_ptr_null_CWnd_proxy
 {
-    typedef TCHAR                       char_type;
-    typedef cstring_maker<TCHAR>        string_maker_type;
+private: // types
+    typedef TCHAR                                           char_type;
+    typedef cstring_maker<char_type>                        cstring_maker_type_;
+    typedef cstring_maker_type_::block                      block_type_;
 public:
-    typedef c_str_ptr_null_CWnd_proxy   class_type;
+    typedef c_str_ptr_null_CWnd_proxy                       class_type;
 
 // Construction
 public:
@@ -261,53 +261,25 @@ public:
     ///
     /// \param w The CWnd instance from which the text will be retrieved
     template<ss_typename_param_k W>
+    ss_explicit_k
     c_str_ptr_null_CWnd_proxy(W const& w)
+        : m_block(make_block_(w))
     {
         stlsoft_constraint_must_have_base(W, CWnd);
-
-        ms_size_t length = impl::GetWindowTextLength_T_(w);
-
-        if(length == 0)
-        {
-            m_buffer = NULL;
-        }
-        else
-        {
-            m_buffer = string_maker_type::alloc(length);
-
-            if(NULL != m_buffer)
-            {
-                impl::GetWindowText_T_(w, m_buffer, length + 1);
-            }
-        }
     }
 
-#ifdef STLSOFT_CF_MOVE_CONSTRUCTOR_SUPPORT
-    /// Move constructor
-    ///
-    /// This <a href = "http://synesis.com.au/resources/articles/cpp/movectors.pdf">move constructor</a>
-    /// is for circumstances when the compiler does not, or cannot, apply the
-    /// return value optimisation. It causes the contents of \c rhs to be
-    /// transferred into the constructing instance. This is completely safe
-    /// because the \c rhs instance will never be accessed in its own right, so
-    /// does not need to maintain ownership of its contents.
-    c_str_ptr_null_CWnd_proxy(class_type& rhs)
-        : m_buffer(rhs.m_buffer)
-    {
-        rhs.m_buffer = NULL;
-    }
-#else /* ? STLSOFT_CF_MOVE_CONSTRUCTOR_SUPPORT */
     // Copy constructor
     c_str_ptr_null_CWnd_proxy(class_type const& rhs)
-        : m_buffer(string_maker_type::dup_null(rhs.m_buffer))
+        : m_block(cstring_maker_type_::share(rhs.m_block))
     {}
-#endif /* STLSOFT_CF_MOVE_CONSTRUCTOR_SUPPORT */
 
-    /// Releases any storage aquired by the proxy
+    /// Releases any storage acquired by the proxy
     ~c_str_ptr_null_CWnd_proxy() STLSOFT_NOEXCEPT
     {
-        string_maker_type::free(m_buffer);
+        cstring_maker_type_::free(m_block);
     }
+private:
+    void operator =(class_type const& rhs); // copy-assignment proscribed
 
 // Accessors
 public:
@@ -315,16 +287,43 @@ public:
     /// NULL if the window contains no text.
     operator LPCTSTR () const
     {
-        return m_buffer;
+        if (NULL == m_block)
+        {
+            return NULL;
+        }
+
+        return &m_block->data[0];
     }
 
-// Members
-private:
-    LPTSTR  m_buffer;
+private: // implementation
+    template<ss_typename_param_k W>
+    static
+    block_type_*
+    make_block_(W const& w)
+    {
+        stlsoft_constraint_must_have_base(W, CWnd);
 
-// Not to be implemented
-private:
-    void operator =(class_type const& rhs);
+        ms_size_t length = ximpl_mfcstl_CWnd_::GetWindowTextLength_T_(w);
+
+        if (length == 0)
+        {
+            return NULL;
+        }
+        else
+        {
+            block_type_* const block = cstring_maker_type_::alloc(NULL, length);
+
+            if (NULL != block)
+            {
+                ximpl_mfcstl_CWnd_::GetWindowText_T_(w, &block->data[0], length + 1);
+            }
+
+            return block;
+        }
+    }
+
+private: // fields
+    block_type_* const  m_block;
 };
 
 /** This class provides an intermediary object that may be returned by the
@@ -336,10 +335,12 @@ private:
  */
 class c_str_ptr_CWnd_proxy
 {
-    typedef TCHAR                   char_type;
-    typedef cstring_maker<TCHAR>    string_maker_type;
-private:
-    typedef c_str_ptr_CWnd_proxy    class_type;
+private: // types
+    typedef TCHAR                                           char_type;
+    typedef cstring_maker<char_type>                        cstring_maker_type_;
+    typedef cstring_maker_type_::block                      block_type_;
+public:
+    typedef c_str_ptr_CWnd_proxy                            class_type;
 
 // Construction
 public:
@@ -347,53 +348,25 @@ public:
     ///
     /// \param w The CWnd instance from which the text will be retrieved
     template<ss_typename_param_k W>
+    ss_explicit_k
     c_str_ptr_CWnd_proxy(W const& w)
+        : m_block(make_block_(w))
     {
         stlsoft_constraint_must_have_base(W, CWnd);
-
-        ms_size_t length = impl::GetWindowTextLength_T_(w);
-
-        if(length == 0)
-        {
-            m_buffer = string_maker_type::dup(_T(""));
-        }
-        else
-        {
-            m_buffer = string_maker_type::alloc(length);
-
-            if(NULL != m_buffer)
-            {
-                impl::GetWindowText_T_(w, m_buffer, length + 1);
-            }
-        }
     }
 
-#ifdef STLSOFT_CF_MOVE_CONSTRUCTOR_SUPPORT
-    /// Move constructor
-    ///
-    /// This <a href = "http://synesis.com.au/resources/articles/cpp/movectors.pdf">move constructor</a>
-    /// is for circumstances when the compiler does not, or cannot, apply the
-    /// return value optimisation. It causes the contents of \c rhs to be
-    /// transferred into the constructing instance. This is completely safe
-    /// because the \c rhs instance will never be accessed in its own right, so
-    /// does not need to maintain ownership of its contents.
-    c_str_ptr_CWnd_proxy(class_type& rhs)
-        : m_buffer(rhs.m_buffer)
-    {
-        rhs.m_buffer = NULL;
-    }
-#else /* ? STLSOFT_CF_MOVE_CONSTRUCTOR_SUPPORT */
     // Copy constructor
     c_str_ptr_CWnd_proxy(class_type const& rhs)
-        : m_buffer(string_maker_type::dup_null(rhs.m_buffer))
+        : m_block(cstring_maker_type_::share(rhs.m_block))
     {}
-#endif /* STLSOFT_CF_MOVE_CONSTRUCTOR_SUPPORT */
 
-    /// Releases any storage aquired by the proxy
+    /// Releases any storage acquired by the proxy
     ~c_str_ptr_CWnd_proxy() STLSOFT_NOEXCEPT
     {
-        string_maker_type::free(m_buffer);
+        cstring_maker_type_::free(m_block);
     }
+private:
+    void operator =(class_type const& rhs); // copy-assignment proscribed
 
 // Accessors
 public:
@@ -401,18 +374,32 @@ public:
     /// the empty string "" if the window contains no text.
     operator LPCTSTR () const
     {
-        static char_type    s_ch[1] = { '\0' };
-
-        return (NULL == m_buffer) ? s_ch : m_buffer;
+        return &m_block->data[0];
     }
 
-// Members
-private:
-    LPTSTR  m_buffer;
+private: // implementation
+    template<ss_typename_param_k W>
+    static
+    block_type_*
+    make_block_(W const& w)
+    {
+        stlsoft_constraint_must_have_base(W, CWnd);
 
-// Not to be implemented
-private:
-    void operator =(class_type const& rhs);
+        ms_size_t length = ximpl_mfcstl_CWnd_::GetWindowTextLength_T_(w);
+
+        block_type_* const block = cstring_maker_type_::alloc(NULL, length);
+
+        if (NULL != block &&
+            length != 0)
+        {
+            ximpl_mfcstl_CWnd_::GetWindowText_T_(w, &block->data[0], length + 1);
+        }
+
+        return block;
+    }
+
+private: // fields
+    block_type_* const  m_block;
 };
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -726,7 +713,7 @@ inline c_str_ptr_CWnd_proxy c_str_data_a(CListView const& w)
  */
 inline ms_size_t c_str_len(CWnd const& w)
 {
-    return impl::GetWindowTextLength_T_(w);
+    return ximpl_mfcstl_CWnd_::GetWindowTextLength_T_(w);
 }
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # ifdef UNICODE
@@ -746,7 +733,7 @@ inline ms_size_t c_str_len_a(CWnd const& w)
  */
 inline ms_size_t c_str_len(CListBox const& w)
 {
-    return impl::GetWindowTextLength_T_(w);
+    return ximpl_mfcstl_CWnd_::GetWindowTextLength_T_(w);
 }
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # ifdef UNICODE
@@ -768,7 +755,7 @@ inline ms_size_t c_str_len_a(CListBox const& w)
  */
 inline ms_size_t c_str_len(CListCtrl const& w)
 {
-    return impl::GetWindowTextLength_T_(w);
+    return ximpl_mfcstl_CWnd_::GetWindowTextLength_T_(w);
 }
 # ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 #  ifdef UNICODE

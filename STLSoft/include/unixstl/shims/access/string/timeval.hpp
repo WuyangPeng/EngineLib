@@ -4,10 +4,11 @@
  * Purpose:     String shims for UNIX timeval structure.
  *
  * Created:     5th May 2014
- * Updated:     2nd February 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2014-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -52,7 +54,7 @@
 # define UNIXSTL_VER_UNIXSTL_SHIMS_ACCESS_STRING_HPP_TIMEVAL_MAJOR      2
 # define UNIXSTL_VER_UNIXSTL_SHIMS_ACCESS_STRING_HPP_TIMEVAL_MINOR      0
 # define UNIXSTL_VER_UNIXSTL_SHIMS_ACCESS_STRING_HPP_TIMEVAL_REVISION   5
-# define UNIXSTL_VER_UNIXSTL_SHIMS_ACCESS_STRING_HPP_TIMEVAL_EDIT       15
+# define UNIXSTL_VER_UNIXSTL_SHIMS_ACCESS_STRING_HPP_TIMEVAL_EDIT       17
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -130,7 +132,7 @@ c_str_data_a(
 {
     typedef basic_shim_string<ss_char_a_t>  shim_string_t;
 
-    if(NULL == tv)
+    if (NULL == tv)
     {
         return shim_string_t();
     }
@@ -142,18 +144,18 @@ c_str_data_a(
         time_t const    t = tv->tv_sec;
         int const       e = STLSOFT_API_INTERNAL_Time_gmtime(&tm, &t);
 
-        if(0 == e)
+        if (0 == e)
         {
             ss_char_a_t         fmt[101];
             ss_size_t const     n0  =   STLSOFT_NS_GLOBAL(strftime)(&fmt[0], STLSOFT_NUM_ELEMENTS(fmt), "%b %%d %%H:%%M:%%S.000000 %%Y", &tm);
 
-            if(0 != n0)
+            if (0 != n0)
             {
                 shim_string_t       s(n0 + 2);
 
                 ss_size_t const     n1  =   STLSOFT_NS_GLOBAL(strftime)(s.data(), 1 + s.size(), fmt, &tm);
 
-                if(0 != n1)
+                if (0 != n1)
                 {
                     ss_size_t           n2;
                     ss_char_a_t const*  r   =   STLSOFT_NS_QUAL(integer_to_decimal_string)(&s.data()[0] + (n1 - 11), 7, static_cast< STLSOFT_NS_QUAL(uint32_t)>(tv->tv_usec % 1000000), &n2);
@@ -207,7 +209,7 @@ c_str_len_a(
     struct timeval const* tv
 )
 {
-    if(NULL == tv)
+    if (NULL == tv)
     {
         return 0;
     }
@@ -217,12 +219,12 @@ c_str_len_a(
         time_t const    t = tv->tv_sec;
         int const       e = STLSOFT_API_INTERNAL_Time_gmtime(&tm, &t);
 
-        if(0 == e)
+        if (0 == e)
         {
             ss_char_a_t         sz[101];
             ss_size_t const     n1  =   STLSOFT_NS_GLOBAL(strftime)(&sz[0], STLSOFT_NUM_ELEMENTS(sz), "%b", &tm);
 
-            if(0 != n1)
+            if (0 != n1)
             {
                 // See implementation of c_str_data_a(struct timeval const*)
                 return 24 + n1;
@@ -512,7 +514,7 @@ using ::unixstl::c_str_ptr_null;
 #endif /* !UNIXSTL_NO_NAMESPACE */
 
 /* /////////////////////////////////////////////////////////////////////////
- * inclusion
+ * inclusion control
  */
 
 #ifdef STLSOFT_CF_PRAGMA_ONCE_SUPPORT

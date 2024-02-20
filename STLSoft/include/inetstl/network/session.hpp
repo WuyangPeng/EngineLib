@@ -4,10 +4,11 @@
  * Purpose:     Contains the basic_session class.
  *
  * Created:     30th April 1999
- * Updated:     13th September 2019
+ * Updated:     16th February 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 1999-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -52,8 +54,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define INETSTL_VER_INETSTL_NETWORK_HPP_SESSION_MAJOR      5
 # define INETSTL_VER_INETSTL_NETWORK_HPP_SESSION_MINOR      1
-# define INETSTL_VER_INETSTL_NETWORK_HPP_SESSION_REVISION   11
-# define INETSTL_VER_INETSTL_NETWORK_HPP_SESSION_EDIT       77
+# define INETSTL_VER_INETSTL_NETWORK_HPP_SESSION_REVISION   12
+# define INETSTL_VER_INETSTL_NETWORK_HPP_SESSION_EDIT       80
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -118,20 +120,21 @@ namespace inetstl_project
  *
  * \note A session is required for WinInet, as it represents an initialisation of the WinInet libraries
  */
-template<   ss_typename_param_k C
+template<
+    ss_typename_param_k C
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
-        ,   ss_typename_param_k X   =   throw_internet_exception_policy
+,   ss_typename_param_k X   =   throw_internet_exception_policy
 #else /* ? STLSOFT_CF_EXCEPTION_SUPPORT */
-        ,   ss_typename_param_k X   =   STLSOFT_NS_QUAL(null_exception_policy)
+,   ss_typename_param_k X   =   STLSOFT_NS_QUAL(null_exception_policy)
 #endif /* STLSOFT_CF_EXCEPTION_SUPPORT */
-        ,   ss_typename_param_k T   =   filesystem_traits<C>
-        >
+,   ss_typename_param_k T   =   filesystem_traits<C>
+>
 class basic_session
 {
 public:
     typedef C                                                       char_type;
     typedef X                                                       exception_policy_type;
-    typedef ss_typename_param_k exception_policy_type::thrown_type  thrown_type;
+    typedef ss_typename_type_k exception_policy_type::thrown_type   thrown_type;
     typedef T                                                       traits_type;
     typedef basic_session<C, X, T>                                  class_type;
 
@@ -157,11 +160,14 @@ public:
     /// \note If the session fails to initialise, the exception_policy_type function-call operator is called. If the
     /// policy throws an exception, then that exception is thrown. If the policy is "null exception" policy type, then
     /// the session object will be constructed in a closed state.
-    ss_explicit_k basic_session(    char_type const*    pcszAgent
-                                ,   is_dword_t          accessType          =   INTERNET_OPEN_TYPE_PRECONFIG
-                                ,   char_type const*    pcszProxyName      =   NULL
-                                ,   char_type const*    pcszProxyBypass    =   NULL
-                                ,   is_dword_t          flags               =   0);
+    ss_explicit_k
+    basic_session(
+        char_type const*    pcszAgent
+    ,   is_dword_t          accessType      =   INTERNET_OPEN_TYPE_PRECONFIG
+    ,   char_type const*    pcszProxyName   =   NULL
+    ,   char_type const*    pcszProxyBypass =   NULL
+    ,   is_dword_t          flags           =   0
+    );
     /// Closes the session, if open
     ~basic_session() STLSOFT_NOEXCEPT;
 private:
@@ -181,11 +187,14 @@ public:
     /// \note If the session fails to initialise, the exception_policy_type function-call operator is called. If the
     /// policy throws an exception, then that exception is thrown. If the policy is "null exception" policy type, then
     /// the session object will be left in a closed state.
-    is_bool_t    open(  char_type const*    pcszAgent
-                    ,   is_dword_t          accessType          =   INTERNET_OPEN_TYPE_PRECONFIG
-                    ,   char_type const*    pcszProxyName      =   NULL
-                    ,   char_type const*    pcszProxyBypass    =   NULL
-                    ,   is_dword_t          flags               =   0);
+    is_bool_t
+    open(
+        char_type const*    pcszAgent
+    ,   is_dword_t          accessType      =   INTERNET_OPEN_TYPE_PRECONFIG
+    ,   char_type const*    pcszProxyName   =   NULL
+    ,   char_type const*    pcszProxyBypass =   NULL
+    ,   is_dword_t          flags           =   0
+    );
     /// Closes the session, if open
     void        close();
     /// Removes the session from this object, and returns the underlying WinInet handle to the
@@ -223,28 +232,28 @@ private:
  * \ingroup group__library__Network
  *
  */
-typedef basic_session<is_char_a_t>  session_a;
+typedef basic_session<is_char_a_t>                          session_a;
 /** Specialisation of the basic_session template for the Unicode character type \c wchar_t
  *
  * \ingroup group__library__Network
  *
  */
-typedef basic_session<is_char_w_t>  session_w;
+typedef basic_session<is_char_w_t>                          session_w;
 /** Specialisation of the basic_session template for the Win32 character type \c TCHAR
  *
  * \ingroup group__library__Network
  *
  */
-typedef basic_session<TCHAR>        session;
+typedef basic_session<TCHAR>                                session;
 
 /* ////////////////////////////////////////////////////////////////////// */
 
-template<   ss_typename_param_k C
-        ,   ss_typename_param_k X
-        ,   ss_typename_param_k T
-        >
-inline
-/* static */
+template<
+    ss_typename_param_k C
+,   ss_typename_param_k X
+,   ss_typename_param_k T
+>
+inline /* static */
 ss_typename_type_ret_k basic_session<C, X, T>::char_type const*
 basic_session<C, X, T>::null_string_()
 {
@@ -253,24 +262,26 @@ basic_session<C, X, T>::null_string_()
     return s_null;
 }
 
-template<   ss_typename_param_k C
-        ,   ss_typename_param_k X
-        ,   ss_typename_param_k T
-        >
+template<
+    ss_typename_param_k C
+,   ss_typename_param_k X
+,   ss_typename_param_k T
+>
 inline
 basic_session<C, X, T>::basic_session()
     : m_hConn(traits_type::internet_open(null_string_(), INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, 0))
 {
-    if(NULL == m_hConn)
+    if (NULL == m_hConn)
     {
         exception_policy_type()("Failed to create session", WINSTL_API_EXTERNAL_ErrorHandling_GetLastError());
     }
 }
 
-template<   ss_typename_param_k C
-        ,   ss_typename_param_k X
-        ,   ss_typename_param_k T
-        >
+template<
+    ss_typename_param_k C
+,   ss_typename_param_k X
+,   ss_typename_param_k T
+>
 inline
 basic_session<C, X, T>::basic_session(
     char_type const*    pcszAgent
@@ -281,29 +292,31 @@ basic_session<C, X, T>::basic_session(
 )
     : m_hConn(traits_type::internet_open(pcszAgent, accessType, pcszProxyName, pcszProxyBypass, flags))
 {
-    if(NULL == m_hConn)
+    if (NULL == m_hConn)
     {
         exception_policy_type()("Failed to create session", WINSTL_API_EXTERNAL_ErrorHandling_GetLastError());
     }
 }
 
-template<   ss_typename_param_k C
-        ,   ss_typename_param_k X
-        ,   ss_typename_param_k T
-        >
+template<
+    ss_typename_param_k C
+,   ss_typename_param_k X
+,   ss_typename_param_k T
+>
 inline
 basic_session<C, X, T>::~basic_session() STLSOFT_NOEXCEPT
 {
-    if(NULL != m_hConn)
+    if (NULL != m_hConn)
     {
         ::InternetCloseHandle(m_hConn);
     }
 }
 
-template<   ss_typename_param_k C
-        ,   ss_typename_param_k X
-        ,   ss_typename_param_k T
-        >
+template<
+    ss_typename_param_k C
+,   ss_typename_param_k X
+,   ss_typename_param_k T
+>
 inline
 is_bool_t
 basic_session<C, X, T>::open(
@@ -316,7 +329,7 @@ basic_session<C, X, T>::open(
 {
     is_bool_t    bRet;
 
-    if(is_open())
+    if (is_open())
     {
         bRet = false;
     }
@@ -324,7 +337,7 @@ basic_session<C, X, T>::open(
     {
         m_hConn = traits_type::internet_open(pcszAgent, accessType, pcszProxyName, pcszProxyBypass, flags);
 
-        if(NULL == m_hConn)
+        if (NULL == m_hConn)
         {
             exception_policy_type()("Failed to create session", WINSTL_API_EXTERNAL_ErrorHandling_GetLastError());
 
@@ -339,15 +352,16 @@ basic_session<C, X, T>::open(
     return bRet;
 }
 
-template<   ss_typename_param_k C
-        ,   ss_typename_param_k X
-        ,   ss_typename_param_k T
-        >
+template<
+    ss_typename_param_k C
+,   ss_typename_param_k X
+,   ss_typename_param_k T
+>
 inline
 void
 basic_session<C, X, T>::close()
 {
-    if(NULL != m_hConn)
+    if (NULL != m_hConn)
     {
         ::InternetCloseHandle(m_hConn);
 
@@ -355,10 +369,11 @@ basic_session<C, X, T>::close()
     }
 }
 
-template<   ss_typename_param_k C
-        ,   ss_typename_param_k X
-        ,   ss_typename_param_k T
-        >
+template<
+    ss_typename_param_k C
+,   ss_typename_param_k X
+,   ss_typename_param_k T
+>
 inline
 HINTERNET
 basic_session<C, X, T>::detach()
@@ -372,10 +387,11 @@ basic_session<C, X, T>::detach()
     return hConn;
 }
 
-template<   ss_typename_param_k C
-        ,   ss_typename_param_k X
-        ,   ss_typename_param_k T
-        >
+template<
+    ss_typename_param_k C
+,   ss_typename_param_k X
+,   ss_typename_param_k T
+>
 inline
 is_bool_t
 basic_session<C, X, T>::is_open() const
@@ -383,10 +399,11 @@ basic_session<C, X, T>::is_open() const
     return NULL != m_hConn;
 }
 
-template<   ss_typename_param_k C
-        ,   ss_typename_param_k X
-        ,   ss_typename_param_k T
-        >
+template<
+    ss_typename_param_k C
+,   ss_typename_param_k X
+,   ss_typename_param_k T
+>
 inline
 HINTERNET
 basic_session<C, X, T>::get() const
@@ -394,10 +411,11 @@ basic_session<C, X, T>::get() const
     return m_hConn;
 }
 
-template<   ss_typename_param_k C
-        ,   ss_typename_param_k X
-        ,   ss_typename_param_k T
-        >
+template<
+    ss_typename_param_k C
+,   ss_typename_param_k X
+,   ss_typename_param_k T
+>
 inline
 basic_session<C, X, T>::operator HINTERNET ()
 {
@@ -406,11 +424,16 @@ basic_session<C, X, T>::operator HINTERNET ()
 
 /* ////////////////////////////////////////////////////////////////////// */
 
-template<   ss_typename_param_k C
-        ,   ss_typename_param_k X
-        ,   ss_typename_param_k T
-        >
-inline HINTERNET get_handle(basic_session<C, X, T> &s)
+template<
+    ss_typename_param_k C
+,   ss_typename_param_k X
+,   ss_typename_param_k T
+>
+inline
+HINTERNET
+get_handle(
+    basic_session<C, X, T> &s
+)
 {
     return s;
 }

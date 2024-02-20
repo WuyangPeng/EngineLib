@@ -4,13 +4,14 @@
  * Purpose:     Memory mapped file class.
  *
  * Created:     15th December 1996
- * Updated:     13th October 2019
+ * Updated:     22nd January 2024
  *
  * Thanks:      To Pablo Aguilar for requesting multibyte / wide string
  *              ambivalence. To Joe Mariadassou for requesting swap().
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 1996-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -23,9 +24,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -54,8 +56,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define WINSTL_VER_WINSTL_FILESYSTEM_HPP_MEMORY_MAPPED_FILE_MAJOR     4
 # define WINSTL_VER_WINSTL_FILESYSTEM_HPP_MEMORY_MAPPED_FILE_MINOR     12
-# define WINSTL_VER_WINSTL_FILESYSTEM_HPP_MEMORY_MAPPED_FILE_REVISION  6
-# define WINSTL_VER_WINSTL_FILESYSTEM_HPP_MEMORY_MAPPED_FILE_EDIT      125
+# define WINSTL_VER_WINSTL_FILESYSTEM_HPP_MEMORY_MAPPED_FILE_REVISION  8
+# define WINSTL_VER_WINSTL_FILESYSTEM_HPP_MEMORY_MAPPED_FILE_EDIT      128
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -86,6 +88,9 @@
 # ifndef WINSTL_INCL_WINSTL_EXCEPTION_HPP_FILESYSTEM_EXCEPTION
 #  include <winstl/exception/filesystem_exception.hpp>
 # endif /* !WINSTL_INCL_WINSTL_EXCEPTION_HPP_FILESYSTEM_EXCEPTION */
+# ifndef STLSOFT_INCL_STLSOFT_EXCEPTION_HPP_OUT_OF_MEMORY_EXCEPTION
+#  include <stlsoft/exception/out_of_memory_exception.hpp>
+# endif /* !STLSOFT_INCL_STLSOFT_EXCEPTION_HPP_OUT_OF_MEMORY_EXCEPTION */
 #endif /* STLSOFT_CF_EXCEPTION_SUPPORT */
 #ifndef STLSOFT_INCL_STLSOFT_EXCEPTION_HPP_STATUS_CODE_PROVIDER
 # include <stlsoft/exception/status_code_provider.hpp>
@@ -244,9 +249,9 @@ private:
     ,   size_type   requestSize
     )
     {
-        if(INVALID_HANDLE_VALUE == hFile)
+        if (INVALID_HANDLE_VALUE == hFile)
         {
-            if(on_failure_("Failed to open file for mapping"))
+            if (on_failure_("Failed to open file for mapping"))
             {
                 return;
             }
@@ -254,13 +259,13 @@ private:
         else
         {
             DWORD   fileSizeHigh;
-            DWORD   fileSizeLow =   ::GetFileSize(hFile, &fileSizeHigh);
+            DWORD   fileSizeLow =   WINSTL_API_EXTERNAL_FileManagement_GetFileSize(hFile, &fileSizeHigh);
             DWORD   scode       =   WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();
 
-            if( INVALID_FILE_SIZE == fileSizeLow &&
+            if (INVALID_FILE_SIZE == fileSizeLow &&
                 ERROR_SUCCESS != scode)
             {
-                if(on_failure_("Failed to determine mapped file size", scode))
+                if (on_failure_("Failed to determine mapped file size", scode))
                 {
                     return;
                 }
@@ -270,19 +275,19 @@ private:
                 ws_uint64_t fileSize    =   (stlsoft_static_cast(ws_uint64_t, fileSizeHigh) << 32) | fileSizeLow;
                 ws_uint64_t mapSize     =   offset + requestSize;
 
-                if(mapSize < offset) // Overflow?
+                if (mapSize < offset) // Overflow?
                 {
-                    if(on_failure_("Requested region exceeds the available address space", ERROR_INVALID_PARAMETER))
+                    if (on_failure_("Requested region exceeds the available address space", ERROR_INVALID_PARAMETER))
                     {
                         return;
                     }
                 }
 
-                if(offset > fileSize)
+                if (offset > fileSize)
                 {
-                    if(0 == requestSize)
+                    if (0 == requestSize)
                     {
-                        if(on_failure_("Region out of range", ERROR_INVALID_PARAMETER))
+                        if (on_failure_("Region out of range", ERROR_INVALID_PARAMETER))
                         {
                             return;
                         }
@@ -292,7 +297,7 @@ private:
                         // Do nothing, because MapViewOfFile() will fail for us
                     }
                 }
-                else if(0 == requestSize)
+                else if (0 == requestSize)
                 {
 #ifdef WINSTL_OS_IS_WIN64
 
@@ -306,9 +311,9 @@ private:
 
                     ws_uint64_t requestSize2 = fileSize - offset;
 
-                    if(requestSize2 > stlsoft_static_cast(ws_uint64_t, 0xffffffff))
+                    if (requestSize2 > stlsoft_static_cast(ws_uint64_t, 0xffffffff))
                     {
-                        if(on_failure_("Region size too large", ERROR_NOT_ENOUGH_MEMORY))
+                        if (on_failure_("Region size too large", ERROR_NOT_ENOUGH_MEMORY))
                         {
                             return;
                         }
@@ -333,7 +338,7 @@ private:
                     // the user of MMFs, and nothing per se to do with this
                     // component.
 
-                    if(mapSize > fileSize)
+                    if (mapSize > fileSize)
                     {
                         WINSTL_ASSERT((mapSize - fileSize) <= stlsoft_static_cast(ws_uint64_t, 0xffffffff));
                         WINSTL_ASSERT(offset <= fileSize);
@@ -344,7 +349,7 @@ private:
 #endif /* !WINSTL_MMF_DONT_TRIM_REQUEST_SIZE */
                 }
 
-                if(0 == requestSize)
+                if (0 == requestSize)
                 {
                     // Windows CreateFileMapping() does not support mapping
                     // zero-length files, so we catch this condition here
@@ -361,9 +366,9 @@ private:
                                     ,   NULL
                                     );
 
-                    if(NULL == hMap)
+                    if (NULL == hMap)
                     {
-                        if(on_failure_("Failed to open file mapping"))
+                        if (on_failure_("Failed to open file mapping"))
                         {
                             return;
                         }
@@ -379,7 +384,7 @@ private:
                                         ,   requestSize
                                         );
 
-                        if(NULL == memory)
+                        if (NULL == memory)
                         {
                             // The following block of code attempts to provide
                             // improved precision in status code, by using
@@ -391,16 +396,16 @@ private:
 
 #ifdef WINSTL_MEMORY_MAPPED_FILE_TRANSLATE_SC_EINVAL_2_EMEM
 
-                            if(ERROR_INVALID_PARAMETER == scode2)
+                            if (ERROR_INVALID_PARAMETER == scode2)
                             {
                                 SYSTEM_INFO si;
 
                                 ::GetSystemInfo(&si);
 
-                                if(0 == (offset % si.dwAllocationGranularity))
+                                if (0 == (offset % si.dwAllocationGranularity))
                                 {
 # ifndef WINSTL_OS_IS_WIN64
-                                    if(requestSize >= 0x7ffe0000)
+                                    if (requestSize >= 0x7ffe0000)
 # endif /* !WINSTL_OS_IS_WIN64 */
                                     {
                                         scode2 = ERROR_NOT_ENOUGH_MEMORY;
@@ -563,7 +568,7 @@ public:
     {
         WINSTL_ASSERT(is_valid());
 
-        if(NULL != m_memory)
+        if (NULL != m_memory)
         {
             WINSTL_API_EXTERNAL_MemoryManagement_UnmapViewOfFile(m_memory);
         }
@@ -651,11 +656,11 @@ public:
     {
         class_type const& lhs = *this;
 
-        if(lhs.size() != rhs.size())
+        if (lhs.size() != rhs.size())
         {
             return false;
         }
-        if(0 != ::memcmp(lhs.memory(), rhs.memory(), lhs.size()))
+        if (0 != ::memcmp(lhs.memory(), rhs.memory(), lhs.size()))
         {
             return false;
         }
@@ -674,12 +679,12 @@ private:
     {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
 
-        if(winstl_C_is_memory_status_code(scode))
+        if (winstl_C_is_memory_status_code(scode))
         {
             STLSOFT_THROW_X(STLSOFT_NS_QUAL(out_of_memory_exception)(STLSoftProjectIdentifier_WinSTL, STLSoftLibraryIdentifier_FileSystem, scode));
         }
         else
-        switch(scode)
+        switch (scode)
         {
         case ERROR_FILE_NOT_FOUND:
             STLSOFT_THROW_X(file_not_found_exception(message, scode));
@@ -702,13 +707,13 @@ private:
 
     bool_type is_valid() const
     {
-        if((NULL != m_memory) != (0 != m_cb))
+        if ((NULL != m_memory) != (0 != m_cb))
         {
             return false;
         }
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
 #else /* ? STLSOFT_CF_EXCEPTION_SUPPORT */
-        if((0 != m_cb) && (0 != m_lastStatusCode))
+        if ((0 != m_cb) && (0 != m_lastStatusCode))
         {
           return false;
         }

@@ -4,10 +4,11 @@
  * Purpose:     Current working directory scoping class.
  *
  * Created:     12th November 1998
- * Updated:     13th September 2019
+ * Updated:     15th January 2021
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2021, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 1998-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -52,8 +54,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define WINSTL_VER_WINSTL_FILESYSTEM_HPP_CURRENT_DIRECTORY_SCOPE_MAJOR     5
 # define WINSTL_VER_WINSTL_FILESYSTEM_HPP_CURRENT_DIRECTORY_SCOPE_MINOR     2
-# define WINSTL_VER_WINSTL_FILESYSTEM_HPP_CURRENT_DIRECTORY_SCOPE_REVISION  12
-# define WINSTL_VER_WINSTL_FILESYSTEM_HPP_CURRENT_DIRECTORY_SCOPE_EDIT      137
+# define WINSTL_VER_WINSTL_FILESYSTEM_HPP_CURRENT_DIRECTORY_SCOPE_REVISION  17
+# define WINSTL_VER_WINSTL_FILESYSTEM_HPP_CURRENT_DIRECTORY_SCOPE_EDIT      143
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -75,9 +77,9 @@
 #ifndef WINSTL_INCL_WINSTL_FILESYSTEM_HPP_FILESYSTEM_TRAITS
 # include <winstl/filesystem/filesystem_traits.hpp>
 #endif /* !WINSTL_INCL_WINSTL_FILESYSTEM_HPP_FILESYSTEM_TRAITS */
-#ifndef WINSTL_INCL_WINSTL_FILESYSTEM_HPP_FILE_PATH_BUFFER
-# include <winstl/filesystem/file_path_buffer.hpp>
-#endif /* !WINSTL_INCL_WINSTL_FILESYSTEM_HPP_FILE_PATH_BUFFER */
+#ifndef STLSOFT_INCL_STLSOFT_MEMORY_HPP_AUTO_BUFFER
+# include <stlsoft/memory/auto_buffer.hpp>
+#endif /* !STLSOFT_INCL_STLSOFT_MEMORY_HPP_AUTO_BUFFER */
 #ifndef STLSOFT_INCL_STLSOFT_SHIMS_ACCESS_HPP_STRING
 # include <stlsoft/shims/access/string.hpp>
 #endif /* !STLSOFT_INCL_STLSOFT_SHIMS_ACCESS_HPP_STRING */
@@ -126,30 +128,37 @@ namespace winstl_project
  *
  * This class scopes the process's current directory, by changing to the path
  * given in the constructor, and then, if that succeeded, changing back in the
- * destructor
+ * destructor.
  *
  * \param C The character type (e.g. \c char, \c wchar_t)
  * \param T The file-system traits. In translators that support default template parameters that defaults to \c filesystem_traits<C>
  */
 
-template<   ss_typename_param_k C
+template<
+    ss_typename_param_k C
 #ifdef STLSOFT_CF_TEMPLATE_CLASS_DEFAULT_CLASS_ARGUMENT_SUPPORT
-        ,   ss_typename_param_k T = filesystem_traits<C>
+,   ss_typename_param_k T = filesystem_traits<C>
 #else /* ? STLSOFT_CF_TEMPLATE_CLASS_DEFAULT_CLASS_ARGUMENT_SUPPORT */
-        ,   ss_typename_param_k T /* = filesystem_traits<C> */
+,   ss_typename_param_k T /* = filesystem_traits<C> */
 #endif /* STLSOFT_CF_TEMPLATE_CLASS_DEFAULT_CLASS_ARGUMENT_SUPPORT */
-        >
+>
 class basic_current_directory_scope
 {
-public:
-    typedef C                               char_type;
-    typedef T                               traits_type;
+public: // types
+    /// The character type
+    typedef C                                               char_type;
+    /// The traits type
+    typedef T                                               traits_type;
     /// This type
-    typedef basic_current_directory_scope<C, T>   class_type;
-    typedef ws_size_t                       size_type;
+    typedef basic_current_directory_scope<C, T>             class_type;
+    /// The size type
+    typedef ws_size_t                                       size_type;
+private:
+    typedef auto_buffer<
+        char_type
+    >                                                       buffer_type_;
 
-// Construction
-public:
+public: // construction
     /// Constructs a scope instance and changes to the given directory
     ///
     /// \param dir The name of the directory to change the current directory to
@@ -160,25 +169,25 @@ public:
     /// \param dir The name of the directory to change the current directory to
     template <ss_typename_param_k S>
     ss_explicit_k basic_current_directory_scope(S const& dir)
+        : m_previous(1)
     {
         init_(STLSOFT_NS_QUAL(c_str_ptr)(dir));
     }
 #endif /* STLSOFT_CF_MEMBER_TEMPLATE_CTOR_SUPPORT */
     /// Returns the current directory to its original location
     ~basic_current_directory_scope() STLSOFT_NOEXCEPT;
+private:
+    basic_current_directory_scope();                    // default-construction proscribed
+    basic_current_directory_scope(class_type const&);   // copy-construction proscribed
+    class_type const& operator =(class_type const&);    // copy-assignment proscribed
 
-// Attributes
-public:
+public: // accessors
     /// Returns a C-string pointer to the original directory
     char_type const* get_previous() const;
 
-// Conversions
-public:
     /// Returns a C-string pointer to the original directory
     operator char_type const* () const;
 
-/// \name State
-/// @{
 private:
     STLSOFT_DEFINE_OPERATOR_BOOL_TYPES_T(class_type, operator_bool_generator_type, operator_bool_type);
 public:
@@ -191,21 +200,11 @@ public:
         return operator_bool_generator_type::translate('\0' != m_previous[0]);
     }
 
-/// @}
-
-// Implementation
-private:
+private: // implementation
     void init_(char_type const* dir);
 
-// Members
-private:
-    basic_file_path_buffer<char_type>   m_previous;
-
-// Not to be implemented
-private:
-    basic_current_directory_scope();
-    basic_current_directory_scope(class_type const&);
-    class_type const& operator =(class_type const&);
+private: // fields
+    buffer_type_    m_previous;
 };
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -232,45 +231,73 @@ typedef basic_current_directory_scope<TCHAR, filesystem_traits<TCHAR> >         
  * shims
  */
 
-template<   ss_typename_param_k C
-        ,   ss_typename_param_k T
-        >
-inline C const* c_str_ptr_null(basic_current_directory_scope<C, T> const& b)
+template<
+    ss_typename_param_k C
+,   ss_typename_param_k T
+>
+inline
+C const*
+c_str_ptr_null(
+    basic_current_directory_scope<C, T> const& b
+)
 {
     return STLSOFT_NS_QUAL(c_str_ptr_null)(b.get_previous());
 }
 
-template<   ss_typename_param_k C
-        ,   ss_typename_param_k T
-        >
-inline C const* c_str_ptr(basic_current_directory_scope<C, T> const& b)
+template<
+    ss_typename_param_k C
+,   ss_typename_param_k T
+>
+inline
+C const*
+c_str_ptr(
+    basic_current_directory_scope<C, T> const& b
+)
 {
     return b.get_previous();
 }
 
-template<   ss_typename_param_k C
-        ,   ss_typename_param_k T
-        >
-inline C const* c_str_data(basic_current_directory_scope<C, T> const& b)
+template<
+    ss_typename_param_k C
+,   ss_typename_param_k T
+>
+inline
+C const*
+c_str_data(
+    basic_current_directory_scope<C, T> const& b
+)
 {
     return b.get_previous();
 }
 
-template<   ss_typename_param_k C
-        ,   ss_typename_param_k T
-        >
-inline ws_size_t c_str_len(basic_current_directory_scope<C, T> const& b)
+template<
+    ss_typename_param_k C
+,   ss_typename_param_k T
+>
+inline
+ws_size_t
+c_str_len(
+    basic_current_directory_scope<C, T> const& b
+)
 {
     return STLSOFT_NS_QUAL(c_str_len)(b.get_previous());
 }
 
+/* /////////////////////////////////////////////////////////////////////////
+ * operators
+ */
 
-
-template<   ss_typename_param_k S
-        ,   ss_typename_param_k C
-        ,   ss_typename_param_k T
-        >
-inline S& operator <<(S& s, basic_current_directory_scope<C, T> const& b)
+template<
+    ss_typename_param_k S
+,   ss_typename_param_k C
+,   ss_typename_param_k T
+>
+inline
+S&
+operator <<(
+    S&                                          s
+,   basic_current_directory_scope<C, T> const&  b
+)
 {
     s << b.get_previous();
 
@@ -283,63 +310,85 @@ inline S& operator <<(S& s, basic_current_directory_scope<C, T> const& b)
 
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 
-template<   ss_typename_param_k C
-        ,   ss_typename_param_k T
-        >
-inline void basic_current_directory_scope<C, T>::init_(ss_typename_type_k basic_current_directory_scope<C, T>::char_type const* dir)
+template<
+    ss_typename_param_k C
+,   ss_typename_param_k T
+>
+inline
+void
+basic_current_directory_scope<C, T>::init_(
+    ss_typename_type_k basic_current_directory_scope<C, T>::char_type const* dir
+)
 {
-    if(0 == traits_type::get_current_directory(m_previous.size(), &m_previous[0]))
+    if (0 == traits_type::get_current_directory(m_previous))
     {
+        DWORD const le = WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();
+
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
-        STLSOFT_THROW_X(winstl_exception("could not determine current directory", WINSTL_API_EXTERNAL_ErrorHandling_GetLastError()));
+        STLSOFT_THROW_X(winstl_exception("could not determine current directory", le));
 #else /* ?STLSOFT_CF_EXCEPTION_SUPPORT */
         m_previous[0] = '\0';
 #endif /* STLSOFT_CF_EXCEPTION_SUPPORT */
     }
-    else if(!traits_type::set_current_directory(dir))
+    else if (!traits_type::set_current_directory(dir))
     {
+        DWORD const le = WINSTL_API_EXTERNAL_ErrorHandling_GetLastError();
+
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
-        STLSOFT_THROW_X(winstl_exception("could not change current directory", WINSTL_API_EXTERNAL_ErrorHandling_GetLastError()));
+        STLSOFT_THROW_X(winstl_exception("could not change current directory", le));
 #else /* ?STLSOFT_CF_EXCEPTION_SUPPORT */
         m_previous[0] = '\0';
 #endif /* STLSOFT_CF_EXCEPTION_SUPPORT */
     }
 }
 
-template<   ss_typename_param_k C
-        ,   ss_typename_param_k T
-        >
-inline basic_current_directory_scope<C, T>::basic_current_directory_scope(ss_typename_type_k basic_current_directory_scope<C, T>::char_type const* dir)
+template<
+    ss_typename_param_k C
+,   ss_typename_param_k T
+>
+inline
+basic_current_directory_scope<C, T>::basic_current_directory_scope(
+    ss_typename_type_k basic_current_directory_scope<C, T>::char_type const* dir
+)
+    : m_previous(1)
 {
     init_(dir);
 }
 
-template<   ss_typename_param_k C
-        ,   ss_typename_param_k T
-        >
-inline basic_current_directory_scope<C, T>::~basic_current_directory_scope() STLSOFT_NOEXCEPT
+template<
+    ss_typename_param_k C
+,   ss_typename_param_k T
+>
+inline
+basic_current_directory_scope<C, T>::~basic_current_directory_scope() STLSOFT_NOEXCEPT
 {
-    if('\0' != m_previous[0])
+    if ('\0' != m_previous[0])
     {
         traits_type::set_current_directory(&m_previous[0]);
     }
 }
 
-template<   ss_typename_param_k C
-        ,   ss_typename_param_k T
-        >
-inline ss_typename_type_ret_k basic_current_directory_scope<C, T>::char_type const* basic_current_directory_scope<C, T>::get_previous() const
+template<
+    ss_typename_param_k C
+,   ss_typename_param_k T
+>
+inline
+ss_typename_type_ret_k basic_current_directory_scope<C, T>::char_type const*
+basic_current_directory_scope<C, T>::get_previous() const
 {
     return STLSOFT_NS_QUAL(c_str_ptr)(m_previous);
 }
 
-template<   ss_typename_param_k C
-        ,   ss_typename_param_k T
-        >
+template<
+    ss_typename_param_k C
+,   ss_typename_param_k T
+>
 #if defined(STLSOFT_COMPILER_IS_GCC)
-inline basic_current_directory_scope<C, T>::operator C const* () const
+inline
+basic_current_directory_scope<C, T>::operator C const* () const
 #else /* ? compiler */
-inline basic_current_directory_scope<C, T>::operator ss_typename_type_k basic_current_directory_scope<C, T>::char_type const* () const
+inline
+basic_current_directory_scope<C, T>::operator ss_typename_type_k basic_current_directory_scope<C, T>::char_type const* () const
 #endif /* compiler */
 {
     return get_previous();

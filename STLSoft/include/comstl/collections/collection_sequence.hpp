@@ -4,7 +4,7 @@
  * Purpose:     STL sequence for COM collection interfaces.
  *
  * Created:     17th September 1998
- * Updated:     13th September 2019
+ * Updated:     29th January 2024
  *
  * Thanks:      To Eduardo Bezerra and Vivi Orunitia for reporting
  *              incompatibilities with Borland's 5.82 (Turbo C++). The awful
@@ -12,6 +12,7 @@
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 1998-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -24,9 +25,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -57,7 +59,7 @@
 # define COMSTL_VER_COMSTL_COLLECTIONS_HPP_COLLECTION_SEQUENCE_MAJOR    6
 # define COMSTL_VER_COMSTL_COLLECTIONS_HPP_COLLECTION_SEQUENCE_MINOR    1
 # define COMSTL_VER_COMSTL_COLLECTIONS_HPP_COLLECTION_SEQUENCE_REVISION 17
-# define COMSTL_VER_COMSTL_COLLECTIONS_HPP_COLLECTION_SEQUENCE_EDIT     117
+# define COMSTL_VER_COMSTL_COLLECTIONS_HPP_COLLECTION_SEQUENCE_EDIT     122
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -135,21 +137,22 @@ namespace comstl_project
  * \param Q Quanta. Defaults to 8
  * \param EAP Enumerate acquisition policy type. Defaults to comstl::new_enum_property_policy
  *
- * The various parameterising types are used to stipulate the interface and the
+ * The various specialising types are used to stipulate the interface and the
  * value type, and how they are to be handled.
  *
- * For example, the following parameterisation defines a sequence operating
+ * For example, the following specialisation defines a sequence operating
  * over a notional <b>IGUIDCollection</b> collection instance.
  *
 \code
-typedef collection_sequence<IGUIDCollection
-                          , IEnumGUID
-                          , GUID
-                          , GUID_policy
-                          , GUID const&
-                          , forward_cloning_policy<IEnumGUID>
-                          , 5
-                          >    collection_sequence_t;
+typedef collection_sequence<
+    IGUIDCollection
+,   IEnumGUID
+,   GUID
+,   GUID_policy
+,   GUID const&
+,   forward_cloning_policy<IEnumGUID>
+,   5
+>           collection_sequence_t;
 \endcode
  *
  * The value type is <b>GUID</b> and it is returned as a reference, as
@@ -202,47 +205,76 @@ class collection_sequence
 /// \name Member Types
 /// @{
 private:
-    typedef enumerator_sequence<EI, V, VP, R, CP, Q>                            enumerator_sequence_type;
+    typedef enumerator_sequence<
+        EI
+    ,   V
+    ,   VP
+    ,   R
+    ,   CP
+    ,   Q
+    >                                                       enumerator_sequence_type;
 public:
     /// Collection interface type
-    typedef CI                                                                  collection_interface_type;
+    typedef CI                                              collection_interface_type;
     /// Enumerator interface type
-    typedef ss_typename_type_k enumerator_sequence_type::interface_type         enumerator_interface_type;
+    typedef ss_typename_type_k enumerator_sequence_type::interface_type
+                                                            enumerator_interface_type;
     /// Value type
-    typedef ss_typename_type_k enumerator_sequence_type::value_type             value_type;
+    typedef ss_typename_type_k enumerator_sequence_type::value_type
+                                                            value_type;
     /// Value policy type
-    typedef ss_typename_type_k enumerator_sequence_type::value_policy_type      value_policy_type;
+    typedef ss_typename_type_k enumerator_sequence_type::value_policy_type
+                                                            value_policy_type;
     /// Reference type
-    typedef ss_typename_type_k enumerator_sequence_type::reference              reference;
+    typedef ss_typename_type_k enumerator_sequence_type::reference
+                                                            reference;
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
-    typedef ss_typename_type_k enumerator_sequence_type::reference_type         reference_type; // For backwards compatiblity
+    typedef ss_typename_type_k enumerator_sequence_type::reference_type
+                                                            reference_type; // For backwards compatiblity
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
     /// The mutating (non-const) pointer type
-    typedef ss_typename_type_k enumerator_sequence_type::pointer                pointer;
+    typedef ss_typename_type_k enumerator_sequence_type::pointer
+                                                            pointer;
     /// The non-mutating (const) pointer type
-    typedef ss_typename_type_k enumerator_sequence_type::const_pointer          const_pointer;
+    typedef ss_typename_type_k enumerator_sequence_type::const_pointer
+                                                            const_pointer;
     /// The mutating (non-const) iterator type
-    typedef ss_typename_type_k enumerator_sequence_type::iterator               iterator;
+    typedef ss_typename_type_k enumerator_sequence_type::iterator
+                                                            iterator;
     /// The non-mutating (const) iterator type
-    typedef ss_typename_type_k enumerator_sequence_type::const_iterator         const_iterator;
+    typedef ss_typename_type_k enumerator_sequence_type::const_iterator
+                                                            const_iterator;
     /// Cloning policy type
-    typedef ss_typename_type_k enumerator_sequence_type::cloning_policy_type    cloning_policy_type;
+    typedef ss_typename_type_k enumerator_sequence_type::cloning_policy_type
+                                                            cloning_policy_type;
     /// Iterator tag type
-    typedef ss_typename_type_k enumerator_sequence_type::iterator_tag_type      iterator_tag_type;
+    typedef ss_typename_type_k enumerator_sequence_type::iterator_tag_type
+                                                            iterator_tag_type;
 #ifdef STLSOFT_COMPILER_IS_BORLAND
-# define retrievalQuanta                                                        Q
+# define retrievalQuanta                                    Q
 #else /* ? compiler */
     /// Retrieval quanta
-    enum                                                                      { retrievalQuanta = enumerator_sequence_type::retrievalQuanta };
+    enum                                                    { retrievalQuanta = enumerator_sequence_type::retrievalQuanta };
 #endif /* compiler */
     /// The policy for acquiring the enumerator from the collection
-    typedef EAP                                                                 enumerator_acquisition_policy_type;
-    /// Type of the current parameterisation
-    typedef collection_sequence<CI, EI, V, VP, R, CP, Q, EAP>                   class_type;
+    typedef EAP                                             enumerator_acquisition_policy_type;
+    /// The current specialisation of the type
+    typedef collection_sequence<
+        CI
+    ,   EI
+    ,   V
+    ,   VP
+    ,   R
+    ,   CP
+    ,   Q
+    ,   EAP
+    >                                                       class_type;
     /// The size type
-    typedef ss_typename_type_k enumerator_sequence_type::size_type              size_type;
+    typedef ss_typename_type_k enumerator_sequence_type::size_type
+                                                            size_type;
     /// The difference type
-    typedef ss_typename_type_k enumerator_sequence_type::difference_type        difference_type;
+    typedef ss_typename_type_k enumerator_sequence_type::difference_type
+                                                            difference_type;
 /// @}
 
 public:
@@ -266,7 +298,7 @@ public:
         COMSTL_ASSERT(NULL != i);
         COMSTL_MESSAGE_ASSERT("Cannot set a quantum that exceeds the value specified in the template specialisation", quanta <= retrievalQuanta); // Could have named these things better!
 
-        if(bAddRef)
+        if (bAddRef)
         {
             m_i->AddRef();
         }
@@ -294,7 +326,7 @@ public:
         LPUNKNOWN   punkEnum;
         HRESULT     hr  =   enumerator_acquisition_policy_type::acquire(m_i, &punkEnum);
 
-        if(SUCCEEDED(hr))
+        if (SUCCEEDED(hr))
         {
             enumerator_interface_type   *ei;
 
@@ -302,7 +334,7 @@ public:
 
             punkEnum->Release();
 
-            if(SUCCEEDED(hr))
+            if (SUCCEEDED(hr))
             {
                 COMSTL_ASSERT(is_valid());
 
@@ -374,7 +406,7 @@ public:
 private:
     cs_bool_t is_valid() const
     {
-        if(NULL == m_i)
+        if (NULL == m_i)
         {
             return false;
         }
@@ -389,7 +421,7 @@ private:
     {
         COMSTL_MESSAGE_ASSERT("Cannot set a quantum that exceeds the value specified in the template specialisation", quanta <= retrievalQuanta); // Could have named these things better!
 
-        if( 0 == quanta ||
+        if (0 == quanta ||
             quanta > retrievalQuanta)
         {
             quanta = retrievalQuanta;

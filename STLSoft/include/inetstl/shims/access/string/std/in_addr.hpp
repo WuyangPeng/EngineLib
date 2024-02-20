@@ -4,10 +4,11 @@
  * Purpose:     String access shims for Internet types
  *
  * Created:     21st October 2006
- * Updated:     2nd February 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2006-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -53,7 +55,7 @@
 # define INETSTL_VER_INETSTL_SHIMS_ACCESS_STRING_STD_HPP_IN_ADDR_MAJOR      1
 # define INETSTL_VER_INETSTL_SHIMS_ACCESS_STRING_STD_HPP_IN_ADDR_MINOR      1
 # define INETSTL_VER_INETSTL_SHIMS_ACCESS_STRING_STD_HPP_IN_ADDR_REVISION   3
-# define INETSTL_VER_INETSTL_SHIMS_ACCESS_STRING_STD_HPP_IN_ADDR_EDIT       23
+# define INETSTL_VER_INETSTL_SHIMS_ACCESS_STRING_STD_HPP_IN_ADDR_EDIT       25
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -344,7 +346,7 @@ c_str_data_a(
 {
     typedef stlsoft::basic_shim_string<is_char_a_t, 16> shim_string_t;
 
-    if(NULL != addr)
+    if (NULL != addr)
     {
         return c_str_data_a(*addr);
     }
@@ -362,7 +364,7 @@ c_str_data_w(
 {
     typedef stlsoft::basic_shim_string<is_char_w_t, 16> shim_string_t;
 
-    if(NULL != addr)
+    if (NULL != addr)
     {
         return c_str_data_w(*addr);
     }
@@ -406,7 +408,7 @@ c_str_len_a(
     struct in_addr const* addr
 )
 {
-    if(NULL != addr)
+    if (NULL != addr)
     {
         return c_str_len_a(*addr);
     }
@@ -422,7 +424,7 @@ c_str_len_w(
     struct in_addr const* addr
 )
 {
-    if(NULL != addr)
+    if (NULL != addr)
     {
         return c_str_len_w(*addr);
     }
@@ -539,7 +541,7 @@ using ::inetstl::c_str_ptr;
 #endif /* !INETSTL_NO_NAMESPACE */
 
 /* /////////////////////////////////////////////////////////////////////////
- * inclusion
+ * inclusion control
  */
 
 #ifdef STLSOFT_CF_PRAGMA_ONCE_SUPPORT

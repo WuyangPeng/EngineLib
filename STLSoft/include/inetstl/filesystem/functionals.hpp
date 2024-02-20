@@ -4,10 +4,11 @@
  * Purpose:     File-system functionals.
  *
  * Created:     19th January 2002
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2002-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,8 +53,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define INETSTL_VER_INETSTL_FILESYSTEM_HPP_FUNCTIONALS_MAJOR       4
 # define INETSTL_VER_INETSTL_FILESYSTEM_HPP_FUNCTIONALS_MINOR       0
-# define INETSTL_VER_INETSTL_FILESYSTEM_HPP_FUNCTIONALS_REVISION    10
-# define INETSTL_VER_INETSTL_FILESYSTEM_HPP_FUNCTIONALS_EDIT        48
+# define INETSTL_VER_INETSTL_FILESYSTEM_HPP_FUNCTIONALS_REVISION    11
+# define INETSTL_VER_INETSTL_FILESYSTEM_HPP_FUNCTIONALS_EDIT        51
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -138,7 +140,7 @@ public:
     typedef ss_typename_type_k parent_class_type::result_type           result_type;
     /// The traits type
     typedef filesystem_traits<C>                                        traits_type;
-    /// The current parameterisation of the type
+    /// The current specialisation of the type
     typedef path_compare<C, A1, A2>                                     class_type;
 
 public:
@@ -159,8 +161,8 @@ public:
 private:
     static result_type compare_(char_type const* s1, char_type const* s2)
     {
-        char_type       path1[_MAX_PATH + 1];
-        char_type       path2[_MAX_PATH + 1];
+        char_type       path1[INETSTL_CONST_MAX_PATH + 1];
+        char_type       path2[INETSTL_CONST_MAX_PATH + 1];
         is_size_t const len1    =   traits_type::str_len(s1);
         is_size_t const len2    =   traits_type::str_len(s2);
 
@@ -198,7 +200,7 @@ public:
     typedef C                       char_type;
     /// The traits type
     typedef filesystem_traits<C>    traits_type;
-    /// The current parameterisation of the type
+    /// The current specialisation of the type
     typedef path_exists<C>          class_type;
 
 public:
@@ -220,10 +222,10 @@ public:
 private:
     is_bool_t exists_(char_type const* s) const
     {
-        char_type   sz0[1 + _MAX_PATH];
+        char_type   sz0[1 + INETSTL_CONST_MAX_PATH];
         is_dword_t  dw;
 
-        if(!traits_type::get_full_path_name(m_hConnection, s, STLSOFT_NUM_ELEMENTS(sz0), sz0))
+        if (!traits_type::get_full_path_name(m_hConnection, s, STLSOFT_NUM_ELEMENTS(sz0), sz0))
         {
             dw = 0xFFFFFFFF;
         }

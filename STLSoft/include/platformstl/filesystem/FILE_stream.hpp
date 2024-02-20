@@ -4,10 +4,11 @@
  * Purpose:     Facade for the standard C Streams API.
  *
  * Created:     31st May 2009
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2009-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,8 +53,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define PLATFORMSTL_VER_PLATFORMSTL_FILESYSTEM_HPP_FILE_STREAM_MAJOR       2
 # define PLATFORMSTL_VER_PLATFORMSTL_FILESYSTEM_HPP_FILE_STREAM_MINOR       1
-# define PLATFORMSTL_VER_PLATFORMSTL_FILESYSTEM_HPP_FILE_STREAM_REVISION    3
-# define PLATFORMSTL_VER_PLATFORMSTL_FILESYSTEM_HPP_FILE_STREAM_EDIT        21
+# define PLATFORMSTL_VER_PLATFORMSTL_FILESYSTEM_HPP_FILE_STREAM_REVISION    4
+# define PLATFORMSTL_VER_PLATFORMSTL_FILESYSTEM_HPP_FILE_STREAM_EDIT        24
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -114,6 +116,10 @@
 #ifndef STLSOFT_INCL_STLSOFT_INTERNAL_H_SAFESTR
 # include <stlsoft/internal/safestr.h>
 #endif /* !STLSOFT_INCL_STLSOFT_INTERNAL_H_SAFESTR */
+
+#ifndef STLSOFT_INCL_STLSOFT_API_internal_h_memfns
+# include <stlsoft/api/internal/memfns.h>
+#endif /* !STLSOFT_INCL_STLSOFT_API_internal_h_memfns */
 
 #ifndef STLSOFT_INCL_STLSOFT_QUALITY_H_CONTRACT
 # include <stlsoft/quality/contract.h>
@@ -279,7 +285,7 @@ public: // Operations
     /// stream.
     void flush()
     {
-        if(0 != ::fflush(m_ref->handle))
+        if (0 != ::fflush(m_ref->handle))
         {
             int const e = errno;
 
@@ -312,7 +318,7 @@ public: // Operations
     {
         long pos = ::ftell(m_ref->handle);
 
-        if(-1l == pos)
+        if (-1l == pos)
         {
             int const e = errno;
 
@@ -337,7 +343,7 @@ private: // Implementation
         _MSC_VER < 1310) || \
     defined(STLSOFT_COMPILER_IS_MWERKS)
 
-        if( NULL == h &&
+        if (NULL == h &&
             0 == e)
         {
             e = EMFILE;
@@ -364,12 +370,12 @@ private: // Implementation
         FILE* handle;
         int   e = ::fopen_s(&handle, path, mode);
 
-        if(0 != e)
+        if (0 != e)
         {
 #else // }
         FILE* handle = ::fopen(path, mode);
 
-        if(NULL == handle)
+        if (NULL == handle)
         {
             int e = errno;
 #endif
@@ -407,12 +413,12 @@ private: // Implementation
         FILE* handle;
         int   e = ::_wfopen_s(&handle, path, mode);
 
-        if(0 != e)
+        if (0 != e)
         {
 # else // }
         FILE* handle = ::_wfopen(path, mode);
 
-        if(NULL == handle)
+        if (NULL == handle)
         {
             int e = errno;
 # endif
@@ -447,9 +453,9 @@ private: // Implementation
     {
         STLSOFT_NS_QUAL(auto_buffer)<char>  buff(2u + len);
 
-        if(0 != len)
+        if (0 != len)
         {
-            ::memcpy(&buff[0], s, sizeof(*s) * len);
+            STLSOFT_API_INTERNAL_memfns_memcpy(&buff[0], s, sizeof(*s) * len);
         }
         buff[len + 0] = '\n';
         buff[len + 1] = '\0';
@@ -465,9 +471,9 @@ private: // Implementation
     {
         STLSOFT_NS_QUAL(auto_buffer)<wchar_t>  buff(2u + len);
 
-        if(0 != len)
+        if (0 != len)
         {
-            ::memcpy(&buff[0], s, sizeof(*s) * len);
+            STLSOFT_API_INTERNAL_memfns_memcpy(&buff[0], s, sizeof(*s) * len);
         }
         buff[len + 0] = '\n';
         buff[len + 1] = '\0';
@@ -483,7 +489,7 @@ private: // Implementation
     {
         size_type const n = ::fwrite(pv, sizeof(byte_t), cb, m_ref->handle);
 
-        if(n < cb)
+        if (n < cb)
         {
             int const e = errno;
 
@@ -513,7 +519,7 @@ private: // Implementation
 
         int const r = ::fprintf(m_ref->handle, fmt, ps);
 
-        if(r < 0)
+        if (r < 0)
         {
             int const e = errno;
 
@@ -543,7 +549,7 @@ private: // Implementation
 
         int const r = ::fwprintf(m_ref->handle, fmt, ps);
 
-        if(r < 0)
+        if (r < 0)
         {
             int const e = errno;
 
@@ -559,7 +565,7 @@ private: // Implementation
     ,   int     origin
     )
     {
-        if(0 != ::fseek(m_ref->handle, offset, origin))
+        if (0 != ::fseek(m_ref->handle, offset, origin))
         {
             int const e = errno;
 
@@ -574,7 +580,7 @@ private: // Implementation
     ,   int         e
     )
     {
-        switch(e)
+        switch (e)
         {
             case    ENOMEM:
                 STLSOFT_THROW_X(STLSOFT_NS_QUAL(out_of_memory_exception)(STLSoftProjectIdentifier_STLSoft, STLSoftLibraryIdentifier_FileSystem, e));
@@ -599,7 +605,7 @@ private: // Implementation
     ,   int         e
     )
     {
-        switch(e)
+        switch (e)
         {
             case    ENOMEM:
                 STLSOFT_THROW_X(STLSOFT_NS_QUAL(out_of_memory_exception)(STLSoftProjectIdentifier_STLSoft, STLSoftLibraryIdentifier_FileSystem, e));
@@ -624,12 +630,12 @@ private: // Implementation
     ,   int             e
     )
     {
-        if( NULL == path ||
+        if (NULL == path ||
             '\0' == path[0])
         {
             report_nonnormative_(message, e);
         }
-        else if(ENOMEM == e)
+        else if (ENOMEM == e)
         {
             report_nonnormative_(message, e);
         }
@@ -752,7 +758,7 @@ namespace stlsoft
 #endif /* !PLATFORMSTL_NO_NAMESPACE */
 
 /* /////////////////////////////////////////////////////////////////////////
- * inclusion
+ * inclusion control
  */
 
 #ifdef STLSOFT_CF_PRAGMA_ONCE_SUPPORT

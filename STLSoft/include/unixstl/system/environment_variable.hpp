@@ -4,10 +4,11 @@
  * Purpose:     Simple class that provides access to an environment variable.
  *
  * Created:     2nd November 2003
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2003-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -53,7 +55,7 @@
 # define UNIXSTL_VER_UNIXSTL_SYSTEM_HPP_ENVIRONMENT_VARIABLE_MAJOR      4
 # define UNIXSTL_VER_UNIXSTL_SYSTEM_HPP_ENVIRONMENT_VARIABLE_MINOR      3
 # define UNIXSTL_VER_UNIXSTL_SYSTEM_HPP_ENVIRONMENT_VARIABLE_REVISION   6
-# define UNIXSTL_VER_UNIXSTL_SYSTEM_HPP_ENVIRONMENT_VARIABLE_EDIT       78
+# define UNIXSTL_VER_UNIXSTL_SYSTEM_HPP_ENVIRONMENT_VARIABLE_EDIT       81
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -135,10 +137,10 @@ public:
 #ifdef STLSOFT_CF_TEMPLATE_CLASS_DEFAULT_CLASS_ARGUMENT_SUPPORT
     /// The allocator type
     typedef A                                   allocator_type;
-    /// The current parameterisation of the type
+    /// The current specialisation of the type
     typedef basic_environment_variable<C, T, A> class_type;
 #else /* ? STLSOFT_CF_TEMPLATE_CLASS_DEFAULT_CLASS_ARGUMENT_SUPPORT */
-    /// The current parameterisation of the type
+    /// The current specialisation of the type
     typedef basic_environment_variable<C, T>    class_type;
 #endif /* STLSOFT_CF_TEMPLATE_CLASS_DEFAULT_CLASS_ARGUMENT_SUPPORT */
     /// The size type
@@ -154,7 +156,7 @@ public:
     ss_explicit_k basic_environment_variable(char_type const* name)
         : m_buffer(1 + traits_type::get_environment_variable(name, 0, 0))
     {
-        if( 0 == traits_type::get_environment_variable(name, &m_buffer[0], m_buffer.size()) &&
+        if (0 == traits_type::get_environment_variable(name, &m_buffer[0], m_buffer.size()) &&
             0 != m_buffer.size())
         {
             m_buffer[0] = 0;
@@ -166,7 +168,7 @@ public:
     ss_explicit_k basic_environment_variable(S const& name)
         : m_buffer(1 + traits_type::get_environment_variable(STLSOFT_NS_QUAL(c_str_ptr)(name), 0, 0))
     {
-        if( 0 == traits_type::get_environment_variable(STLSOFT_NS_QUAL(c_str_ptr)(name), &m_buffer[0], m_buffer.size()) &&
+        if (0 == traits_type::get_environment_variable(STLSOFT_NS_QUAL(c_str_ptr)(name), &m_buffer[0], m_buffer.size()) &&
             0 != m_buffer.size())
         {
             m_buffer[0] = 0;

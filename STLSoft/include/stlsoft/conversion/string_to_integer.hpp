@@ -4,7 +4,7 @@
  * Purpose:     String to integer conversions.
  *
  * Created:     18th November 2008
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Thanks to:   Chris Oldwood for righteous criticism of one of my hastily-
  *              written articles, which led to the creation of the
@@ -12,6 +12,7 @@
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2008-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -24,9 +25,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -54,10 +56,10 @@
 #define STLSOFT_INCL_STLSOFT_CONVERSION_HPP_STRING_TO_INTEGER
 
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
-# define STLSOFT_VER_STLSOFT_CONVERSION_HPP_STRING_TO_INTEGER_MAJOR     2
+# define STLSOFT_VER_STLSOFT_CONVERSION_HPP_STRING_TO_INTEGER_MAJOR     3
 # define STLSOFT_VER_STLSOFT_CONVERSION_HPP_STRING_TO_INTEGER_MINOR     0
-# define STLSOFT_VER_STLSOFT_CONVERSION_HPP_STRING_TO_INTEGER_REVISION  3
-# define STLSOFT_VER_STLSOFT_CONVERSION_HPP_STRING_TO_INTEGER_EDIT      63
+# define STLSOFT_VER_STLSOFT_CONVERSION_HPP_STRING_TO_INTEGER_REVISION  1
+# define STLSOFT_VER_STLSOFT_CONVERSION_HPP_STRING_TO_INTEGER_EDIT      72
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -90,6 +92,11 @@
 #ifndef STLSOFT_INCL_STLSOFT_QUALITY_H_COVER
 # include <stlsoft/quality/cover.h>
 #endif /* !STLSOFT_INCL_STLSOFT_QUALITY_H_COVER */
+
+#ifndef STLSOFT_INCL_H_CTYPE
+# define STLSOFT_INCL_H_CTYPE
+# include <ctype.h>
+#endif /* !STLSOFT_INCL_H_CTYPE */
 
 /* /////////////////////////////////////////////////////////////////////////
  * namespace
@@ -132,7 +139,9 @@ struct ximpl_string_to_integer_util_
         ss_typename_param_k I
     ,   ss_typename_param_k C
     >
-    static I string_to_integer_raw_(
+    static
+    I
+    string_to_integer_raw_2_(
         C const*    s
     ,   C const**   endptr
     ,   I
@@ -144,11 +153,11 @@ struct ximpl_string_to_integer_util_
 
         I result = 0;
 
-        for(;; ++s)
+        for (;; ++s)
         {
             STLSOFT_COVER_MARK_LINE();
 
-            switch(*s)
+            switch (*s)
             {
                 case    '0':
                 case    '1':
@@ -178,11 +187,14 @@ struct ximpl_string_to_integer_util_
         ss_typename_param_k I
     ,   ss_typename_param_k C
     >
-    static I hex_string_to_integer_len_raw_(
+    static
+    bool
+    hex_string_to_integer_len_raw_4_(
         C const*    s
     ,   ss_size_t   len
     ,   C const**   endptr
-    ,   I
+    ,   I*          result
+    ,   I        /* fail_value */
     )
     {
         STLSOFT_COVER_MARK_LINE();
@@ -190,15 +202,15 @@ struct ximpl_string_to_integer_util_
         STLSOFT_ASSERT(0 != len);
         STLSOFT_ASSERT(NULL != endptr);
 
-        I result = 0;
+        *result = 0;
 
-        for(; 0 != len; ++s, --len)
+        for (; 0 != len; ++s, --len)
         {
             STLSOFT_COVER_MARK_LINE();
 
             C c = *s;
 
-            switch(c)
+            switch (c)
             {
                 case    'a':
                 case    'A':
@@ -238,7 +250,7 @@ struct ximpl_string_to_integer_util_
                     c = c - '0';
 calc:
                     STLSOFT_COVER_MARK_LINE();
-                    result = 16 * result + c;
+                    *result = I(16 * *result + c);
                     continue;
                 default:
                     STLSOFT_COVER_MARK_LINE();
@@ -249,18 +261,21 @@ calc:
 
         *endptr = s;
 
-        return result;
+        return true;
     }
 
     template<
         ss_typename_param_k I
     ,   ss_typename_param_k C
     >
-    static I string_to_integer_len_raw_(
+    static
+    bool
+    string_to_integer_len_raw_5_(
         C const*    s
     ,   ss_size_t   len
     ,   C const**   endptr
-    ,   I
+    ,   I*          result
+    ,   I           fail_value
     )
     {
         STLSOFT_COVER_MARK_LINE();
@@ -268,39 +283,39 @@ calc:
         STLSOFT_ASSERT(0 != len);
         STLSOFT_ASSERT(NULL != endptr);
 
-        I result = 0;
-
-        if('0' == s[0])
+        if ('0' == s[0])
         {
             STLSOFT_COVER_MARK_LINE();
 
-            if(1 == len)
+            if (1 == len)
             {
                 STLSOFT_COVER_MARK_LINE();
 
+                *result = 0;
+
                 *endptr = s + 1;
 
-                return 0;
+                return true;
             }
             else
-            if( 'x' == s[1] ||
+            if ('x' == s[1] ||
                 'X' == s[1])
             {
                 STLSOFT_COVER_MARK_LINE();
 
-                if(2 == len)
+                if (2 == len)
                 {
                     STLSOFT_COVER_MARK_LINE();
 
                     *endptr = s + 1;
 
-                    return 0;
+                    return false;
                 }
                 else
                 {
                     STLSOFT_COVER_MARK_LINE();
 
-                    return hex_string_to_integer_len_raw_(s + 2, len - 2, endptr, I());
+                    return hex_string_to_integer_len_raw_4_(s + 2, len - 2, endptr, result, fail_value);
                 }
             }
 
@@ -309,11 +324,13 @@ calc:
             STLSOFT_COVER_MARK_LINE();
         }
 
-        for(; 0 != len; ++s, --len)
+        *result = 0;
+
+        for (; 0 != len; ++s, --len)
         {
             STLSOFT_COVER_MARK_LINE();
 
-            switch(*s)
+            switch (*s)
             {
                 case    '0':
                 case    '1':
@@ -326,7 +343,7 @@ calc:
                 case    '8':
                 case    '9':
                     STLSOFT_COVER_MARK_LINE();
-                    result = 10 * result + (*s - '0');
+                    *result = I(10 * *result + (*s - '0'));
                     continue;
                 default:
                     STLSOFT_COVER_MARK_LINE();
@@ -337,21 +354,23 @@ calc:
 
         *endptr = s;
 
-        return result;
+        return true;
     }
 
     template<
         ss_typename_param_k I
     ,   ss_typename_param_k C
     >
-    static bool try_read_minus_(
+    static
+    bool
+    try_read_minus_(
         C const*    s
     ,   C const**   endptr
     ,   I*          v
     ,   yes_type
     )
     {
-        *v = -string_to_integer_raw_(s, endptr, I());
+        *v = -string_to_integer_raw_2_(s, endptr, I());
 
         return true;
     }
@@ -360,7 +379,9 @@ calc:
         ss_typename_param_k I
     ,   ss_typename_param_k C
     >
-    static bool try_read_minus_(
+    static
+    bool
+    try_read_minus_(
         C const*    /* s */
     ,   C const**   /* endptr */
     ,   I*          /* v */
@@ -374,7 +395,9 @@ calc:
         ss_typename_param_k I
     ,   ss_typename_param_k C
     >
-    static bool try_read_minus_len_(
+    static
+    bool
+    try_read_minus_len_(
         C const*    s
     ,   ss_size_t   len
     ,   C const**   endptr
@@ -382,16 +405,23 @@ calc:
     ,   yes_type
     )
     {
-        *v = -string_to_integer_len_raw_(s, len, endptr, I());
+        if (string_to_integer_len_raw_5_(s, len, endptr, v, I(0)))
+        {
+            *v = -*v;
 
-        return true;
+            return true;
+        }
+
+        return false;
     }
 
     template
         <   ss_typename_param_k I
     ,   ss_typename_param_k C
     >
-    static bool try_read_minus_len_(
+    static
+    bool
+    try_read_minus_len_(
         C const*    /* s */
     ,   ss_size_t   /* len */
     ,   C const**   /* endptr */
@@ -406,7 +436,9 @@ calc:
         ss_typename_param_k I
     ,   ss_typename_param_k C
     >
-    static I string_to_integer_(
+    static
+    I
+    string_to_integer_2_(
         C const*    s
     ,   C const**   endptr
     ,   I
@@ -421,7 +453,7 @@ calc:
         // apply Null Object pattern
         C const* endptr_;
 
-        if(NULL == endptr)
+        if (NULL == endptr)
         {
             STLSOFT_COVER_MARK_LINE();
 
@@ -429,11 +461,11 @@ calc:
         }
 
         // skip whitespace
-        for(;; ++s)
+        for (;; ++s)
         {
             STLSOFT_COVER_MARK_LINE();
 
-            switch(*s)
+            switch (*s)
             {
                 case    ' ':
                 case    '\t':
@@ -450,7 +482,7 @@ calc:
             break;
         }
 
-        switch(*s)
+        switch (*s)
         {
             case    '+':
                 STLSOFT_COVER_MARK_LINE();
@@ -467,14 +499,14 @@ calc:
             case    '8':
             case    '9':
                 STLSOFT_COVER_MARK_LINE();
-                return string_to_integer_raw_(s, endptr, I());
+                return string_to_integer_raw_2_(s, endptr, I());
             case    '-':
                 STLSOFT_COVER_MARK_LINE();
                 {
                     STLSOFT_COVER_MARK_LINE();
 
                     I   v;
-                    if(try_read_minus_(s + 1, endptr, &v, I_is_signed_type_()))
+                    if (try_read_minus_(s + 1, endptr, &v, I_is_signed_type_()))
                     {
                         return v;
                     }
@@ -492,11 +524,14 @@ calc:
         ss_typename_param_k I
     ,   ss_typename_param_k C
     >
-    static I string_to_integer_len_(
+    static
+    bool
+    string_to_integer_len_5_(
         C const*    s
     ,   ss_size_t   len
     ,   C const**   endptr
-    ,   I
+    ,   I*          result
+    ,   I           fail_value
     )
     {
         STLSOFT_COVER_MARK_LINE();
@@ -508,20 +543,30 @@ calc:
         // apply Null Object pattern
         C const* endptr_;
 
-        if(NULL == endptr)
+        if (NULL == endptr)
         {
             STLSOFT_COVER_MARK_LINE();
 
             endptr = &endptr_;
         }
+
         *endptr = NULL;
 
-        // skip whitespace
-        for(; 0 != len; ++s, --len)
+        if (0 == len)
         {
             STLSOFT_COVER_MARK_LINE();
 
-            switch(*s)
+            *endptr = NULL;
+
+            return false;
+        }
+
+        // skip whitespace
+        for (; 0 != len; ++s, --len)
+        {
+            STLSOFT_COVER_MARK_LINE();
+
+            switch (*s)
             {
                 case    ' ':
                 case    '\t':
@@ -538,22 +583,28 @@ calc:
             break;
         }
 
-        if(0 == len)
+        if (0 == len)
         {
             STLSOFT_COVER_MARK_LINE();
 
             *endptr = s;
 
-            return 0;
+            return false;
         }
 
-        switch(*s)
+        switch (*s)
         {
             case    '+':
                 STLSOFT_COVER_MARK_LINE();
+                if (len < 2 || !isdigit(char(s[1])))
+                {
+                    *endptr = s;
+
+                    return false;
+                }
                 ++s;
                 --len;
-                // Fall through
+                // fall through
             case    '0':
             case    '1':
             case    '2':
@@ -565,16 +616,22 @@ calc:
             case    '8':
             case    '9':
                 STLSOFT_COVER_MARK_LINE();
-                return string_to_integer_len_raw_(s, len, endptr, I());
+                return string_to_integer_len_raw_5_(s, len, endptr, result, fail_value);
             case    '-':
+                if (len < 2 || !isdigit(char(s[1])))
+                {
+                    *endptr = s;
+
+                    return false;
+                }
+
                 STLSOFT_COVER_MARK_LINE();
                 {
                     STLSOFT_COVER_MARK_LINE();
 
-                    I   v;
-                    if(try_read_minus_len_(s + 1, len - 1, endptr, &v, I_is_signed_type_()))
+                    if (try_read_minus_len_(s + 1, len - 1, endptr, result, I_is_signed_type_()))
                     {
-                        return v;
+                        return true;
                     }
                 }
                 // Fall through
@@ -582,76 +639,7 @@ calc:
             default:
                 STLSOFT_COVER_MARK_LINE();
                 *endptr = s;
-                return 0;
-        }
-    }
-
-
-    template<
-        ss_typename_param_k I
-    ,   ss_typename_param_k C
-    >
-    static bool try_string_to_integer_len_3_(
-        C const*    s
-    ,   ss_size_t   len
-    ,   I*          pi
-    )
-    {
-        if(0 == len)
-        {
-            return false;
-        }
-
-        C const* ep;
-
-        *pi = string_to_integer_len_(s, len, &ep, I());
-
-        STLSOFT_ASSERT(NULL != ep);
-
-        if((ep - s) < ss_ptrdiff_t(len))
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
-
-    template<
-        ss_typename_param_k I
-    ,   ss_typename_param_k C
-    >
-    static bool try_string_to_integer_len_4_(
-        C const*    s
-    ,   ss_size_t   len
-    ,   I*          pi
-    ,   C const**   endptr
-    )
-    {
-        if(0 == len)
-        {
-            return false;
-        }
-
-        C const* ep;
-
-        *pi = string_to_integer_len_(s, len, &ep, I());
-
-        STLSOFT_ASSERT(NULL != ep);
-
-        if(NULL != endptr)
-        {
-            *endptr = ep;
-        }
-
-        if((ep - s) < ss_ptrdiff_t(len))
-        {
-            return false;
-        }
-        else
-        {
-            return true;
+                return false;
         }
     }
 
@@ -659,33 +647,45 @@ calc:
         ss_typename_param_k I
     ,   ss_typename_param_k C1
     ,   ss_typename_param_k C2
+    ,   ss_typename_param_k C3
     >
-    static bool try_string_to_integer_len_5_(
+    static
+    bool
+    try_string_to_integer_len_6_(
         C1 const*   s
     ,   ss_size_t   len
     ,   I*          pi
-    ,   C2 const*   endChars
-    ,   ss_size_t   endCharsLen
+    ,   C2 const*   validEndChars
+    ,   ss_size_t   validEndCharsLen
+    ,   C3 const**  ep
     )
     {
-        if(0 == len)
+        if (0 == len)
         {
             return false;
         }
 
-        C1 const* ep;
+        C3 const* dummy_;
 
-        *pi = string_to_integer_len_(s, len, &ep, I());
-
-        STLSOFT_ASSERT(NULL != ep);
-
-        if((ep - s) < ss_ptrdiff_t(len))
+        if (NULL == ep)
         {
-            C2 const* const endCharsEnd = endChars + endCharsLen;
+            ep = &dummy_;
+        }
 
-            for( ; endCharsEnd != endChars; ++endChars)
+        if (!string_to_integer_len_5_(s, len, ep, pi, I()))
+        {
+            return false;
+        }
+
+        STLSOFT_ASSERT(NULL != *ep);
+
+        if ((*ep - s) < ss_ptrdiff_t(len))
+        {
+            C2 const* const endCharsEnd = validEndChars + validEndCharsLen;
+
+            for ( ; endCharsEnd != validEndChars; ++validEndChars)
             {
-                if(*endChars == *ep)
+                if (*validEndChars == **ep)
                 {
                     return true;
                 }
@@ -699,6 +699,167 @@ calc:
         }
     }
 
+    template<
+        ss_typename_param_k I
+    ,   ss_typename_param_k C
+    >
+    static
+    bool
+    try_string_to_integer_len_4_(
+        C const*    s
+    ,   ss_size_t   len
+    ,   I*          pi
+    ,   C const**   endptr
+    )
+    {
+        if (0 == len)
+        {
+            *endptr = NULL;
+
+            return false;
+        }
+
+        C const* ep;
+
+        if (!string_to_integer_len_5_(s, len, &ep, pi, I()))
+        {
+            *endptr = ep;
+
+            return false;
+        }
+
+        STLSOFT_ASSERT(NULL != ep);
+
+        if (NULL != endptr)
+        {
+            *endptr = ep;
+        }
+
+        if ((ep - s) < ss_ptrdiff_t(len))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    template<
+        ss_typename_param_k I
+    ,   ss_typename_param_k C
+    >
+    static
+    bool
+    try_string_to_integer_len_3n_(
+        C const*    s
+    ,   ss_size_t   len
+    ,   I*          pi
+    )
+    {
+        if (0 == len)
+        {
+            return false;
+        }
+
+        C const* ep;
+
+        if (!string_to_integer_len_5_(s, len, &ep, pi, I()))
+        {
+            return false;
+        }
+
+        STLSOFT_ASSERT(NULL != ep);
+
+        if ((ep - s) < ss_ptrdiff_t(len))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    template<
+        ss_typename_param_k I
+    ,   ss_typename_param_k C
+    >
+    static
+    bool
+    try_string_to_integer_len_3e_(
+        C const*    s
+    ,   I*          pi
+    ,   C const**   ep
+    )
+    {
+        ss_size_t const len = c_str_len(s);
+
+        if (0 == len)
+        {
+            return false;
+        }
+
+        C const* dummy_;
+
+        if (NULL == ep)
+        {
+            ep = &dummy_;
+        }
+
+        if (!string_to_integer_len_5_(s, len, ep, pi, I()))
+        {
+            return false;
+        }
+
+        STLSOFT_ASSERT(NULL != *ep);
+
+        if ((*ep - s) < ss_ptrdiff_t(len))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    template<
+        ss_typename_param_k I
+    ,   ss_typename_param_k C
+    >
+    static
+    bool
+    try_string_to_integer_len_2_(
+        C const*    s
+    ,   I*          pi
+    )
+    {
+        ss_size_t const len = c_str_len(s);
+
+        if (0 == len)
+        {
+            return false;
+        }
+
+        C const* ep;
+
+        if (!string_to_integer_len_5_(s, len, &ep, pi, I()))
+        {
+            return false;
+        }
+
+        STLSOFT_ASSERT(NULL != ep);
+
+        if ((ep - s) < ss_ptrdiff_t(len))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
 };
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
@@ -717,7 +878,6 @@ calc:
   stlsoft::string_to_integer("  -1234", NULL); // returns -1234
 
   stlsoft::string_to_integer("  +1234abc", &endptr); // returns 1234, endptr -> "abc"
-
 </pre>
  */
 inline
@@ -729,7 +889,7 @@ string_to_integer(
 {
     STLSOFT_COVER_MARK_LINE();
 
-    return ximpl_string_to_integer_util_::string_to_integer_(s, endptr, int());
+    return ximpl_string_to_integer_util_::string_to_integer_2_(s, endptr, int());
 }
 /** Converts a decimal numeric string to an integer
  */
@@ -742,7 +902,7 @@ string_to_integer(
 {
     STLSOFT_COVER_MARK_LINE();
 
-    return ximpl_string_to_integer_util_::string_to_integer_(s, endptr, int());
+    return ximpl_string_to_integer_util_::string_to_integer_2_(s, endptr, int());
 }
 
 
@@ -760,7 +920,14 @@ string_to_integer(
 {
     STLSOFT_COVER_MARK_LINE();
 
-    return ximpl_string_to_integer_util_::string_to_integer_len_(s, len, endptr, int());
+    int r;
+
+    if (!ximpl_string_to_integer_util_::string_to_integer_len_5_(s, len, endptr, &r, int()))
+    {
+        return 0;
+    }
+
+    return r;
 }
 /** Converts a decimal numeric string to an integer
  *
@@ -776,9 +943,19 @@ string_to_integer(
 {
     STLSOFT_COVER_MARK_LINE();
 
-    return ximpl_string_to_integer_util_::string_to_integer_len_(s, len, endptr, int());
+    int r;
+
+    if (!ximpl_string_to_integer_util_::string_to_integer_len_5_(s, len, endptr, &r, int()))
+    {
+        return 0;
+    }
+
+    return r;
 }
 
+
+
+/* try_parse_to(S const&, I*) */
 
 /** Attempts to converts a decimal numeric string to an integer
  *
@@ -796,24 +973,129 @@ try_parse_to(
 ,   I*          pi
 )
 {
-    return ximpl_string_to_integer_util_::try_string_to_integer_len_3_(STLSOFT_NS_QUAL(c_str_data)(s), STLSOFT_NS_QUAL(c_str_len)(s), pi);
+    return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(STLSOFT_NS_QUAL(c_str_data)(s), STLSOFT_NS_QUAL(c_str_len)(s), pi);
 }
 
+#ifdef STLSOFT_DOCUMENTATION_SKIP_SECTION
+
+#else /* ? STLSOFT_DOCUMENTATION_SKIP_SECTION */
+
+inline bool try_parse_to(char    const* s, ss_sint8_t*    pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+inline bool try_parse_to(char    const* s, ss_uint8_t*    pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+inline bool try_parse_to(wchar_t const* s, ss_sint8_t*    pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+inline bool try_parse_to(wchar_t const* s, ss_uint8_t*    pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+
+inline bool try_parse_to(char    const* s, ss_sint16_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+inline bool try_parse_to(char    const* s, ss_uint16_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+inline bool try_parse_to(wchar_t const* s, ss_sint16_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+inline bool try_parse_to(wchar_t const* s, ss_uint16_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+
+inline bool try_parse_to(char    const* s, ss_sint32_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+inline bool try_parse_to(char    const* s, ss_uint32_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+inline bool try_parse_to(wchar_t const* s, ss_sint32_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+inline bool try_parse_to(wchar_t const* s, ss_uint32_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+
+# ifdef STLSOFT_CF_64BIT_INT_SUPPORT
+
+inline bool try_parse_to(char    const* s, ss_sint64_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+inline bool try_parse_to(char    const* s, ss_uint64_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+inline bool try_parse_to(wchar_t const* s, ss_sint64_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+inline bool try_parse_to(wchar_t const* s, ss_uint64_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+# endif /* !STLSOFT_CF_64BIT_INT_SUPPORT */
+
+# ifdef STLSOFT_CF_INT_DISTINCT_INT_TYPE
+
+inline bool try_parse_to(char    const* s,   signed int*  pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+inline bool try_parse_to(char    const* s, unsigned int*  pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+inline bool try_parse_to(wchar_t const* s,   signed int*  pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+inline bool try_parse_to(wchar_t const* s, unsigned int*  pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+# endif /* STLSOFT_CF_INT_DISTINCT_INT_TYPE */
+
+# ifdef STLSOFT_CF_LONG_DISTINCT_INT_TYPE
+
+inline bool try_parse_to(char    const* s,   signed long* pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+inline bool try_parse_to(char    const* s, unsigned long* pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+inline bool try_parse_to(wchar_t const* s,   signed long* pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+inline bool try_parse_to(wchar_t const* s, unsigned long* pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_2_(s, pi); }
+# endif /* STLSOFT_CF_LONG_DISTINCT_INT_TYPE */
+#endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
+
+
+
+/* try_parse_to(C const*, size_t, I*) */
+
+#ifdef STLSOFT_DOCUMENTATION_SKIP_SECTION
+
+/** Attempts to converts a decimal numeric string to an integer
+ *
+ * \retval true The string \c s contains a decimal number and ends with
+ * \retval false
+ */
 template <
     ss_typename_param_k I
-,   ss_typename_param_k S
+,   ss_typename_param_k C
 >
 inline
 bool
 try_parse_to(
-    S const&    s
-,   ss_size_t   n
+    C const*    s
+,   ss_size_t   cch
 ,   I*          pi
 )
-{
-    return ximpl_string_to_integer_util_::try_string_to_integer_len_3_(STLSOFT_NS_QUAL(c_str_data)(s), stlsoft::minimum(STLSOFT_NS_QUAL(c_str_len)(s), n), pi);
-}
+;
+#else /* ? STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
+inline bool try_parse_to(char    const* s, ss_size_t cch, ss_sint8_t*    pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+inline bool try_parse_to(char    const* s, ss_size_t cch, ss_uint8_t*    pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+inline bool try_parse_to(wchar_t const* s, ss_size_t cch, ss_sint8_t*    pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+inline bool try_parse_to(wchar_t const* s, ss_size_t cch, ss_uint8_t*    pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+
+inline bool try_parse_to(char    const* s, ss_size_t cch, ss_sint16_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+inline bool try_parse_to(char    const* s, ss_size_t cch, ss_uint16_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+inline bool try_parse_to(wchar_t const* s, ss_size_t cch, ss_sint16_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+inline bool try_parse_to(wchar_t const* s, ss_size_t cch, ss_uint16_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+
+inline bool try_parse_to(char    const* s, ss_size_t cch, ss_sint32_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+inline bool try_parse_to(char    const* s, ss_size_t cch, ss_uint32_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+inline bool try_parse_to(wchar_t const* s, ss_size_t cch, ss_sint32_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+inline bool try_parse_to(wchar_t const* s, ss_size_t cch, ss_uint32_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+
+# ifdef STLSOFT_CF_64BIT_INT_SUPPORT
+
+inline bool try_parse_to(char    const* s, ss_size_t cch, ss_sint64_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+inline bool try_parse_to(char    const* s, ss_size_t cch, ss_uint64_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+inline bool try_parse_to(wchar_t const* s, ss_size_t cch, ss_sint64_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+inline bool try_parse_to(wchar_t const* s, ss_size_t cch, ss_uint64_t*   pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+# endif /* !STLSOFT_CF_64BIT_INT_SUPPORT */
+
+# ifdef STLSOFT_CF_INT_DISTINCT_INT_TYPE
+
+inline bool try_parse_to(char    const* s, ss_size_t cch,   signed int*  pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+inline bool try_parse_to(char    const* s, ss_size_t cch, unsigned int*  pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+inline bool try_parse_to(wchar_t const* s, ss_size_t cch,   signed int*  pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+inline bool try_parse_to(wchar_t const* s, ss_size_t cch, unsigned int*  pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+# endif /* STLSOFT_CF_INT_DISTINCT_INT_TYPE */
+
+# ifdef STLSOFT_CF_LONG_DISTINCT_INT_TYPE
+
+inline bool try_parse_to(char    const* s, ss_size_t cch,   signed long* pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+inline bool try_parse_to(char    const* s, ss_size_t cch, unsigned long* pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+inline bool try_parse_to(wchar_t const* s, ss_size_t cch,   signed long* pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+inline bool try_parse_to(wchar_t const* s, ss_size_t cch, unsigned long* pi) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3n_(s, cch, pi); }
+# endif /* STLSOFT_CF_LONG_DISTINCT_INT_TYPE */
+#endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
+
+
+
+/* try_parse_to(C const*, I*, C const**) */
+
+#ifdef STLSOFT_DOCUMENTATION_SKIP_SECTION
+
+/** Attempts to converts a decimal numeric string to an integer
+ *
+ * \retval true The string \c s contains a decimal number and ends with
+ * \retval false
+ */
 template <
     ss_typename_param_k I
 ,   ss_typename_param_k C
@@ -825,43 +1107,138 @@ try_parse_to(
 ,   I*          pi
 ,   C const**   endptr
 )
-{
-    return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(STLSOFT_NS_QUAL(c_str_data)(s), STLSOFT_NS_QUAL(c_str_len)(s), pi, endptr);
-}
+;
+#else /* ? STLSOFT_DOCUMENTATION_SKIP_SECTION */
+
+inline bool try_parse_to(char    const* s, ss_sint8_t*    pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+inline bool try_parse_to(char    const* s, ss_uint8_t*    pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, ss_sint8_t*    pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, ss_uint8_t*    pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+
+inline bool try_parse_to(char    const* s, ss_sint16_t*   pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+inline bool try_parse_to(char    const* s, ss_uint16_t*   pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, ss_sint16_t*   pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, ss_uint16_t*   pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+
+inline bool try_parse_to(char    const* s, ss_sint32_t*   pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+inline bool try_parse_to(char    const* s, ss_uint32_t*   pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, ss_sint32_t*   pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, ss_uint32_t*   pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+
+# ifdef STLSOFT_CF_64BIT_INT_SUPPORT
+
+inline bool try_parse_to(char    const* s, ss_sint64_t*   pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+inline bool try_parse_to(char    const* s, ss_uint64_t*   pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, ss_sint64_t*   pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, ss_uint64_t*   pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+# endif /* !STLSOFT_CF_64BIT_INT_SUPPORT */
+
+# ifdef STLSOFT_CF_INT_DISTINCT_INT_TYPE
+
+inline bool try_parse_to(char    const* s,   signed int*  pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+inline bool try_parse_to(char    const* s, unsigned int*  pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s,   signed int*  pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, unsigned int*  pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+# endif /* STLSOFT_CF_INT_DISTINCT_INT_TYPE */
+
+# ifdef STLSOFT_CF_LONG_DISTINCT_INT_TYPE
+
+inline bool try_parse_to(char    const* s,   signed long* pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+inline bool try_parse_to(char    const* s, unsigned long* pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s,   signed long* pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, unsigned long* pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_3e_(s, pi, endptr); }
+# endif /* STLSOFT_CF_LONG_DISTINCT_INT_TYPE */
+#endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 
-// TODO: get rid of this override, as it violates overload rules
+
+/* try_parse_to(C const*, size_t, I*, C const**) */
+
+#ifdef STLSOFT_DOCUMENTATION_SKIP_SECTION
+
+/** Attempts to converts a decimal numeric string to an integer
+ *
+ * \retval true The string \c s contains a decimal number and ends with
+ * \retval false
+ */
 template <
     ss_typename_param_k I
-,   ss_typename_param_k S1
-,   ss_typename_param_k S2
+,   ss_typename_param_k C
 >
 inline
 bool
 try_parse_to(
-    S1 const&   s
+    C const*    s
 ,   I*          pi
-,   S2 const&   validEndChars
+,   C const**   endptr
 )
-{
-    return ximpl_string_to_integer_util_::try_string_to_integer_len_5_(STLSOFT_NS_QUAL(c_str_data)(s), STLSOFT_NS_QUAL(c_str_len)(s), pi, STLSOFT_NS_QUAL(c_str_data)(validEndChars), STLSOFT_NS_QUAL(c_str_len)(validEndChars));
-}
+;
+#else /* ? STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
+inline bool try_parse_to(char    const* s, size_t n, ss_sint8_t*    pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+inline bool try_parse_to(char    const* s, size_t n, ss_uint8_t*    pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, size_t n, ss_sint8_t*    pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, size_t n, ss_uint8_t*    pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+
+inline bool try_parse_to(char    const* s, size_t n, ss_sint16_t*   pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+inline bool try_parse_to(char    const* s, size_t n, ss_uint16_t*   pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, size_t n, ss_sint16_t*   pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, size_t n, ss_uint16_t*   pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+
+inline bool try_parse_to(char    const* s, size_t n, ss_sint32_t*   pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+inline bool try_parse_to(char    const* s, size_t n, ss_uint32_t*   pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, size_t n, ss_sint32_t*   pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, size_t n, ss_uint32_t*   pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+
+# ifdef STLSOFT_CF_64BIT_INT_SUPPORT
+
+inline bool try_parse_to(char    const* s, size_t n, ss_sint64_t*   pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+inline bool try_parse_to(char    const* s, size_t n, ss_uint64_t*   pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, size_t n, ss_sint64_t*   pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, size_t n, ss_uint64_t*   pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+# endif /* !STLSOFT_CF_64BIT_INT_SUPPORT */
+
+# ifdef STLSOFT_CF_INT_DISTINCT_INT_TYPE
+
+inline bool try_parse_to(char    const* s, size_t n,   signed int*  pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+inline bool try_parse_to(char    const* s, size_t n, unsigned int*  pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, size_t n,   signed int*  pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, size_t n, unsigned int*  pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+# endif /* STLSOFT_CF_INT_DISTINCT_INT_TYPE */
+
+# ifdef STLSOFT_CF_LONG_DISTINCT_INT_TYPE
+
+inline bool try_parse_to(char    const* s, size_t n,   signed long* pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+inline bool try_parse_to(char    const* s, size_t n, unsigned long* pi,  char   const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, size_t n,   signed long* pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+inline bool try_parse_to(wchar_t const* s, size_t n, unsigned long* pi, wchar_t const** endptr) { return ximpl_string_to_integer_util_::try_string_to_integer_len_4_(s, n, pi, endptr); }
+# endif /* STLSOFT_CF_LONG_DISTINCT_INT_TYPE */
+#endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
+
+
+
+/* try_parse_to(C const*, size_t, C const*, I*, C const**) */
+
+/** Attempts to convert a decimal numeric string to an integer, against the
+ *
+ * \param s
+
+ */
 template <
     ss_typename_param_k I
-,   ss_typename_param_k S1
-,   ss_typename_param_k S2
+,   ss_typename_param_k C
 >
 inline
 bool
 try_parse_to(
-    S1 const&   s
-,   ss_size_t   n
-,   I*          pi
-,   S2 const&   validEndChars
+    C const*        s
+,   ss_size_t       len
+,   C const*        validEndChars
+,   I*              pi
+,   C const**       endptr
 )
 {
-    return ximpl_string_to_integer_util_::try_string_to_integer_len_5_(STLSOFT_NS_QUAL(c_str_data)(s), stlsoft::minimum(STLSOFT_NS_QUAL(c_str_len)(s), n), pi, STLSOFT_NS_QUAL(c_str_data)(validEndChars), STLSOFT_NS_QUAL(c_str_len)(validEndChars));
+    return ximpl_string_to_integer_util_::try_string_to_integer_len_6_(s, len, pi, STLSOFT_NS_QUAL(c_str_data)(validEndChars), STLSOFT_NS_QUAL(c_str_len)(validEndChars), endptr);
 }
 
 /* /////////////////////////////////////////////////////////////////////////

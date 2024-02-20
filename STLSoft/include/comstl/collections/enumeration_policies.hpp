@@ -4,10 +4,11 @@
  * Purpose:     Policies for enumerator interface handling.
  *
  * Created:     20th December 2003
- * Updated:     13th September 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2003-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,8 +53,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define COMSTL_VER_COMSTL_COLLECTIONS_HPP_ENUMERATION_POLICIES_MAJOR       6
 # define COMSTL_VER_COMSTL_COLLECTIONS_HPP_ENUMERATION_POLICIES_MINOR       1
-# define COMSTL_VER_COMSTL_COLLECTIONS_HPP_ENUMERATION_POLICIES_REVISION    12
-# define COMSTL_VER_COMSTL_COLLECTIONS_HPP_ENUMERATION_POLICIES_EDIT        66
+# define COMSTL_VER_COMSTL_COLLECTIONS_HPP_ENUMERATION_POLICIES_REVISION    13
+# define COMSTL_VER_COMSTL_COLLECTIONS_HPP_ENUMERATION_POLICIES_EDIT        69
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -74,6 +76,10 @@
 #  include <comstl/exception/comstl_exception.hpp>
 # endif /* !COMSTL_INCL_COMSTL_EXCEPTION_HPP_COMSTL_EXCEPTION */
 #endif /* STLSOFT_CF_EXCEPTION_SUPPORT */
+
+#ifndef STLSOFT_INCL_STLSOFT_API_internal_h_memfns
+# include <stlsoft/api/internal/memfns.h>
+#endif /* !STLSOFT_INCL_STLSOFT_API_internal_h_memfns */
 
 /* /////////////////////////////////////////////////////////////////////////
  * namespace
@@ -251,7 +257,7 @@ public:
         interface_type  *ret;
         HRESULT         hr  =   const_cast<interface_type*>(root)->Clone(&ret);
 
-        if(FAILED(hr))
+        if (FAILED(hr))
         {
             ret = NULL;
         }
@@ -266,7 +272,7 @@ public:
         interface_type  *ret;
         HRESULT         hr  =   const_cast<interface_type*>(src)->Clone(&ret);
 
-        if(FAILED(hr))
+        if (FAILED(hr))
         {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
             STLSOFT_THROW_X(clone_failure(hr));
@@ -322,7 +328,7 @@ public:
         interface_type  *ret;
         HRESULT         hr  =   const_cast<interface_type*>(root)->Clone(&ret);
 
-        if(FAILED(hr))
+        if (FAILED(hr))
         {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
             STLSOFT_THROW_X(clone_failure(hr));
@@ -342,7 +348,7 @@ public:
         interface_type  *ret;
         HRESULT         hr  =   const_cast<interface_type*>(src)->Clone(&ret);
 
-        if(FAILED(hr))
+        if (FAILED(hr))
         {
 #ifdef STLSOFT_CF_EXCEPTION_SUPPORT
             STLSOFT_THROW_X(clone_failure(hr));
@@ -502,13 +508,13 @@ public:
         LPDISPATCH  pdisp;
         HRESULT     hr  =   pcoll->QueryInterface(IID_IDispatch, reinterpret_cast<void**>(&pdisp));
 
-        if(SUCCEEDED(hr))
+        if (SUCCEEDED(hr))
         {
             DISPPARAMS  params;
             UINT        argErrIndex;
             VARIANT     result;
 
-            ::memset(&params, 0, sizeof(params));
+            STLSOFT_API_INTERNAL_memfns_memset(&params, 0, sizeof(params));
             ::VariantInit(&result);
 
             hr = pdisp->Invoke( DISPID_NEWENUM
@@ -522,13 +528,13 @@ public:
 
             pdisp->Release();
 
-            if(SUCCEEDED(hr))
+            if (SUCCEEDED(hr))
             {
                 hr = ::VariantChangeType(&result, &result, 0, VT_UNKNOWN);
 
-                if(SUCCEEDED(hr))
+                if (SUCCEEDED(hr))
                 {
-                    if(NULL == result.punkVal)
+                    if (NULL == result.punkVal)
                     {
                         hr = E_UNEXPECTED;
                     }

@@ -4,10 +4,11 @@
  * Purpose:     Process functions.
  *
  * Created:     12th March 2006
- * Updated:     2nd February 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2006-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -51,8 +53,8 @@
 #ifndef STLSOFT_DOCUMENTATION_SKIP_SECTION
 # define WINSTL_VER_WINSTL_PROCESS_H_FUNCTIONS_MAJOR    1
 # define WINSTL_VER_WINSTL_PROCESS_H_FUNCTIONS_MINOR    1
-# define WINSTL_VER_WINSTL_PROCESS_H_FUNCTIONS_REVISION 5
-# define WINSTL_VER_WINSTL_PROCESS_H_FUNCTIONS_EDIT     28
+# define WINSTL_VER_WINSTL_PROCESS_H_FUNCTIONS_REVISION 6
+# define WINSTL_VER_WINSTL_PROCESS_H_FUNCTIONS_EDIT     32
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -73,14 +75,13 @@
 # include <stlsoft/quality/cover.h>
 #endif /* !STLSOFT_INCL_STLSOFT_QUALITY_H_COVER */
 
-#ifndef STLSOFT_INCL_H_STRING
-# define STLSOFT_INCL_H_STRING
-# include <string.h>
-#endif /* !STLSOFT_INCL_H_STRING */
-
 #ifndef WINSTL_INCL_WINSTL_API_external_h_HandleAndObject
 # include <winstl/api/external/HandleAndObject.h>
 #endif /* !WINSTL_INCL_WINSTL_API_external_h_HandleAndObject */
+
+#ifndef STLSOFT_INCL_STLSOFT_API_internal_h_memfns
+# include <stlsoft/api/internal/memfns.h>
+#endif /* !STLSOFT_INCL_STLSOFT_API_internal_h_memfns */
 
 /* /////////////////////////////////////////////////////////////////////////
  * namespace
@@ -135,21 +136,21 @@ STLSOFT_INLINE BOOL winstl_C_CreateProcess9_a(
     PROCESS_INFORMATION pi_;
     BOOL                b;
 
-    if(NULL == si)
+    if (NULL == si)
     {
-        STLSOFT_NS_GLOBAL(memset)(&si_, 0, sizeof(si_));
+        STLSOFT_API_INTERNAL_memfns_memset(&si_, 0, sizeof(si_));
         si = &si_;
     }
-    if(NULL == pi)
+    if (NULL == pi)
     {
         pi = &pi_;
     }
 
     b = STLSOFT_NS_GLOBAL(CreateProcessA)(NULL, stlsoft_const_cast(ws_char_a_t*, cmdLine), processAttributes, threadAttributes, inheritsHandles, creationFlags, stlsoft_const_cast(ws_char_a_t*, environment), currentDirectory, si, pi);
 
-    if(b)
+    if (b)
     {
-        if(pi == &pi_)
+        if (pi == &pi_)
         {
             WINSTL_API_EXTERNAL_HandleAndObject_CloseHandle(pi->hProcess);
             WINSTL_API_EXTERNAL_HandleAndObject_CloseHandle(pi->hThread);
@@ -169,11 +170,11 @@ STLSOFT_INLINE BOOL winstl_C_CreateProcessFEA_a(ws_char_a_t const* cmdLine, DWOR
     PROCESS_INFORMATION pi;
     BOOL                b;
 
-    STLSOFT_NS_GLOBAL(memset)(&si, 0, sizeof(si));
+    STLSOFT_API_INTERNAL_memfns_memset(&si, 0, sizeof(si));
 
     b = STLSOFT_NS_GLOBAL(CreateProcessA)(NULL, stlsoft_const_cast(ws_char_a_t*, cmdLine), NULL, NULL, FALSE, flags, stlsoft_const_cast(ws_char_a_t*, envBlock), NULL, &si, &pi);
 
-    if(b)
+    if (b)
     {
         WINSTL_API_EXTERNAL_HandleAndObject_CloseHandle(pi.hProcess);
         WINSTL_API_EXTERNAL_HandleAndObject_CloseHandle(pi.hThread);
@@ -204,9 +205,9 @@ STLSOFT_INLINE BOOL winstl_C_CreateProcess0A(ws_char_a_t const* cmdLine)
  * obsolete functions
  */
 
-#define winstl__CreateProcessFEA    winstl_C_CreateProcessFEA_a
-#define winstl__CreateProcessEA     winstl_C_CreateProcessEA
-#define winstl__CreateProcess0A     winstl_C_CreateProcess0A
+#define winstl__CreateProcessFEA                            winstl_C_CreateProcessFEA_a
+#define winstl__CreateProcessEA                             winstl_C_CreateProcessEA
+#define winstl__CreateProcess0A                             winstl_C_CreateProcess0A
 
 /* /////////////////////////////////////////////////////////////////////////
  * namespace

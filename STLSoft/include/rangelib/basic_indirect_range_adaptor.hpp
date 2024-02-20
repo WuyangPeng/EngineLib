@@ -4,10 +4,11 @@
  * Purpose:     basic_indirect_range_adaptor.
  *
  * Created:     4th November 2003
- * Updated:     2nd February 2019
+ * Updated:     22nd January 2024
  *
  * Home:        http://stlsoft.org/
  *
+ * Copyright (c) 2019-2024, Matthew Wilson and Synesis Information Systems
  * Copyright (c) 2003-2019, Matthew Wilson and Synesis Software
  * All rights reserved.
  *
@@ -20,9 +21,10 @@
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
- * - Neither the name(s) of Matthew Wilson and Synesis Software nor the
- *   names of any contributors may be used to endorse or promote products
- *   derived from this software without specific prior written permission.
+ * - Neither the name(s) of Matthew Wilson and Synesis Information Systems
+ *   nor the names of any contributors may be used to endorse or promote
+ *   products derived from this software without specific prior written
+ *   permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -48,7 +50,7 @@
 # define RANGELIB_VER_RANGELIB_HPP_BASIC_INDIRECT_RANGE_ADAPTOR_MAJOR      2
 # define RANGELIB_VER_RANGELIB_HPP_BASIC_INDIRECT_RANGE_ADAPTOR_MINOR      1
 # define RANGELIB_VER_RANGELIB_HPP_BASIC_INDIRECT_RANGE_ADAPTOR_REVISION   6
-# define RANGELIB_VER_RANGELIB_HPP_BASIC_INDIRECT_RANGE_ADAPTOR_EDIT       40
+# define RANGELIB_VER_RANGELIB_HPP_BASIC_INDIRECT_RANGE_ADAPTOR_EDIT       42
 #endif /* !STLSOFT_DOCUMENTATION_SKIP_SECTION */
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -200,7 +202,7 @@ namespace
         template <ss_typename_param_k T2>
         ss_bool_t operator ()(T2 val)
         {
-            if(m_pr(val))
+            if (m_pr(val))
             {
                 *m_o++ = val;
             }
@@ -232,7 +234,7 @@ namespace
         template <ss_typename_param_k T2>
         ss_bool_t operator ()(T2 val) const
         {
-            if(m_val == val)
+            if (m_val == val)
             {
                 ++m_n;
             }
@@ -257,7 +259,7 @@ namespace
         template <ss_typename_param_k T2>
         ss_bool_t operator ()(T2 val) const
         {
-            if(m_pr(val))
+            if (m_pr(val))
             {
                 ++m_n;
             }
@@ -303,7 +305,7 @@ namespace
         template <ss_typename_param_k T2>
         ss_bool_t operator ()(T2 val) const
         {
-            if(m_val == val)
+            if (m_val == val)
             {
                 m_b = true;
 
@@ -332,7 +334,7 @@ namespace
         template <ss_typename_param_k T2>
         ss_bool_t operator ()(T2 val) const
         {
-            if(pf(val))
+            if (pf(val))
             {
                 m_b = true;
 
@@ -364,7 +366,7 @@ namespace
         template <ss_typename_param_k T2>
         ss_bool_t operator ()(T2 val) const
         {
-            if(pf(val))
+            if (pf(val))
             {
                 m_b         =   true;
                 m_result    =   val;
@@ -412,7 +414,7 @@ namespace
         template <ss_typename_param_k T>
         ss_bool_t operator ()(T val) const
         {
-            if(!m_bRetrieved)
+            if (!m_bRetrieved)
             {
                 m_result = val;
 
@@ -420,7 +422,7 @@ namespace
             }
             else
             {
-                if(m_pr(m_result, val))
+                if (m_pr(m_result, val))
                 {
                     m_result = val;
                 }
