@@ -174,11 +174,11 @@ setx  OpenXLSXX64ReleaseLib "%cd%\..\OpenXLSX\BuildX64\output\Release"
 
 echo MinizWin32DebugLib = %MinizWin32DebugLib%
 echo  %cd%
-setx  MinizWin32DebugLib "%cd%\..\miniz\miniz\Debug"
+setx  MinizWin32DebugLib "%cd%\..\miniz\miniz\Win32\Debug"
 
 echo MinizWin32ReleaseLib = %MinizWin32ReleaseLib%
 echo  %cd%
-setx  MinizWin32ReleaseLib "%cd%\..\miniz\miniz\Release"
+setx  MinizWin32ReleaseLib "%cd%\..\miniz\miniz\Win32\Release"
 
 echo MinizX64DebugLib = %MinizX64DebugLib%
 echo  %cd%
