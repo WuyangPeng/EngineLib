@@ -1,10 +1,10 @@
-cd /data/github/Libs
+cd /data/coding/Libs
 
 #! 编译boost库
 version="1.83.0" 
 boost_dir="boost_1_83_0" 
 
-if [ ! -f /data/github/Libs/boost_installed.txt ]; then
+if [ ! -f /data/coding/Libs/boost_installed.txt ]; then
 
 	if [ ! -f ${boost_dir}.tar.gz ]; then
 		wget https://boostorg.jfrog.io/artifactory/main/release/${version}/source/${boost_dir}.tar.gz
@@ -15,7 +15,7 @@ if [ ! -f /data/github/Libs/boost_installed.txt ]; then
 	mv ${boost_dir} boost
 	cd boost
 	./bootstrap.sh --with-libraries=all --with-toolset=gcc
-	./b2 install --prefix=/data/github/Libs/boost/stage/
-	touch /data/github/Libs/boost_installed.txt
+	./b2 install --prefix=/data/coding/Libs/boost/stage/
+	touch /data/coding/Libs/boost_installed.txt
 	
 fi 
