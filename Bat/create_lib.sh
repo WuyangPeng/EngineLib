@@ -7,7 +7,7 @@ boost_dir="boost_1_83_0"
 if [ ! -f /data/coding/Libs/boost_installed.txt ]; then
 
 	if [ ! -f ${boost_dir}.tar.gz ]; then
-		wget https://boostorg.jfrog.io/artifactory/main/release/${version}/source/${boost_dir}.tar.gz
+		wget https://archives.boost.io/release/${version}/source/${boost_dir}.tar.gz
 	fi 
 	
 	tar -zxvf ${boost_dir}.tar.gz
