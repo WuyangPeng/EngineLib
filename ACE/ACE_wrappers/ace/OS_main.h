@@ -63,10 +63,10 @@
 #     define ACE_HAS_NONSTATIC_OBJECT_MANAGER
 #   endif /* ACE_HAS_NONSTATIC_OBJECT_MANAGER */
 # endif /* ACE_DOESNT_INSTANTIATE_NONSTATIC_OBJECT_MANAGER */
-7
+
 # if defined (ACE_HAS_NONSTATIC_OBJECT_MANAGER) \
        && !defined (ACE_DOESNT_INSTANTIATE_NONSTATIC_OBJECT_MANAGER)
-
+7
 // Rename "main ()" on platforms that don't allow it to be called "main ()".
 
 #   if defined (ACE_VXWORKS) && !defined (__RTP__)
