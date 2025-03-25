@@ -70,7 +70,7 @@
 // Rename "main ()" on platforms that don't allow it to be called "main ()".
 
 #   if defined (ACE_VXWORKS) && !defined (__RTP__)
-1
+
 typedef int (*ace_main_proc_ptr)(int, char *[]);
 
 extern ace_main_proc_ptr vx_ace_main_i_ptr;
@@ -98,7 +98,7 @@ int \
 ace_main_i
 
 #   elif defined (ACE_VXWORKS) && (ACE_VXWORKS <= 0x640) && defined (__RTP__)
-2
+
 #     define main \
 ACE_MAIN (int, char *[]); /* forward decl to gobble up the 'int' if there is one */ \
 ACE_BEGIN_VERSIONED_NAMESPACE_DECL \
@@ -114,7 +114,7 @@ int \
 ace_main_i
 
 #   elif !defined (ACE_WIN32)
-3
+
 #     define main \
 ACE_MAIN (int, char *[]); /* forward decl to gobble up the 'int' if there is one */ \
 ACE_BEGIN_VERSIONED_NAMESPACE_DECL \
@@ -131,7 +131,7 @@ ace_main_i
 #   else
 
 #     if defined (ACE_WIN32) && defined (ACE_USES_WCHAR)
-4
+
 ACE_BEGIN_VERSIONED_NAMESPACE_DECL
 
 class ACE_Export ACE_Main_Base
@@ -165,7 +165,7 @@ ace_wmain_i
 #     else /* ! (ACE_WIN32 && ACE_USES_WCHAR) */
 
 ACE_BEGIN_VERSIONED_NAMESPACE_DECL
-5
+
 class ACE_Export ACE_Main_Base
 {
 public:
