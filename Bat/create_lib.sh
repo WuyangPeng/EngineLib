@@ -41,12 +41,12 @@ if [ ! -f /data/coding/Libs/mongo-cxx-driver_installed.txt ]; then
 	
 	if [ -f /data/coding/Libs/mongo-cxx-driver_installed_clone.txt ]; then
 	
-		cd mongo-cxx-driver
+		cd /data/coding/Libs/mongo-cxx-driver
 	
 		mkdir -p build
 		cd build
 
-		cmake ./
+		cmake ..
 		make
 	 
 		if [ $? -eq 0 ]; then 
