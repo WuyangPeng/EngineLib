@@ -19,3 +19,15 @@ if [ ! -f /data/coding/Libs/boost_installed.txt ]; then
 	touch /data/coding/Libs/boost_installed.txt
 	
 fi 
+
+
+if [ ! -f /data/coding/Libs/mongo-cxx-driver_installed.txt ]; then
+	
+	cd /data/coding/Libs/mongo-cxx-driver
+
+	cmake ./
+	make
+	 
+	touch /data/coding/Libs/mongo-cxx-driver_installed.txt
+	
+fi 
