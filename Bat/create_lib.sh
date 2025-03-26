@@ -37,6 +37,10 @@ if [ ! -f /data/coding/Libs/mongo-cxx-driver_installed.txt ]; then
 	cmake ./
 	make
 	 
-	touch /data/coding/Libs/mongo-cxx-driver_installed.txt
+	if [ $? -eq 0 ]; then 
+	 
+		touch /data/coding/Libs/mongo-cxx-driver_installed.txt
+	
+	fi
 	
 fi 
