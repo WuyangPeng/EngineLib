@@ -39,7 +39,7 @@ if [ ! -f /data/coding/Libs/mongo-cxx-driver_installed.txt ]; then
 	
 	fi 
 	
-	if [ -f /data/coding/Libs/mongo-cxx-driver_installed.txt ]; then
+	if [ -f /data/coding/Libs/mongo-cxx-driver_installed_clone.txt ]; then
 	
 		cd mongo-cxx-driver
 	
