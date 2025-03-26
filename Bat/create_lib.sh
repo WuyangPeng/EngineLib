@@ -25,21 +25,35 @@ if [ ! -f /data/coding/Libs/mongo-cxx-driver_installed.txt ]; then
 
     cd /data/coding/Libs/
 	
-	rm -rf mongo-cxx-driver
-
-    git clone https://github.com/mongodb/mongo-cxx-driver.git
+	if [ ! -f /data/coding/Libs/mongo-cxx-driver_installed_clone.txt ]; then
 	
-	cd mongo-cxx-driver
-	
-    mkdir -p build
-    cd build
+		rm -rf mongo-cxx-driver
 
-	cmake ./
-	make
+		git clone https://github.com/mongodb/mongo-cxx-driver.git
+		
+		if [ $? -eq 0 ]; then 
 	 
-	if [ $? -eq 0 ]; then 
+			touch /data/coding/Libs/mongo-cxx-driver_installed_clone.txt
+	
+		fi
+	
+	fi 
+	
+	if [ -f /data/coding/Libs/mongo-cxx-driver_installed.txt ]; then
+	
+		cd mongo-cxx-driver
+	
+		mkdir -p build
+		cd build
+
+		cmake ./
+		make
 	 
-		touch /data/coding/Libs/mongo-cxx-driver_installed.txt
+		if [ $? -eq 0 ]; then 
+	 
+			touch /data/coding/Libs/mongo-cxx-driver_installed.txt
+	
+		fi
 	
 	fi
 	
