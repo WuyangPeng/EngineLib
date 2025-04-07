@@ -38,7 +38,7 @@ if [ ! -f /data/coding/Libs/ace_installed.txt ]; then
 		# 检查下载是否成功
 		if [ $? -eq 0 ]; then
 			# 解压下载的文件
-			tar -xzf /data/coding/Libs/ACE-8.0.2.tar.gz -C /data/coding/Libs/
+			tar -xzf /data/coding/Libs/ACE-8.0.2.tar.gz -C /data/coding/Libs/ACE
 
 			# 检查解压是否成功
 			if [ $? -eq 0 ]; then
@@ -66,6 +66,10 @@ if [ ! -f /data/coding/Libs/ace_installed.txt ]; then
 	
 		cd /data/coding/Libs/ACE/ACE_wrappers		
 	
+		mkdir -p build
+		cd build
+
+		cmake ..
 		make
 	 
 		if [ $? -eq 0 ]; then 
