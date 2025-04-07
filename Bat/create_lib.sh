@@ -45,7 +45,7 @@ if [ ! -f /data/coding/Libs/ace_installed.txt ]; then
 	
 	if [ -f /data/coding/Libs/ace_installed_clone.txt ]; then
 	
-		cd /data/coding/Libs/ACE
+		cd /data/coding/Libs/ACE/ACE_wrappers
 	
 		mkdir -p build
 		cd build
