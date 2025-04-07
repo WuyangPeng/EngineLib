@@ -34,8 +34,11 @@ if [ ! -f /data/coding/Libs/ace_installed.txt ]; then
 		if [ $? -eq 0 ]; then 
 	 
 			touch /data/coding/Libs/ace_installed_clone.txt
+			
+			mv /data/coding/Libs/ACE_TAO/ACE /data/coding/Libs/ACE_TAO/ACE_wrappers
+			mv /data/coding/Libs/ACE_TAO /data/coding/Libs/ACE
 	
-		fi
+		fi 
 	
 	fi 
 	
