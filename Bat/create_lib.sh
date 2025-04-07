@@ -60,6 +60,7 @@ if [ ! -f /data/coding/Libs/ace_installed.txt ]; then
 	
 		cd /data/coding/Libs/ACE/ACE_wrappers	
 		
+		./bin/mwc.pl -type gnuace ACE.mwc
 		make
 	 
 		if [ $? -eq 0 ]; then 
