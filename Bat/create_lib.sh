@@ -21,6 +21,10 @@ if [ ! -f /data/coding/Libs/boost_installed.txt ]; then
 fi
 
 
+ace_config="/data/coding/Libs/ACE/ACE_wrappers/ace/config.h"
+ace_platform_macros_gnu="/data/coding/Libs/ACE/ACE_wrappers/include/makeinclude/platform_macros.GNU"
+
+
 if [ ! -f /data/coding/Libs/ace_installed.txt ]; then
 
     cd /data/coding/Libs/
@@ -45,12 +49,17 @@ if [ ! -f /data/coding/Libs/ace_installed.txt ]; then
 	
 	if [ -f /data/coding/Libs/ace_installed_clone.txt ]; then
 	
-		cd /data/coding/Libs/ACE/ACE_wrappers
-	
-		mkdir -p build
-		cd build
+		# 创建新的 config.h 文件
+		echo "#ifndef _CONFIG_H_" > "$ace_config"
+		echo "#define _CONFIG_H_" >> "$ace_config"
+		echo "#include \"ace/config-linux.h\"" >> "$ace_config"
+		echo "#endif" >> "$ace_config"
 
-		cmake ..
+		# 创建新的 platform_macros.GNU 文件
+		echo "include /data/coding/Libs/ACE/ACE_wrappers/include/makeinclude/platform_linux.GNU" > "$ace_platform_macros_gnu"
+	
+		cd /data/coding/Libs/ACE/ACE_wrappers	
+		
 		make
 	 
 		if [ $? -eq 0 ]; then 
