@@ -28,6 +28,7 @@ if [ ! -f /data/coding/Libs/ace_installed.txt ]; then
 	if [ ! -f /data/coding/Libs/ace_installed_clone.txt ]; then
 	
 		rm -rf ACE
+		rm -rf ACE_TAO
 
 		git clone https://github.com/DOCGroup/ACE_TAO.git
 		
