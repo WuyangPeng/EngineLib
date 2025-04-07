@@ -38,7 +38,7 @@ if [ ! -f /data/coding/Libs/ace_installed.txt ]; then
 		# 检查下载是否成功
 		if [ $? -eq 0 ]; then
 			# 解压下载的文件
-			tar -xzf /data/coding/Libs/ACE+TAO-8.0.2.tar.gz -C /data/coding/Libs/
+			tar -xzf /data/coding/Libs/ACE-8.0.2.tar.gz -C /data/coding/Libs/
 
 			# 检查解压是否成功
 			if [ $? -eq 0 ]; then
