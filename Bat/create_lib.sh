@@ -24,7 +24,6 @@ fi
 ace_config="/data/coding/Libs/ACE/ACE_wrappers/ace/config.h"
 ace_platform_macros_gnu="/data/coding/Libs/ACE/ACE_wrappers/include/makeinclude/platform_macros.GNU"
 
-
 if [ ! -f /data/coding/Libs/ace_installed.txt ]; then
 
     cd /data/coding/Libs/
@@ -32,18 +31,25 @@ if [ ! -f /data/coding/Libs/ace_installed.txt ]; then
 	if [ ! -f /data/coding/Libs/ace_installed_clone.txt ]; then
 	
 		rm -rf ACE
-		rm -rf ACE_TAO
-
-		git clone https://github.com/DOCGroup/ACE_TAO.git
-		
-		if [ $? -eq 0 ]; then 
 	 
-			touch /data/coding/Libs/ace_installed_clone.txt
-			
-			mv /data/coding/Libs/ACE_TAO/ACE /data/coding/Libs/ACE_TAO/ACE_wrappers
-			mv /data/coding/Libs/ACE_TAO /data/coding/Libs/ACE
-	
-		fi 
+		wget -O /data/coding/Libs/ACE-8.0.2.tar.gz https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-8_0_2/ACE-8.0.2.tar.gz
+ 
+		
+		# 检查下载是否成功
+		if [ $? -eq 0 ]; then
+			# 解压下载的文件
+			tar -xzf /data/coding/Libs/ACE+TAO-8.0.2.tar.gz -C /data/coding/Libs/
+
+			# 检查解压是否成功
+			if [ $? -eq 0 ]; then
+				# 创建标志文件
+				touch /data/coding/Libs/ace_installed_clone.txt 
+			else
+				echo "解压失败"
+			i
+		else
+			echo "下载失败"
+		fi
 	
 	fi 
 	
@@ -58,9 +64,8 @@ if [ ! -f /data/coding/Libs/ace_installed.txt ]; then
 		# 创建新的 platform_macros.GNU 文件
 		echo "include /data/coding/Libs/ACE/ACE_wrappers/include/makeinclude/platform_linux.GNU" > "$ace_platform_macros_gnu"
 	
-		cd /data/coding/Libs/ACE/ACE_wrappers	
-		
-		./bin/mwc.pl -type gnuace ACE.mwc
+		cd /data/coding/Libs/ACE/ACE_wrappers		
+	
 		make
 	 
 		if [ $? -eq 0 ]; then 
