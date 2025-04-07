@@ -18,7 +18,46 @@ if [ ! -f /data/coding/Libs/boost_installed.txt ]; then
 	./b2 install --prefix=/data/coding/Libs/boost/stage/ cxxflags="-std=c++20"
 	touch /data/coding/Libs/boost_installed.txt
 	
-fi 
+fi
+
+
+if [ ! -f /data/coding/Libs/ace_installed.txt ]; then
+
+    cd /data/coding/Libs/
+	
+	if [ ! -f /data/coding/Libs/ace_installed_clone.txt ]; then
+	
+		rm -rf ACE
+
+		git clone https://github.com/DOCGroup/ACE_TAO.git
+		
+		if [ $? -eq 0 ]; then 
+	 
+			touch /data/coding/Libs/ace_installed_clone.txt
+	
+		fi
+	
+	fi 
+	
+	if [ -f /data/coding/Libs/ace_installed_clone.txt ]; then
+	
+		cd /data/coding/Libs/ACE
+	
+		mkdir -p build
+		cd build
+
+		cmake ..
+		make
+	 
+		if [ $? -eq 0 ]; then 
+	 
+			touch /data/coding/Libs/ace_installed.txt
+	
+		fi
+	
+	fi
+	
+fi  
 
 
 if [ ! -f /data/coding/Libs/mongo-cxx-driver_installed.txt ]; then
