@@ -46,7 +46,7 @@ if [ ! -f /data/coding/Libs/ace_installed.txt ]; then
 				touch /data/coding/Libs/ace_installed_clone.txt 
 			else
 				echo "解压失败"
-			i
+			fi
 		else
 			echo "下载失败"
 		fi
