@@ -62,15 +62,14 @@ if [ ! -f /data/coding/Libs/ace_installed.txt ]; then
 		echo "#endif" >> "$ace_config"
 
 		# 创建新的 platform_macros.GNU 文件
-		echo "include /data/coding/Libs/ACE/ACE_wrappers/include/makeinclude/platform_linux.GNU" > "$ace_platform_macros_gnu"
+		echo "include /data/coding/Libs/ACE/ACE_wrappers/include/makeinclude/platform_linux.GNU" > "$ace_platform_macros_gnu"	
+	
+		export ACE_ROOT="/data/coding/Libs/ACE/ACE_wrappers"
 	
 		cd /data/coding/Libs/ACE/ACE_wrappers		
 	
-		mkdir -p build
-		cd build
-
-		cmake ..
-		make
+		 
+		./bin/mwc.pl -type gnuace ACE.mwc
 	 
 		if [ $? -eq 0 ]; then 
 	 
