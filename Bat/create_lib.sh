@@ -67,9 +67,8 @@ if [ ! -f /data/coding/Libs/ace_installed.txt ]; then
 		export ACE_ROOT="/data/coding/Libs/ACE/ACE_wrappers"
 	
 		cd /data/coding/Libs/ACE/ACE_wrappers		
-	
 		 
-		./bin/mwc.pl -type gnuace ACE.mwc
+		make
 	 
 		if [ $? -eq 0 ]; then 
 	 
