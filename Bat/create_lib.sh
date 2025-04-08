@@ -106,7 +106,7 @@ if [ ! -f /data/coding/Libs/mongo-cxx-driver_installed.txt ]; then
 		mkdir -p build
 		cd build
 
-		cmake ..
+		cmake .. -DCMAKE_BUILD_TYPE=Release
 		make
 	 
 		if [ $? -eq 0 ]; then 
@@ -145,8 +145,8 @@ if [ ! -f /data/coding/Libs/mysql_connector_cpp_installed.txt ]; then
 		mkdir -p build
 		cd build
 
-		cmake ..
-		make
+		cmake .. -DCMAKE_BUILD_TYPE=Release
+		make 
 	 
 		if [ $? -eq 0 ]; then 
 	 
