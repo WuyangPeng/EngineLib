@@ -118,3 +118,42 @@ if [ ! -f /data/coding/Libs/mongo-cxx-driver_installed.txt ]; then
 	fi
 	
 fi 
+
+
+if [ ! -f /data/coding/Libs/mysql_connector_cpp_installed.txt ]; then
+
+    cd /data/coding/Libs/
+	
+	if [ ! -f /data/coding/Libs/mysql_connector_cpp_installed_clone.txt ]; then
+	
+		rm -rf mysql-connector-c++
+
+		git clone https://github.com/mysql/mysql-connector-cpp.git mysql-connector-c++
+		
+		if [ $? -eq 0 ]; then 
+	 
+			touch /data/coding/Libs/mysql_connector_cpp_installed_clone.txt
+	
+		fi
+	
+	fi 
+	
+	if [ -f /data/coding/Libs/mysql_connector_cpp_installed_clone.txt ]; then
+	
+		cd /data/coding/Libs/mysql-connector-c++
+	
+		mkdir -p build
+		cd build
+
+		cmake ..
+		make
+	 
+		if [ $? -eq 0 ]; then 
+	 
+			touch /data/coding/Libs/mysql_connector_cpp_installed.txt
+	
+		fi
+	
+	fi
+	
+fi 
