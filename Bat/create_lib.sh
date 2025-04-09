@@ -238,3 +238,42 @@ if [ ! -f /data/coding/Libs/miniz_installed.txt ]; then
 	
 fi
 
+
+if [ ! -f /data/coding/Libs/hiredis_installed.txt ]; then
+
+    cd /data/coding/Libs/
+	
+	if [ ! -f /data/coding/Libs/hiredis_installed_clone.txt ]; then
+	
+		rm -rf hiredis
+
+		git clone https://github.com/redis/hiredis
+		
+		if [ $? -eq 0 ]; then 
+	 
+			touch /data/coding/Libs/hiredis_installed_clone.txt
+	
+		fi
+	
+	fi 
+	
+	if [ -f /data/coding/Libs/hiredis_installed_clone.txt ]; then
+	
+		cd /data/coding/Libs/hiredis
+	
+		mkdir -p build
+		cd build
+
+		cmake .. -DCMAKE_BUILD_TYPE=Release
+		make 
+	 
+		if [ $? -eq 0 ]; then 
+	 
+			touch /data/coding/Libs/hiredis_installed.txt
+	
+		fi
+	
+	fi
+	
+fi
+
