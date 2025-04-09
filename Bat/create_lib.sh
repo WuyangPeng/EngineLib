@@ -198,3 +198,5 @@ if [ ! -f /data/coding/Libs/activemq_installed.txt ]; then
 	fi
 	
 fi 
+
+gcc /data/coding/Libs/miniz/miniz.c -o miniz
