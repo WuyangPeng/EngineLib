@@ -199,4 +199,42 @@ if [ ! -f /data/coding/Libs/activemq_installed.txt ]; then
 	
 fi 
 
-gcc /data/coding/Libs/miniz/miniz.c -o miniz
+
+if [ ! -f /data/coding/Libs/miniz_installed.txt ]; then
+
+    cd /data/coding/Libs/
+	
+	if [ ! -f /data/coding/Libs/miniz_installed_clone.txt ]; then
+	
+		rm -rf miniz
+
+		git clone https://github.com/richgel999/miniz
+		
+		if [ $? -eq 0 ]; then 
+	 
+			touch /data/coding/Libs/miniz_installed_clone.txt
+	
+		fi
+	
+	fi 
+	
+	if [ -f /data/coding/Libs/miniz_installed_clone.txt ]; then
+	
+		cd /data/coding/Libs/miniz
+	
+		mkdir -p build
+		cd build
+
+		cmake .. -DCMAKE_BUILD_TYPE=Release
+		make 
+	 
+		if [ $? -eq 0 ]; then 
+	 
+			touch /data/coding/Libs/miniz_installed.txt
+	
+		fi
+	
+	fi
+	
+fi
+
