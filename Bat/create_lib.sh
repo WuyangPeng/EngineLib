@@ -167,6 +167,7 @@ if [ ! -f /data/coding/Libs/activemq_installed.txt ]; then
 	if [ ! -f /data/coding/Libs/activemq_installed_clone.txt ]; then
 	
 		rm -rf activemq
+		rm -rf activemq-cpp
 
 		git clone https://github.com/apache/activemq-cpp
 		
