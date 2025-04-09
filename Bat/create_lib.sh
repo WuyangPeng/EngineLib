@@ -187,7 +187,7 @@ if [ ! -f /data/coding/Libs/activemq_installed.txt ]; then
 		
 		export AMQCPP_BUILD_DIR="/data/coding/Libs/activemq"
 	
-		sh /data/coding/Libs/activemq/build.sh configure
+		sh ./build.sh configure
 		make
 	 
 		if [ $? -eq 0 ]; then 
