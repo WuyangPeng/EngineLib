@@ -164,7 +164,7 @@ if [ ! -f /data/coding/Libs/activemq_installed.txt ]; then
 
     cd /data/coding/Libs/
 	
-	if [ ! -f /data/coding/Libs/activemqp_installed_clone.txt ]; then
+	if [ ! -f /data/coding/Libs/activemq_installed_clone.txt ]; then
 	
 		rm -rf activemq
 
@@ -174,15 +174,17 @@ if [ ! -f /data/coding/Libs/activemq_installed.txt ]; then
 		
 		if [ $? -eq 0 ]; then 
 	 
-			touch /data/coding/Libs/activemqp_installed_clone.txt
+			touch /data/coding/Libs/activem_installed_clone.txt
 	
 		fi
 	
 	fi 
 	
-	if [ -f /data/coding/Libs/activemqp_installed_clone.txt ]; then
+	if [ -f /data/coding/Libs/activemq_installed_clone.txt ]; then
 	
 		cd /data/coding/Libs/activemq
+		
+		export AMQCPP_BUILD_DIR="/data/coding/Libs/activemq"
 	
 		mkdir -p build
 		cd build
