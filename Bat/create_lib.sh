@@ -186,11 +186,8 @@ if [ ! -f /data/coding/Libs/activemq_installed.txt ]; then
 		
 		export AMQCPP_BUILD_DIR="/data/coding/Libs/activemq"
 	
-		mkdir -p build
-		cd build
-
-		cmake .. -DCMAKE_BUILD_TYPE=Release
-		make 
+		./configure
+		make
 	 
 		if [ $? -eq 0 ]; then 
 	 
