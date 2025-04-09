@@ -186,6 +186,7 @@ if [ ! -f /data/coding/Libs/activemq_installed.txt ]; then
 		cd /data/coding/Libs/activemq
 	
 		sh ./build.sh configure
+		./configure
 		make
 	 
 		if [ $? -eq 0 ]; then 
