@@ -156,4 +156,44 @@ if [ ! -f /data/coding/Libs/mysql_connector_cpp_installed.txt ]; then
 	
 	fi
 	
+fi
+
+
+
+if [ ! -f /data/coding/Libs/activemq_installed.txt ]; then
+
+    cd /data/coding/Libs/
+	
+	if [ ! -f /data/coding/Libs/activemqp_installed_clone.txt ]; then
+	
+		rm -rf activemq
+
+		git clone https://github.com/apache/activemq-cpp activemq
+		
+		if [ $? -eq 0 ]; then 
+	 
+			touch /data/coding/Libs/activemqp_installed_clone.txt
+	
+		fi
+	
+	fi 
+	
+	if [ -f /data/coding/Libs/activemqp_installed_clone.txt ]; then
+	
+		cd /data/coding/Libs/activemq
+	
+		mkdir -p build
+		cd build
+
+		cmake .. -DCMAKE_BUILD_TYPE=Release
+		make 
+	 
+		if [ $? -eq 0 ]; then 
+	 
+			touch /data/coding/Libs/activemq_installed.txt
+	
+		fi
+	
+	fi
+	
 fi 
