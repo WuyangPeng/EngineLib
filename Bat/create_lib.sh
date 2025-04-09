@@ -175,7 +175,7 @@ if [ ! -f /data/coding/Libs/activemq_installed.txt ]; then
 		
 		if [ $? -eq 0 ]; then 
 	 
-			touch /data/coding/Libs/activem_installed_clone.txt
+			touch /data/coding/Libs/activemq_installed_clone.txt
 	
 		fi
 	
