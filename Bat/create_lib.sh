@@ -277,3 +277,41 @@ if [ ! -f /data/coding/Libs/hiredis_installed.txt ]; then
 	
 fi
 
+if [ ! -f /data/coding/Libs/protobuf_installed.txt ]; then
+
+    cd /data/coding/Libs/
+	
+	if [ ! -f /data/coding/Libs/protobuf_installed_clone.txt ]; then
+	
+		rm -rf protobuf
+
+		git clone https://github.com/protocolbuffers/protobuf.git
+		
+		if [ $? -eq 0 ]; then 
+	 
+			touch /data/coding/Libs/protobuf_installed_clone.txt
+	
+		fi
+	
+	fi 
+	
+	if [ -f /data/coding/Libs/protobuf_installed_clone.txt ]; then
+	
+		cd /data/coding/Libs/protobuf
+	
+		mkdir -p build
+		cd build
+
+		cmake .. -DCMAKE_BUILD_TYPE=Release
+		make 
+	 
+		if [ $? -eq 0 ]; then 
+	 
+			touch /data/coding/Libs/protobuf_installed.txt
+	
+		fi
+	
+	fi
+	
+fi
+
