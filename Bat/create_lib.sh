@@ -288,6 +288,10 @@ if [ ! -f /data/coding/Libs/protobuf_installed.txt ]; then
 		git clone https://github.com/protocolbuffers/protobuf.git
 		
 		if [ $? -eq 0 ]; then 
+		
+			cd protobuf
+            git checkout v21.12
+            cd ..
 	 
 			touch /data/coding/Libs/protobuf_installed_clone.txt
 	
