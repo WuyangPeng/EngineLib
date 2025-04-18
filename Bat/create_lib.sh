@@ -291,6 +291,7 @@ if [ ! -f /data/coding/Libs/protobuf_installed.txt ]; then
 		
 			cd protobuf
             git checkout v21.12
+			git submodule update --init --recursive
             cd ..
 	 
 			touch /data/coding/Libs/protobuf_installed_clone.txt
