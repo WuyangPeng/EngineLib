@@ -320,7 +320,7 @@ if [ ! -f /data/coding/Libs/protobuf_installed.txt ]; then
 		cd build
 
 		cmake .. -DCMAKE_BUILD_TYPE=Release
-		make -j1
+		make
 	 
 		if [ $? -eq 0 ]; then 
 	 
