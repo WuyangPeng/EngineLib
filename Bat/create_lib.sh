@@ -18,7 +18,11 @@ if [ ! -f /data/coding/Libs/boost_installed.txt ]; then
 	fi 
 	
 	cd boost
-	./bootstrap.sh --with-libraries=all --with-toolset=gcc
+	
+	if [ ! -f b2 ]; then
+		./bootstrap.sh --with-libraries=all --with-toolset=gcc
+	fi 
+	
 	./b2 install --prefix=/data/coding/Libs/boost/stage/ cxxflags="-std=c++20"
 	touch /data/coding/Libs/boost_installed.txt
 	
