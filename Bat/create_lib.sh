@@ -40,11 +40,15 @@ if [ ! -f /data/coding/Libs/ace_installed.txt ]; then
 	
 		rm -rf ACE
 	 
-		wget -O /data/coding/Libs/ACE-8.0.2.tar.gz https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-8_0_2/ACE-8.0.2.tar.gz
- 
+		if [ ! -f /data/coding/Libs/ACE-8.0.2.tar.gz ]; then
+			wget -O /data/coding/Libs/ACE-8.0.2.tar.gz https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-8_0_2/ACE-8.0.2.tar.gz
+		fi
 		
 		# 检查下载是否成功
 		if [ $? -eq 0 ]; then
+		
+			mkdir /data/coding/Libs/ACE
+			
 			# 解压下载的文件
 			tar -xzf /data/coding/Libs/ACE-8.0.2.tar.gz -C /data/coding/Libs/ACE
 
