@@ -162,7 +162,7 @@ if [ ! -f /data/coding/Libs/mysql_connector_cpp_installed.txt ]; then
 		cd /data/coding/Libs/mysql-connector-c++/build/cdk/protocol/mysqlx/protobuf
 		make
 		
-		cd /data/coding/Libs/mysql-connector-c++
+		cd /data/coding/Libs/mysql-connector-c++/build
 		make 
 	 
 		if [ $? -eq 0 ]; then 
