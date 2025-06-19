@@ -10,9 +10,13 @@ if [ ! -f /data/coding/Libs/boost_installed.txt ]; then
 		wget https://archives.boost.io/release/${version}/source/${boost_dir}.tar.gz
 	fi 
 	
-	tar -zxvf ${boost_dir}.tar.gz
-	rm -rf boost
-	mv ${boost_dir} boost
+	if [ ! -f /data/coding/Libs/boost_download.txt ]; then
+		tar -zxvf ${boost_dir}.tar.gz
+		rm -rf boost
+		mv ${boost_dir} boost
+		touch /data/coding/Libs/boost_download.txt
+	fi 
+	
 	cd boost
 	./bootstrap.sh --with-libraries=all --with-toolset=gcc
 	./b2 install --prefix=/data/coding/Libs/boost/stage/ cxxflags="-std=c++20"
