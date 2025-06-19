@@ -202,7 +202,7 @@ if [ ! -f /data/coding/Libs/activemq_installed.txt ]; then
 	
 		cd /data/coding/Libs/activemq
 		
-		export AMQCPP_BUILD_DIR="/data/coding/Libs/activemq"
+		export AMQCPP_BUILD_DIR="/data/coding/Libs/activemq/build"
 	
 		sh ./build.sh configure
 		./configure
