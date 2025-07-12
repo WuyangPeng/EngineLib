@@ -243,7 +243,7 @@ if [ ! -f /data/coding/Libs/miniz_installed.txt ]; then
 		mkdir -p build
 		cd build
 
-		cmake .. -DCMAKE_BUILD_TYPE=Release
+		cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_POSITION_INDEPENDENT_CODE=ON
 		make 
 	 
 		if [ $? -eq 0 ]; then 
