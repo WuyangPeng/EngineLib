@@ -205,7 +205,6 @@ if [ ! -f /data/coding/Libs/activemq_installed.txt ]; then
 		sh ./build.sh configure
 		./configure
 		make
-		make install
 	 
 		if [ $? -eq 0 ]; then 
 	 
