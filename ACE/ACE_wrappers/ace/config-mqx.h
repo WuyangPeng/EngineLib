@@ -407,7 +407,6 @@ inline int puts(const char* str) {
 #define ACE_LACKS_WAIT
 #define ACE_LACKS_WAITPID
 #define ACE_LACKS_SIGEMPTYSET
-#define ACE_LACKS_SIGADDSET
 #define ACE_LACKS_IOSTREAM_TOTALLY
 #define ACE_LACKS_ACE_IOSTREAM
 #define ACE_LACKS_UNIX_SYSLOG
@@ -418,7 +417,6 @@ inline int puts(const char* str) {
 #define ACE_MKDIR_LACKS_MODE
 
 // POSIX
-#define ACE_HAS_PTHREAD_SIGMASK_PROTOTYPE
 #define ACE_LACKS_SEMBUF_T
 #define ACE_LACKS_UNIX_DOMAIN_SOCKETS
 #define ACE_LACKS_KILL

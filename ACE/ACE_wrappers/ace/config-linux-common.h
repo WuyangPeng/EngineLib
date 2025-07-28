@@ -40,7 +40,6 @@
 
 #if (__GLIBC__  > 2)  || (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 3)
 #  define ACE_HAS_ISASTREAM_PROTOTYPE
-#  define ACE_HAS_PTHREAD_SIGMASK_PROTOTYPE
 #  define ACE_HAS_CPU_SET_T
 #  define ACE_HAS_GLIBC_2_2_3
 #endif /* __GLIBC__ > 2 || __GLIBC__ === 2 && __GLIBC_MINOR__ >= 3) */
@@ -218,6 +217,8 @@
 #define ACE_HAS_RECURSIVE_THR_EXIT_SEMANTICS
 #define ACE_HAS_2_PARAM_ASCTIME_R_AND_CTIME_R
 #define ACE_HAS_REENTRANT_FUNCTIONS
+
+#define ACE_IOCTL_TYPE_ARG2 unsigned long
 
 /* ===========================================================================
  * By Kernel API Version

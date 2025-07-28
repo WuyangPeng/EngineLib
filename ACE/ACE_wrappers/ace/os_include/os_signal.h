@@ -154,7 +154,7 @@ extern "C"
 #elif defined (ACE_WIN32)
    using ACE_SignalHandler = void (__cdecl *)(int);
    using ACE_SignalHandlerV = void (__cdecl *)(int);
-#elif defined (INTEGRITY)
+#elif defined (ACE_INTEGRITY)
    using ACE_SignalHandler = void (*)();
    using ACE_SignalHandlerV = void (*)(int);
 #else /* This is necessary for some older broken version of cfront */
@@ -187,10 +187,6 @@ extern "C"
 #    define ACE_SIGRTMAX 0
 #  endif /* ACE_SIGRTMAX */
 #endif /* ACE_HAS_POSIX_REALTIME_SIGNALS */
-
-#if !defined (ACE_HAS_PTHREAD_SIGMASK_PROTOTYPE)
-  int pthread_sigmask(int, const sigset_t *, sigset_t *);
-#endif /*!ACE_HAS_PTHREAD_SIGMASK_PROTOTYPE */
 
 #ifdef __cplusplus
 }

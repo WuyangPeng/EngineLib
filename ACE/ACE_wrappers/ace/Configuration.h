@@ -349,7 +349,7 @@ public:
    * error The path consists of sections separated by the backslash
    * '\' or forward slash '/'.
    * Returns 0 on success, -1 if <create) is 0 and the path refers
-   * a nonexistant section
+   * a non-existent section
    */
   int expand_path (const ACE_Configuration_Section_Key& key,
                    const ACE_TString& path_in,
@@ -454,7 +454,7 @@ public:
                                             u_long security_access = KEY_ALL_ACCESS);
 
   /// Destructor
-  virtual ~ACE_Configuration_Win32Registry ();
+  virtual ~ACE_Configuration_Win32Registry () = default;
 
   virtual int open_section (const ACE_Configuration_Section_Key& base,
                             const ACE_TCHAR* sub_section,
@@ -627,7 +627,7 @@ public:
   ACE_Configuration_Value_IntId (const ACE_Configuration_Value_IntId& rhs);
 
   /// Destructor
-  ~ACE_Configuration_Value_IntId ();
+  ~ACE_Configuration_Value_IntId () = default;
 
   /// Assignment operator
   ACE_Configuration_Value_IntId& operator= (
@@ -683,7 +683,7 @@ public:
   ACE_Configuration_Section_IntId (const ACE_Configuration_Section_IntId& rhs);
 
   /// Destructor
-  ~ACE_Configuration_Section_IntId ();
+  ~ACE_Configuration_Section_IntId () = default;
 
   /// Assignment operator
   ACE_Configuration_Section_IntId& operator= (
