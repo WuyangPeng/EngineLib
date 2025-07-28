@@ -19,6 +19,7 @@
 #include <string>
 #include <type_traits>
 
+#include <boost/range/size.hpp>
 #include <boost/throw_exception.hpp>
 
 #include <boost/geometry/algorithms/convert.hpp>
@@ -52,11 +53,7 @@ namespace detail
 
 template <typename G1, typename G2>
 struct same_tags
-    : std::is_same
-        <
-            typename geometry::tag<G1>::type,
-            typename geometry::tag<G2>::type
-        >
+    : std::is_same<geometry::tag_t<G1>, geometry::tag_t<G2>>
 {};
 
 template <typename CT>
@@ -200,7 +197,7 @@ template
 <
     typename Geometry,
     typename PointPolicy,
-    typename Tag = typename geometry::tag<Geometry>::type
+    typename Tag = geometry::tag_t<Geometry>
 >
 struct project_geometry
 {};

@@ -25,8 +25,8 @@ namespace detail { namespace overlay
 template
 <  
     typename Point,
-    typename CoordinateType = typename geometry::coordinate_type<Point>::type,
-    typename CsTag = typename geometry::cs_tag<Point>::type,
+    typename CoordinateType = geometry::coordinate_type_t<Point>,
+    typename CsTag = geometry::cs_tag_t<Point>,
     bool IsIntegral = std::is_integral<CoordinateType>::value
 >            
 struct cluster_colocator 
@@ -62,14 +62,14 @@ struct cluster_colocator<Point, CoordinateType, geometry::cartesian_tag, false>
     {
         CoordinateType centroid_0 = 0;
         CoordinateType centroid_1 = 0;
-        for (const auto& index : indices)
+        for (auto const& index : indices)
         {
             centroid_0 += geometry::get<0>(turns[index].point);
             centroid_1 += geometry::get<1>(turns[index].point);
         }
         centroid_0 /= indices.size();
         centroid_1 /= indices.size();
-        for (const auto& index : indices)
+        for (auto const& index : indices)
         {
             geometry::set<0>(turns[index].point, centroid_0);
             geometry::set<1>(turns[index].point, centroid_1);
@@ -86,14 +86,14 @@ inline void colocate_clusters(Clusters const& clusters, Turns& turns)
 {
     for (auto const& pair : clusters)
     {
-        auto const& indices = pair.second.turn_indices;
-        if (indices.size() < 2)
+        auto const& turn_indices = pair.second.turn_indices;
+        if (turn_indices.size() < 2)
         {
             // Defensive check
             continue;
         }
-        using point_t = decltype(turns[*indices.begin()].point);
-        cluster_colocator<point_t>::apply(indices, turns);
+        using point_t = decltype(turns[*turn_indices.begin()].point);
+        cluster_colocator<point_t>::apply(turn_indices, turns);
     }
 }
 
