@@ -1,15 +1,16 @@
-/* Copyright (c) 2000, 2023, Oracle and/or its affiliates.
+/* Copyright (c) 2000, 2025, Oracle and/or its affiliates.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License, version 2.0,
    as published by the Free Software Foundation.
 
-   This program is also distributed with certain software (including
+   This program is designed to work with certain software (including
    but not limited to OpenSSL) that is licensed under separate terms,
    as designated in a particular file or component or in included license
    documentation.  The authors of MySQL hereby grant you an additional
    permission to link the program and your derivative works with the
-   separately licensed software that they have included with MySQL.
+   separately licensed software that they have either included with
+   the program or referenced in the documentation.
 
    Without limiting anything contained in the foregoing, this file,
    which is part of C Driver for MySQL (Connector/C), is also subject to the
@@ -212,7 +213,8 @@ enum mysql_option {
   MYSQL_OPT_ZSTD_COMPRESSION_LEVEL,
   MYSQL_OPT_LOAD_DATA_LOCAL_DIR,
   MYSQL_OPT_USER_PASSWORD,
-  MYSQL_OPT_SSL_SESSION_DATA
+  MYSQL_OPT_SSL_SESSION_DATA,
+  MYSQL_OPT_TLS_SNI_SERVERNAME
 };
 
 /**
@@ -369,6 +371,16 @@ typedef struct MYSQL_RES {
  is using the class Heartbeat_event_v2
 */
 #define USE_HEARTBEAT_EVENT_V2 (1 << 1)
+
+/**
+ Flag to indicate that tagged GTIDS will be skipped in COM_BINLOG_DUMP_GTIDS
+*/
+#define MYSQL_RPL_SKIP_TAGGED_GTIDS (1 << 2)
+
+/**
+ Tagged GTIDS are supported starting from below version of MySQL
+*/
+#define MYSQL_TAGGED_GTIDS_VERSION_SUPPORT 80300
 
 /**
   Struct for information about a replication stream.
@@ -568,6 +580,7 @@ void STDCALL myodbc_remove_escape(MYSQL *mysql, char *name);
 unsigned int STDCALL mysql_thread_safe(void);
 bool STDCALL mysql_read_query_result(MYSQL *mysql);
 int STDCALL mysql_reset_connection(MYSQL *mysql);
+enum net_async_status STDCALL mysql_reset_connection_nonblocking(MYSQL *mysql);
 
 int STDCALL mysql_binlog_open(MYSQL *mysql, MYSQL_RPL *rpl);
 int STDCALL mysql_binlog_fetch(MYSQL *mysql, MYSQL_RPL *rpl);
@@ -761,6 +774,8 @@ bool STDCALL mysql_stmt_attr_get(MYSQL_STMT *stmt,
                                  enum enum_stmt_attr_type attr_type,
                                  void *attr);
 bool STDCALL mysql_stmt_bind_param(MYSQL_STMT *stmt, MYSQL_BIND *bnd);
+bool STDCALL mysql_stmt_bind_named_param(MYSQL_STMT *stmt, MYSQL_BIND *binds,
+                                         unsigned n_params, const char **names);
 bool STDCALL mysql_stmt_bind_result(MYSQL_STMT *stmt, MYSQL_BIND *bnd);
 bool STDCALL mysql_stmt_close(MYSQL_STMT *stmt);
 bool STDCALL mysql_stmt_reset(MYSQL_STMT *stmt);
@@ -806,6 +821,8 @@ MYSQL *STDCALL mysql_real_connect_dns_srv(MYSQL *mysql,
                                           const char *user, const char *passwd,
                                           const char *db,
                                           unsigned long client_flag);
+
+enum connect_stage STDCALL mysql_get_connect_nonblocking_stage(MYSQL *mysql);
 
 #ifdef __cplusplus
 }

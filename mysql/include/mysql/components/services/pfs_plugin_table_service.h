@@ -1,15 +1,16 @@
-/* Copyright (c) 2017, 2023, Oracle and/or its affiliates.
+/* Copyright (c) 2017, 2025, Oracle and/or its affiliates.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2.0,
 as published by the Free Software Foundation.
 
-This program is also distributed with certain software (including
+This program is designed to work with certain software (including
 but not limited to OpenSSL) that is licensed under separate terms,
 as designated in a particular file or component or in included license
 documentation.  The authors of MySQL hereby grant you an additional
 permission to link the program and your derivative works with the
-separately licensed software that they have included with MySQL.
+separately licensed software that they have either included with
+the program or referenced in the documentation.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -87,7 +88,7 @@ struct PFS_string {
 typedef struct PFS_string PFS_string;
 
 /**
-  This is an opaque structure to denote filed in plugin/component code.
+  This is an opaque structure to denote field in plugin/component code.
 */
 typedef struct PSI_field PSI_field;
 /**
@@ -410,22 +411,21 @@ typedef void (*close_table_t)(PSI_table_handle *handle);
  plugin/component.
 */
 struct PFS_engine_table_proxy {
-  rnd_next_t rnd_next;
-  rnd_init_t rnd_init;
-  rnd_pos_t rnd_pos;
-  index_init_t index_init;
-  index_read_t index_read;
-  index_next_t index_next;
-  read_column_value_t read_column_value;
-  reset_position_t reset_position;
-  write_column_value_t write_column_value;
-  write_row_values_t write_row_values;
-  update_column_value_t update_column_value;
-  update_row_values_t update_row_values;
-  delete_row_values_t delete_row_values;
-  open_table_t open_table;
-  close_table_t close_table;
-  PFS_engine_table_proxy() = default;
+  rnd_next_t rnd_next{nullptr};
+  rnd_init_t rnd_init{nullptr};
+  rnd_pos_t rnd_pos{nullptr};
+  index_init_t index_init{nullptr};
+  index_read_t index_read{nullptr};
+  index_next_t index_next{nullptr};
+  read_column_value_t read_column_value{nullptr};
+  reset_position_t reset_position{nullptr};
+  write_column_value_t write_column_value{nullptr};
+  write_row_values_t write_row_values{nullptr};
+  update_column_value_t update_column_value{nullptr};
+  update_row_values_t update_row_values{nullptr};
+  delete_row_values_t delete_row_values{nullptr};
+  open_table_t open_table{nullptr};
+  close_table_t close_table{nullptr};
 };
 typedef struct PFS_engine_table_proxy PFS_engine_table_proxy;
 
@@ -694,5 +694,16 @@ DECLARE_METHOD(void, set, (PSI_field * f, PSI_year value));
 DECLARE_METHOD(void, get, (PSI_field * f, PSI_year *value));
 /* No support for indexes. */
 END_SERVICE_DEFINITION(pfs_plugin_column_year_v1)
+
+/*
+  SERVICE_DEFINITION(pfs_plugin_column_text_v1)
+  Introduced in MySQL 8.0.34
+  Status: Active.
+*/
+BEGIN_SERVICE_DEFINITION(pfs_plugin_column_text_v1)
+DECLARE_METHOD(void, set,
+               (PSI_field * f, const char *str, unsigned int length));
+DECLARE_METHOD(void, get, (PSI_field * f, char *val, unsigned int *len));
+END_SERVICE_DEFINITION(pfs_plugin_column_text_v1)
 
 #endif

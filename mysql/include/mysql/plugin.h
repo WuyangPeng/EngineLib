@@ -1,15 +1,16 @@
-/* Copyright (c) 2005, 2023, Oracle and/or its affiliates.
+/* Copyright (c) 2005, 2025, Oracle and/or its affiliates.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License, version 2.0,
    as published by the Free Software Foundation.
 
-   This program is also distributed with certain software (including
+   This program is designed to work with certain software (including
    but not limited to OpenSSL) that is licensed under separate terms,
    as designated in a particular file or component or in included license
    documentation.  The authors of MySQL hereby grant you an additional
    permission to link the program and your derivative works with the
-   separately licensed software that they have included with MySQL.
+   separately licensed software that they have either included with
+   the program or referenced in the documentation.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -22,7 +23,9 @@
 
 #ifndef _my_plugin_h
 #define _my_plugin_h
-
+#ifdef MYSQL_COMPONENT
+#error This header shall not be included in components
+#endif
 /**
   @file include/mysql/plugin.h
 */
@@ -159,8 +162,11 @@ struct MYSQL_XID {
                          builtin_##NAME##_sizeof_struct_st_plugin,        \
                          builtin_##NAME##_plugin)
 
-#define mysql_declare_plugin_end                 \
-  , { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } \
+#define mysql_declare_plugin_end                                            \
+  , {                                                                       \
+    0, nullptr, nullptr, nullptr, nullptr, 0, nullptr, nullptr, nullptr, 0, \
+        nullptr, nullptr, nullptr, 0                                        \
+  }                                                                         \
   }
 
 /*
@@ -189,47 +195,6 @@ struct MYSQL_XID {
 */
 
 #include <mysql/components/services/bits/system_variables_bits.h>
-
-struct SYS_VAR;
-
-/*
-  SYNOPSIS
-    (*mysql_var_check_func)()
-      thd               thread handle
-      var               dynamic variable being altered
-      save              pointer to temporary storage
-      value             user provided value
-  RETURN
-    0   user provided value is OK and the update func may be called.
-    any other value indicates error.
-
-  This function should parse the user provided value and store in the
-  provided temporary storage any data as required by the update func.
-  There is sufficient space in the temporary storage to store a double.
-  Note that the update func may not be called if any other error occurs
-  so any memory allocated should be thread-local so that it may be freed
-  automatically at the end of the statement.
-*/
-
-typedef int (*mysql_var_check_func)(MYSQL_THD thd, SYS_VAR *var, void *save,
-                                    struct st_mysql_value *value);
-
-/*
-  SYNOPSIS
-    (*mysql_var_update_func)()
-      thd               thread handle
-      var               dynamic variable being altered
-      var_ptr           pointer to dynamic variable
-      save              pointer to temporary storage
-   RETURN
-     NONE
-
-   This function should use the validated value stored in the temporary store
-   and persist it in the provided pointer to the dynamic variable.
-   For example, strings may require memory to be allocated.
-*/
-typedef void (*mysql_var_update_func)(MYSQL_THD thd, SYS_VAR *var,
-                                      void *var_ptr, const void *save);
 
 /* the following declarations are for internal use only */
 
@@ -866,11 +831,6 @@ void thd_set_ha_data(MYSQL_THD thd, const struct handlerton *hton,
 */
 
 void remove_ssl_err_thread_state();
-
-/**
-  Interface to get the number of VCPUs.
-*/
-unsigned int thd_get_num_vcpus();
 #ifdef __cplusplus
 }
 #endif
