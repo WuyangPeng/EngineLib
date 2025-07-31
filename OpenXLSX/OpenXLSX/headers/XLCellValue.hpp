@@ -51,7 +51,6 @@ YM      M9  MM    MM MM       MM    MM   d'  `MM.    MM            MM   d'  `MM.
 #pragma warning(disable : 4275)
 
 // ===== External Includes ===== //
-#include <cmath>
 #include <cstdint>
 #include <iostream>
 #include <string>
@@ -145,14 +144,8 @@ namespace OpenXLSX
             // ===== If not, a static_assert will result in compilation error.
             else {
                 static_assert(std::is_floating_point_v<T>, "Invalid argument for constructing XLCellValue object");
-                if (std::isfinite(value)) {
-                    m_type  = XLValueType::Float;
-                    m_value = double(value);
-                }
-                else {
-                    m_type = XLValueType::Error;
-                    m_value = std::string("#NUM!");
-                }
+                m_type  = XLValueType::Float;
+                m_value = double(value);
             }
         }
 
@@ -241,10 +234,7 @@ namespace OpenXLSX
 
                 if constexpr (std::is_integral_v<T> && !std::is_same_v<T, bool>) return static_cast<T>(std::get<int64_t>(m_value));
 
-                if constexpr (std::is_floating_point_v<T>) {
-                    if (m_type == XLValueType::Error) return std::nan("1");
-                    return static_cast<T>(std::get<double>(m_value));
-                }
+                if constexpr (std::is_floating_point_v<T>) return static_cast<T>(std::get<double>(m_value));
 
                 if constexpr (std::is_same_v<std::decay_t<T>, std::string> || std::is_same_v<std::decay_t<T>, std::string_view> ||
                               std::is_same_v<std::decay_t<T>, const char*> ||
@@ -254,7 +244,7 @@ namespace OpenXLSX
                 if constexpr (std::is_same_v<T, XLDateTime>) return XLDateTime(std::get<double>(m_value));
             }
 
-            catch (const std::bad_variant_access& ) {
+            catch (const std::bad_variant_access& e) {
                 throw XLValueTypeError("XLCellValue object does not contain the requested type.");
             }
         }
@@ -285,7 +275,7 @@ namespace OpenXLSX
          * @brief Sets the value type to XLValueType::Error.
          * @return Returns a reference to the current object.
          */
-        XLCellValue& setError(const std::string &error);
+        XLCellValue& setError();
 
         /**
          * @brief Get the value type of the current object.
@@ -389,7 +379,7 @@ namespace OpenXLSX
                         clear();
                         break;
                     default:
-                        setError("#N/A");
+                        setError();
                         break;
                 }
             }
@@ -439,7 +429,7 @@ namespace OpenXLSX
          * @brief Set the cell value to a error state.
          * @return A reference to the current object.
          */
-        XLCellValueProxy& setError(const std::string & error);
+        XLCellValueProxy& setError();
 
         /**
          * @brief Get the value type for the cell.

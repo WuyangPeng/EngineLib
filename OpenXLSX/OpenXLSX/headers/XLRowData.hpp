@@ -11,7 +11,6 @@
 
 // ===== External Includes ===== //
 #include <deque>
-#include <iterator>
 #include <list>
 #include <memory>
 #include <vector>

@@ -58,6 +58,5 @@ YM      M9  MM    MM MM       MM    MM   d'  `MM.    MM            MM   d'  `MM.
 #include "headers/XLRow.hpp"
 #include "headers/XLSheet.hpp"
 #include "headers/XLWorkbook.hpp"
-#include "headers/XLZipArchive.hpp"
 
 #endif    // OPENXLSX_OPENXLSX_HPP

@@ -187,7 +187,7 @@ namespace OpenXLSX
          */
         XLColor color() const
         {
-            return static_cast<const T&>(*this).getColor_impl();
+            return XLColor();
         }
 
         /**
@@ -448,13 +448,6 @@ namespace OpenXLSX
         void updateSheetName(const std::string& oldName, const std::string& newName);
 
     private:
-
-        /**
-         * @brief
-         * @return
-         */
-        XLColor getColor_impl() const;
-
         /**
          * @brief
          * @param color
@@ -541,13 +534,6 @@ namespace OpenXLSX
         XLChartsheet& operator=(XLChartsheet&& other) noexcept = default;
 
     private:
-
-        /**
-         * @brief
-         * @return
-         */
-        XLColor getColor_impl() const;
-
         /**
          * @brief
          * @param color
