@@ -44,6 +44,13 @@
 #define GLUT_KEY_CTRL_R             0x0073
 #define GLUT_KEY_ALT_L              0x0074
 #define GLUT_KEY_ALT_R              0x0075
+#define GLUT_KEY_SUPER_L            0x0076
+#define GLUT_KEY_SUPER_R            0x0077
+
+/*
+ * Additional GLUT modifiers
+ */
+#define GLUT_ACTIVE_SUPER           0x0008
 
 /*
  * GLUT API Extension macro definitions -- behaviour when the user clicks on an "x" to close a window
@@ -88,6 +95,12 @@
 
 #define  GLUT_GEOMETRY_VISUALIZE_NORMALS    0x0205
 
+#define  GLUT_STROKE_FONT_DRAW_JOIN_DOTS    0x0206  /* Draw dots between line segments of stroke fonts? */
+
+#define  GLUT_ALLOW_NEGATIVE_WINDOW_POSITION 0x0207 /* GLUT doesn't allow negative window positions by default */
+
+#define  GLUT_WINDOW_SRGB                   0x007D
+
 /*
  * New tokens for glutInitDisplayMode.
  * Only one GLUT_AUXn bit may be used at a time.
@@ -101,7 +114,7 @@
 #define  GLUT_AUX4                          0x8000
 
 /*
- * Context-related flags, see freeglut_state.c
+ * Context-related flags, see fg_state.c
  * Set the requested OpenGL version
  */
 #define  GLUT_INIT_MAJOR_VERSION            0x0200
@@ -110,27 +123,37 @@
 #define  GLUT_INIT_PROFILE                  0x0203
 
 /*
- * Flags for glutInitContextFlags, see freeglut_init.c
+ * Flags for glutInitContextFlags, see fg_init.c
  */
 #define  GLUT_DEBUG                         0x0001
 #define  GLUT_FORWARD_COMPATIBLE            0x0002
 
 
 /*
- * Flags for glutInitContextProfile, see freeglut_init.c
+ * Flags for glutInitContextProfile, see fg_init.c
  */
 #define GLUT_CORE_PROFILE                   0x0001
 #define	GLUT_COMPATIBILITY_PROFILE          0x0002
 
 /*
- * Process loop function, see freeglut_main.c
+* GLUT API Extension macro definitions -- Spaceball button definitions
+*/
+
+#define  GLUT_SPACEBALL_BUTTON_A            0x0001
+#define  GLUT_SPACEBALL_BUTTON_B            0x0002
+#define  GLUT_SPACEBALL_BUTTON_C            0x0004
+#define  GLUT_SPACEBALL_BUTTON_D            0x0008
+#define  GLUT_SPACEBALL_BUTTON_E            0x0010
+
+/*
+ * Process loop function, see fg_main.c
  */
 FGAPI void    FGAPIENTRY glutMainLoopEvent( void );
 FGAPI void    FGAPIENTRY glutLeaveMainLoop( void );
 FGAPI void    FGAPIENTRY glutExit         ( void );
 
 /*
- * Window management functions, see freeglut_window.c
+ * Window management functions, see fg_window.c
  */
 FGAPI void    FGAPIENTRY glutFullScreenToggle( void );
 FGAPI void    FGAPIENTRY glutLeaveFullScreen( void );
@@ -141,7 +164,7 @@ FGAPI void    FGAPIENTRY glutLeaveFullScreen( void );
 FGAPI void    FGAPIENTRY glutSetMenuFont( int menuID, void* font );
 
 /*
- * Window-specific callback functions, see freeglut_callbacks.c
+ * Window-specific callback functions, see fg_callbacks.c
  */
 FGAPI void    FGAPIENTRY glutMouseWheelFunc( void (* callback)( int, int, int, int ) );
 FGAPI void    FGAPIENTRY glutPositionFunc( void (* callback)( int, int ) );
@@ -151,7 +174,7 @@ FGAPI void    FGAPIENTRY glutWMCloseFunc( void (* callback)( void ) );
 FGAPI void    FGAPIENTRY glutMenuDestroyFunc( void (* callback)( void ) );
 
 /*
- * State setting and retrieval functions, see freeglut_state.c
+ * State setting and retrieval functions, see fg_state.c
  */
 FGAPI void    FGAPIENTRY glutSetOption ( GLenum option_flag, int value );
 FGAPI int *   FGAPIENTRY glutGetModeValues(GLenum mode, int * size);
@@ -162,7 +185,7 @@ FGAPI void*   FGAPIENTRY glutGetMenuData( void );
 FGAPI void    FGAPIENTRY glutSetMenuData(void* data);
 
 /*
- * Font stuff, see freeglut_font.c
+ * Font stuff, see fg_font.c
  */
 FGAPI int     FGAPIENTRY glutBitmapHeight( void* font );
 FGAPI GLfloat FGAPIENTRY glutStrokeHeight( void* font );
@@ -170,7 +193,7 @@ FGAPI void    FGAPIENTRY glutBitmapString( void* font, const unsigned char *stri
 FGAPI void    FGAPIENTRY glutStrokeString( void* font, const unsigned char *string );
 
 /*
- * Geometry functions, see freeglut_geometry.c
+ * Geometry functions, see fg_geometry.c
  */
 FGAPI void    FGAPIENTRY glutWireRhombicDodecahedron( void );
 FGAPI void    FGAPIENTRY glutSolidRhombicDodecahedron( void );
@@ -180,7 +203,7 @@ FGAPI void    FGAPIENTRY glutWireCylinder( double radius, double height, GLint s
 FGAPI void    FGAPIENTRY glutSolidCylinder( double radius, double height, GLint slices, GLint stacks);
 
 /*
- * Rest of functions for rendering Newell's teaset, found in freeglut_teapot.c
+ * Rest of functions for rendering Newell's teaset, found in fg_teapot.c
  * NB: front facing polygons have clockwise winding, not counter clockwise
  */
 FGAPI void    FGAPIENTRY glutWireTeacup( double size );
@@ -189,7 +212,7 @@ FGAPI void    FGAPIENTRY glutWireTeaspoon( double size );
 FGAPI void    FGAPIENTRY glutSolidTeaspoon( double size );
 
 /*
- * Extension functions, see freeglut_ext.c
+ * Extension functions, see fg_ext.c
  */
 typedef void (*GLUTproc)();
 FGAPI GLUTproc FGAPIENTRY glutGetProcAddress( const char *procName );
@@ -200,7 +223,7 @@ FGAPI GLUTproc FGAPIENTRY glutGetProcAddress( const char *procName );
 
 #define GLUT_HAS_MULTI 1
 
-/* TODO: add device_id paramater,
+/* TODO: add device_id parameter,
    cf. http://sourceforge.net/mailarchive/forum.php?thread_name=20120518071314.GA28061%40perso.beuc.net&forum_name=freeglut-developer */
 FGAPI void FGAPIENTRY glutMultiEntryFunc( void (* callback)( int, int ) );
 FGAPI void FGAPIENTRY glutMultiButtonFunc( void (* callback)( int, int, int, int, int ) );
@@ -208,7 +231,7 @@ FGAPI void FGAPIENTRY glutMultiMotionFunc( void (* callback)( int, int, int ) );
 FGAPI void FGAPIENTRY glutMultiPassiveFunc( void (* callback)( int, int, int ) );
 
 /*
- * Joystick functions, see freeglut_joystick.c
+ * Joystick functions, see fg_joystick.c
  */
 /* USE OF THESE FUNCTIONS IS DEPRECATED !!!!! */
 /* If you have a serious need for these functions in your application, please either
@@ -231,7 +254,7 @@ void    glutJoystickGetMaxRange( int ident, float *axes );
 void    glutJoystickGetCenter( int ident, float *axes );
 
 /*
- * Initialization functions, see freeglut_init.c
+ * Initialization functions, see fg_init.c
  */
 /* to get the typedef for va_list */
 #include <stdarg.h>
@@ -242,13 +265,13 @@ FGAPI void    FGAPIENTRY glutInitErrorFunc( void (* callback)( const char *fmt, 
 FGAPI void    FGAPIENTRY glutInitWarningFunc( void (* callback)( const char *fmt, va_list ap ) );
 
 /* OpenGL >= 2.0 support */
-FGAPI void    FGAPIENTRY glutSetVertexAttribCoord3(GLint attrib);
-FGAPI void    FGAPIENTRY glutSetVertexAttribNormal(GLint attrib);
-FGAPI void    FGAPIENTRY glutSetVertexAttribTexCoord2(GLint attrib);
+FGAPI void    FGAPIENTRY glutSetVertexAttribCoord3( GLint attrib );
+FGAPI void    FGAPIENTRY glutSetVertexAttribNormal( GLint attrib );
+FGAPI void    FGAPIENTRY glutSetVertexAttribTexCoord2( GLint attrib );
 
 /* Mobile platforms lifecycle */
-FGAPI void    FGAPIENTRY glutInitContextFunc(void (* callback)());
-FGAPI void    FGAPIENTRY glutAppStatusFunc(void (* callback)(int));
+FGAPI void    FGAPIENTRY glutInitContextFunc( void (* callback)( void ) );
+FGAPI void    FGAPIENTRY glutAppStatusFunc( void (* callback)( int ) );
 /* state flags that can be passed to callback set by glutAppStatusFunc */
 #define GLUT_APPSTATUS_PAUSE                0x0001
 #define GLUT_APPSTATUS_RESUME               0x0002
@@ -259,6 +282,9 @@ FGAPI void    FGAPIENTRY glutAppStatusFunc(void (* callback)(int));
 #define  GLUT_CAPTIONLESS                   0x0400
 #define  GLUT_BORDERLESS                    0x0800
 #define  GLUT_SRGB                          0x1000
+
+/* User-argument callbacks and implementation */
+#include "freeglut_ucall.h"
 
 #ifdef __cplusplus
     }
