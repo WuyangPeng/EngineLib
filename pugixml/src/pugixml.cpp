@@ -1,7 +1,7 @@
 /**
- * pugixml parser - version 1.14
+ * pugixml parser - version 1.15
  * --------------------------------------------------------
- * Copyright (C) 2006-2023, by Arseny Kapoulkine (arseny.kapoulkine@gmail.com)
+ * Copyright (C) 2006-2025, by Arseny Kapoulkine (arseny.kapoulkine@gmail.com)
  * Report bugs and download new versions at https://pugixml.org/
  *
  * This library is distributed under the MIT License. See notice at the end
@@ -251,6 +251,24 @@ PUGI_IMPL_NS_BEGIN
 		return strcmp(src, dst) == 0;
 	#endif
 	}
+
+#ifdef PUGIXML_HAS_STRING_VIEW
+	// Check if the null-terminated dst string is equal to the entire contents of srcview
+	PUGI_IMPL_FN bool stringview_equal(string_view_t srcview, const char_t* dst)
+	{
+		// std::basic_string_view::compare(const char*) has the right behavior, but it performs an
+		// extra traversal of dst to compute its length.
+		assert(dst);
+		const char_t* src = srcview.data();
+		size_t srclen = srcview.size();
+
+		while (srclen && *dst && *src == *dst)
+		{
+			--srclen; ++dst; ++src; 
+		}
+		return srclen == 0 && *dst == 0;
+	}
+#endif
 
 	// Compare lhs with [rhs_begin, rhs_end)
 	PUGI_IMPL_FN bool strequalrange(const char_t* lhs, const char_t* rhs, size_t count)
@@ -1574,8 +1592,8 @@ PUGI_IMPL_NS_BEGIN
 
 		static value_type high(value_type result, uint32_t ch)
 		{
-			uint32_t msh = static_cast<uint32_t>(ch - 0x10000) >> 10;
-			uint32_t lsh = static_cast<uint32_t>(ch - 0x10000) & 0x3ff;
+			uint32_t msh = (ch - 0x10000U) >> 10;
+			uint32_t lsh = (ch - 0x10000U) & 0x3ff;
 
 			result[0] = static_cast<uint16_t>(0xD800 + msh);
 			result[1] = static_cast<uint16_t>(0xDC00 + lsh);
@@ -2455,7 +2473,7 @@ PUGI_IMPL_NS_BEGIN
 			{
 				// Move [old_gap_end, new_gap_start) to [old_gap_start, ...)
 				assert(s >= end);
-				memmove(end - size, end, reinterpret_cast<char*>(s) - reinterpret_cast<char*>(end));
+				memmove(end - size, end, (s - end) * sizeof(char_t));
 			}
 
 			s += count; // end of current gap
@@ -2472,7 +2490,7 @@ PUGI_IMPL_NS_BEGIN
 			{
 				// Move [old_gap_end, current_pos) to [old_gap_start, ...)
 				assert(s >= end);
-				memmove(end - size, end, reinterpret_cast<char*>(s) - reinterpret_cast<char*>(end));
+				memmove(end - size, end, (s - end) * sizeof(char_t));
 
 				return s - size;
 			}
@@ -4790,6 +4808,20 @@ PUGI_IMPL_NS_BEGIN
 		return res;
 	}
 
+	template <typename T> PUGI_IMPL_FN xml_parse_status convert_file_size(T length, size_t& out_result)
+	{
+		// check for I/O errors
+		if (length < 0) return status_io_error;
+
+		// check for overflow
+		size_t result = static_cast<size_t>(length);
+
+		if (static_cast<T>(result) != length) return status_out_of_memory;
+
+		out_result = result;
+		return status_ok;
+	}
+
 	// we need to get length of entire file to load it in memory; the only (relatively) sane way to do it is via seek/tell trick
 	PUGI_IMPL_FN xml_parse_status get_file_size(FILE* file, size_t& out_result)
 	{
@@ -4801,43 +4833,31 @@ PUGI_IMPL_NS_BEGIN
 		// anything that's not a regular file doesn't have a coherent length
 		if (!S_ISREG(st.st_mode)) return status_io_error;
 
-		typedef off_t length_type;
-		length_type length = st.st_size;
+		xml_parse_status status = convert_file_size(st.st_size, out_result);
 	#elif defined(PUGI_IMPL_MSVC_CRT_VERSION) && PUGI_IMPL_MSVC_CRT_VERSION >= 1400
 		// there are 64-bit versions of fseek/ftell, let's use them
-		typedef __int64 length_type;
-
 		_fseeki64(file, 0, SEEK_END);
-		length_type length = _ftelli64(file);
+		__int64 length = _ftelli64(file);
 		_fseeki64(file, 0, SEEK_SET);
+
+		xml_parse_status status = convert_file_size(length, out_result);
 	#elif defined(__MINGW32__) && !defined(__NO_MINGW_LFS) && (!defined(__STRICT_ANSI__) || defined(__MINGW64_VERSION_MAJOR))
 		// there are 64-bit versions of fseek/ftell, let's use them
-		typedef off64_t length_type;
-
 		fseeko64(file, 0, SEEK_END);
-		length_type length = ftello64(file);
+		off64_t length = ftello64(file);
 		fseeko64(file, 0, SEEK_SET);
+
+		xml_parse_status status = convert_file_size(length, out_result);
 	#else
 		// if this is a 32-bit OS, long is enough; if this is a unix system, long is 64-bit, which is enough; otherwise we can't do anything anyway.
-		typedef long length_type;
-
 		fseek(file, 0, SEEK_END);
-		length_type length = ftell(file);
+		long length = ftell(file);
 		fseek(file, 0, SEEK_SET);
+
+		xml_parse_status status = convert_file_size(length, out_result);
 	#endif
 
-		// check for I/O errors
-		if (length < 0) return status_io_error;
-
-		// check for overflow
-		size_t result = static_cast<size_t>(length);
-
-		if (static_cast<length_type>(result) != length) return status_out_of_memory;
-
-		// finalize
-		out_result = result;
-
-		return status_ok;
+		return status;
 	}
 
 	// This function assumes that buffer has extra sizeof(char_t) writable bytes after size
@@ -5052,6 +5072,14 @@ PUGI_IMPL_NS_BEGIN
 #if defined(PUGI_IMPL_MSVC_CRT_VERSION) || defined(__BORLANDC__) || (defined(__MINGW32__) && (!defined(__STRICT_ANSI__) || defined(__MINGW64_VERSION_MAJOR)))
 	PUGI_IMPL_FN FILE* open_file_wide(const wchar_t* path, const wchar_t* mode)
 	{
+#ifdef PUGIXML_NO_STL
+		// ensure these symbols are consistently referenced to avoid 'unreferenced function' warnings
+		// note that generally these functions are used in STL builds, but PUGIXML_NO_STL leaves the only usage in convert_path_heap
+		(void)&as_utf8_begin;
+		(void)&as_utf8_end;
+		(void)&strlength_wide;
+#endif
+
 #if defined(PUGI_IMPL_MSVC_CRT_VERSION) && PUGI_IMPL_MSVC_CRT_VERSION >= 1400
 		FILE* file = NULL;
 		return _wfopen_s(&file, path, mode) == 0 ? file : NULL;
@@ -5155,11 +5183,11 @@ namespace pugi
 	}
 
 #ifndef PUGIXML_NO_STL
-	PUGI_IMPL_FN xml_writer_stream::xml_writer_stream(std::basic_ostream<char, std::char_traits<char> >& stream): narrow_stream(&stream), wide_stream(NULL)
+	PUGI_IMPL_FN xml_writer_stream::xml_writer_stream(std::basic_ostream<char>& stream): narrow_stream(&stream), wide_stream(NULL)
 	{
 	}
 
-	PUGI_IMPL_FN xml_writer_stream::xml_writer_stream(std::basic_ostream<wchar_t, std::char_traits<wchar_t> >& stream): narrow_stream(NULL), wide_stream(&stream)
+	PUGI_IMPL_FN xml_writer_stream::xml_writer_stream(std::basic_ostream<wchar_t>& stream): narrow_stream(NULL), wide_stream(&stream)
 	{
 	}
 
@@ -5347,7 +5375,7 @@ namespace pugi
 
 	PUGI_IMPL_FN size_t xml_attribute::hash_value() const
 	{
-		return static_cast<size_t>(reinterpret_cast<uintptr_t>(_attr) / sizeof(xml_attribute_struct));
+		return reinterpret_cast<uintptr_t>(_attr) / sizeof(xml_attribute_struct);
 	}
 
 	PUGI_IMPL_FN xml_attribute_struct* xml_attribute::internal_object() const
@@ -5403,6 +5431,14 @@ namespace pugi
 		return *this;
 	}
 
+#ifdef PUGIXML_HAS_STRING_VIEW
+	PUGI_IMPL_FN xml_attribute& xml_attribute::operator=(string_view_t rhs)
+	{
+		set_value(rhs);
+		return *this;
+	}
+#endif
+
 #ifdef PUGIXML_HAS_LONG_LONG
 	PUGI_IMPL_FN xml_attribute& xml_attribute::operator=(long long rhs)
 	{
@@ -5431,6 +5467,15 @@ namespace pugi
 		return impl::strcpy_insitu(_attr->name, _attr->header, impl::xml_memory_page_name_allocated_mask, rhs, size);
 	}
 
+#ifdef PUGIXML_HAS_STRING_VIEW
+	PUGI_IMPL_FN bool xml_attribute::set_name(string_view_t rhs)
+	{
+		if (!_attr) return false;
+
+		return impl::strcpy_insitu(_attr->name, _attr->header, impl::xml_memory_page_name_allocated_mask, rhs.data(), rhs.size());
+	}
+#endif
+
 	PUGI_IMPL_FN bool xml_attribute::set_value(const char_t* rhs)
 	{
 		if (!_attr) return false;
@@ -5444,6 +5489,15 @@ namespace pugi
 
 		return impl::strcpy_insitu(_attr->value, _attr->header, impl::xml_memory_page_value_allocated_mask, rhs, size);
 	}
+
+#ifdef PUGIXML_HAS_STRING_VIEW
+	PUGI_IMPL_FN bool xml_attribute::set_value(string_view_t rhs)
+	{
+		if (!_attr) return false;
+
+		return impl::strcpy_insitu(_attr->value, _attr->header, impl::xml_memory_page_value_allocated_mask, rhs.data(), rhs.size());
+	}
+#endif
 
 	PUGI_IMPL_FN bool xml_attribute::set_value(int rhs)
 	{
@@ -5708,6 +5762,64 @@ namespace pugi
 		return xml_node();
 	}
 
+#ifdef PUGIXML_HAS_STRING_VIEW
+	PUGI_IMPL_FN xml_node xml_node::child(string_view_t name_) const
+	{
+		if (!_root) return xml_node();
+
+		for (xml_node_struct* i = _root->first_child; i; i = i->next_sibling)
+		{
+			const char_t* iname = i->name;
+			if (iname && impl::stringview_equal(name_, iname))
+				return xml_node(i);
+		}
+
+		return xml_node();
+	}
+
+	PUGI_IMPL_FN xml_attribute xml_node::attribute(string_view_t name_) const
+	{
+		if (!_root) return xml_attribute();
+
+		for (xml_attribute_struct* i = _root->first_attribute; i; i = i->next_attribute)
+		{
+			const char_t* iname = i->name;
+			if (iname && impl::stringview_equal(name_, iname))
+				return xml_attribute(i);
+		}
+
+		return xml_attribute();
+	}
+
+	PUGI_IMPL_FN xml_node xml_node::next_sibling(string_view_t name_) const
+	{
+		if (!_root) return xml_node();
+
+		for (xml_node_struct* i = _root->next_sibling; i; i = i->next_sibling)
+		{
+			const char_t* iname = i->name;
+			if (iname && impl::stringview_equal(name_, iname))
+				return xml_node(i);
+		}
+
+		return xml_node();
+	}
+
+	PUGI_IMPL_FN xml_node xml_node::previous_sibling(string_view_t name_) const
+	{
+		if (!_root) return xml_node();
+
+		for (xml_node_struct* i = _root->prev_sibling_c; i->next_sibling; i = i->prev_sibling_c)
+		{
+			const char_t* iname = i->name;
+			if (iname && impl::stringview_equal(name_, iname))
+				return xml_node(i);
+		}
+
+		return xml_node();
+	}
+#endif
+
 	PUGI_IMPL_FN xml_attribute xml_node::attribute(const char_t* name_, xml_attribute& hint_) const
 	{
 		xml_attribute_struct* hint = hint_._attr;
@@ -5746,6 +5858,47 @@ namespace pugi
 
 		return xml_attribute();
 	}
+
+#ifdef PUGIXML_HAS_STRING_VIEW
+	PUGI_IMPL_FN xml_attribute xml_node::attribute(string_view_t name_, xml_attribute& hint_) const
+	{
+		xml_attribute_struct* hint = hint_._attr;
+
+		// if hint is not an attribute of node, behavior is not defined
+		assert(!hint || (_root && impl::is_attribute_of(hint, _root)));
+
+		if (!_root) return xml_attribute();
+
+		// optimistically search from hint up until the end
+		for (xml_attribute_struct* i = hint; i; i = i->next_attribute)
+		{
+			const char_t* iname = i->name;
+			if (iname && impl::stringview_equal(name_, iname))
+			{
+				// update hint to maximize efficiency of searching for consecutive attributes
+				hint_._attr = i->next_attribute;
+
+				return xml_attribute(i);
+			}
+		}
+
+		// wrap around and search from the first attribute until the hint
+		// 'j' null pointer check is technically redundant, but it prevents a crash in case the assertion above fails
+		for (xml_attribute_struct* j = _root->first_attribute; j && j != hint; j = j->next_attribute)
+		{
+			const char_t* jname = j->name;
+			if (jname && impl::stringview_equal(name_, jname))
+			{
+				// update hint to maximize efficiency of searching for consecutive attributes
+				hint_._attr = j->next_attribute;
+
+				return xml_attribute(j);
+			}
+		}
+
+		return xml_attribute();
+	}
+#endif
 
 	PUGI_IMPL_FN xml_node xml_node::previous_sibling() const
 	{
@@ -5838,6 +5991,18 @@ namespace pugi
 		return impl::strcpy_insitu(_root->name, _root->header, impl::xml_memory_page_name_allocated_mask, rhs, size);
 	}
 
+#ifdef PUGIXML_HAS_STRING_VIEW
+	PUGI_IMPL_FN bool xml_node::set_name(string_view_t rhs)
+	{
+		xml_node_type type_ = _root ? PUGI_IMPL_NODETYPE(_root) : node_null;
+
+		if (type_ != node_element && type_ != node_pi && type_ != node_declaration)
+			return false;
+
+		return impl::strcpy_insitu(_root->name, _root->header, impl::xml_memory_page_name_allocated_mask, rhs.data(), rhs.size());
+	}
+#endif
+
 	PUGI_IMPL_FN bool xml_node::set_value(const char_t* rhs)
 	{
 		xml_node_type type_ = _root ? PUGI_IMPL_NODETYPE(_root) : node_null;
@@ -5857,6 +6022,18 @@ namespace pugi
 
 		return impl::strcpy_insitu(_root->value, _root->header, impl::xml_memory_page_value_allocated_mask, rhs, size);
 	}
+
+#ifdef PUGIXML_HAS_STRING_VIEW
+	PUGI_IMPL_FN bool xml_node::set_value(string_view_t rhs)
+	{
+		xml_node_type type_ = _root ? PUGI_IMPL_NODETYPE(_root) : node_null;
+
+		if (type_ != node_pcdata && type_ != node_cdata && type_ != node_comment && type_ != node_pi && type_ != node_doctype)
+			return false;
+
+		return impl::strcpy_insitu(_root->value, _root->header, impl::xml_memory_page_value_allocated_mask, rhs.data(), rhs.size());
+	}
+#endif
 
 	PUGI_IMPL_FN xml_attribute xml_node::append_attribute(const char_t* name_)
 	{
@@ -5927,6 +6104,78 @@ namespace pugi
 
 		return a;
 	}
+
+#ifdef PUGIXML_HAS_STRING_VIEW
+	PUGI_IMPL_FN xml_attribute xml_node::append_attribute(string_view_t name_)
+	{
+		if (!impl::allow_insert_attribute(type())) return xml_attribute();
+
+		impl::xml_allocator& alloc = impl::get_allocator(_root);
+		if (!alloc.reserve()) return xml_attribute();
+
+		xml_attribute a(impl::allocate_attribute(alloc));
+		if (!a) return xml_attribute();
+
+		impl::append_attribute(a._attr, _root);
+
+		a.set_name(name_);
+
+		return a;
+	}
+
+	PUGI_IMPL_FN xml_attribute xml_node::prepend_attribute(string_view_t name_)
+	{
+		if (!impl::allow_insert_attribute(type())) return xml_attribute();
+
+		impl::xml_allocator& alloc = impl::get_allocator(_root);
+		if (!alloc.reserve()) return xml_attribute();
+
+		xml_attribute a(impl::allocate_attribute(alloc));
+		if (!a) return xml_attribute();
+
+		impl::prepend_attribute(a._attr, _root);
+
+		a.set_name(name_);
+
+		return a;
+	}
+
+	PUGI_IMPL_FN xml_attribute xml_node::insert_attribute_after(string_view_t name_, const xml_attribute& attr)
+	{
+		if (!impl::allow_insert_attribute(type())) return xml_attribute();
+		if (!attr || !impl::is_attribute_of(attr._attr, _root)) return xml_attribute();
+
+		impl::xml_allocator& alloc = impl::get_allocator(_root);
+		if (!alloc.reserve()) return xml_attribute();
+
+		xml_attribute a(impl::allocate_attribute(alloc));
+		if (!a) return xml_attribute();
+
+		impl::insert_attribute_after(a._attr, attr._attr, _root);
+
+		a.set_name(name_);
+
+		return a;
+	}
+
+	PUGI_IMPL_FN xml_attribute xml_node::insert_attribute_before(string_view_t name_, const xml_attribute& attr)
+	{
+		if (!impl::allow_insert_attribute(type())) return xml_attribute();
+		if (!attr || !impl::is_attribute_of(attr._attr, _root)) return xml_attribute();
+
+		impl::xml_allocator& alloc = impl::get_allocator(_root);
+		if (!alloc.reserve()) return xml_attribute();
+
+		xml_attribute a(impl::allocate_attribute(alloc));
+		if (!a) return xml_attribute();
+
+		impl::insert_attribute_before(a._attr, attr._attr, _root);
+
+		a.set_name(name_);
+
+		return a;
+	}
+#endif
 
 	PUGI_IMPL_FN xml_attribute xml_node::append_copy(const xml_attribute& proto)
 	{
@@ -6104,6 +6353,44 @@ namespace pugi
 		return result;
 	}
 
+#ifdef PUGIXML_HAS_STRING_VIEW
+	PUGI_IMPL_FN xml_node xml_node::append_child(string_view_t name_)
+	{
+		xml_node result = append_child(node_element);
+
+		result.set_name(name_);
+
+		return result;
+	}
+
+	PUGI_IMPL_FN xml_node xml_node::prepend_child(string_view_t name_)
+	{
+		xml_node result = prepend_child(node_element);
+
+		result.set_name(name_);
+
+		return result;
+	}
+
+	PUGI_IMPL_FN xml_node xml_node::insert_child_after(string_view_t name_, const xml_node& node)
+	{
+		xml_node result = insert_child_after(node_element, node);
+
+		result.set_name(name_);
+
+		return result;
+	}
+
+	PUGI_IMPL_FN xml_node xml_node::insert_child_before(string_view_t name_, const xml_node& node)
+	{
+		xml_node result = insert_child_before(node_element, node);
+
+		result.set_name(name_);
+
+		return result;
+	}
+#endif
+
 	PUGI_IMPL_FN xml_node xml_node::append_copy(const xml_node& proto)
 	{
 		xml_node_type type_ = proto.type();
@@ -6247,6 +6534,13 @@ namespace pugi
 		return remove_attribute(attribute(name_));
 	}
 
+#ifdef PUGIXML_HAS_STRING_VIEW
+	PUGI_IMPL_FN bool xml_node::remove_attribute(string_view_t name_)
+	{
+		return remove_attribute(attribute(name_));
+	}
+#endif
+
 	PUGI_IMPL_FN bool xml_node::remove_attribute(const xml_attribute& a)
 	{
 		if (!_root || !a._attr) return false;
@@ -6286,6 +6580,13 @@ namespace pugi
 	{
 		return remove_child(child(name_));
 	}
+
+#ifdef PUGIXML_HAS_STRING_VIEW
+	PUGI_IMPL_FN bool xml_node::remove_child(string_view_t name_)
+	{
+		return remove_child(child(name_));
+	}
+#endif
 
 	PUGI_IMPL_FN bool xml_node::remove_child(const xml_node& n)
 	{
@@ -6531,7 +6832,7 @@ namespace pugi
 
 	PUGI_IMPL_FN size_t xml_node::hash_value() const
 	{
-		return static_cast<size_t>(reinterpret_cast<uintptr_t>(_root) / sizeof(xml_node_struct));
+		return reinterpret_cast<uintptr_t>(_root) / sizeof(xml_node_struct);
 	}
 
 	PUGI_IMPL_FN xml_node_struct* xml_node::internal_object() const
@@ -6551,14 +6852,14 @@ namespace pugi
 	}
 
 #ifndef PUGIXML_NO_STL
-	PUGI_IMPL_FN void xml_node::print(std::basic_ostream<char, std::char_traits<char> >& stream, const char_t* indent, unsigned int flags, xml_encoding encoding, unsigned int depth) const
+	PUGI_IMPL_FN void xml_node::print(std::basic_ostream<char>& stream, const char_t* indent, unsigned int flags, xml_encoding encoding, unsigned int depth) const
 	{
 		xml_writer_stream writer(stream);
 
 		print(writer, indent, flags, encoding, depth);
 	}
 
-	PUGI_IMPL_FN void xml_node::print(std::basic_ostream<wchar_t, std::char_traits<wchar_t> >& stream, const char_t* indent, unsigned int flags, unsigned int depth) const
+	PUGI_IMPL_FN void xml_node::print(std::basic_ostream<wchar_t>& stream, const char_t* indent, unsigned int flags, unsigned int depth) const
 	{
 		xml_writer_stream writer(stream);
 
@@ -6747,6 +7048,15 @@ namespace pugi
 		return dn ? impl::strcpy_insitu(dn->value, dn->header, impl::xml_memory_page_value_allocated_mask, rhs, size) : false;
 	}
 
+#ifdef PUGIXML_HAS_STRING_VIEW
+	PUGI_IMPL_FN bool xml_text::set(string_view_t rhs)
+	{
+		xml_node_struct* dn = _data_new();
+
+		return dn ? impl::strcpy_insitu(dn->value, dn->header, impl::xml_memory_page_value_allocated_mask, rhs.data(), rhs.size()) : false;
+	}
+#endif
+
 	PUGI_IMPL_FN bool xml_text::set(int rhs)
 	{
 		xml_node_struct* dn = _data_new();
@@ -6874,6 +7184,14 @@ namespace pugi
 		return *this;
 	}
 
+#ifdef PUGIXML_HAS_STRING_VIEW
+	PUGI_IMPL_FN xml_text& xml_text::operator=(string_view_t rhs)
+	{
+		set(rhs);
+		return *this;
+	}
+#endif
+
 #ifdef PUGIXML_HAS_LONG_LONG
 	PUGI_IMPL_FN xml_text& xml_text::operator=(long long rhs)
 	{
@@ -6936,7 +7254,7 @@ namespace pugi
 	PUGI_IMPL_FN xml_node* xml_node_iterator::operator->() const
 	{
 		assert(_wrap._root);
-		return const_cast<xml_node*>(&_wrap); // BCC5 workaround
+		return &_wrap;
 	}
 
 	PUGI_IMPL_FN xml_node_iterator& xml_node_iterator::operator++()
@@ -6997,7 +7315,7 @@ namespace pugi
 	PUGI_IMPL_FN xml_attribute* xml_attribute_iterator::operator->() const
 	{
 		assert(_wrap._attr);
-		return const_cast<xml_attribute*>(&_wrap); // BCC5 workaround
+		return &_wrap;
 	}
 
 	PUGI_IMPL_FN xml_attribute_iterator& xml_attribute_iterator::operator++()
@@ -7058,7 +7376,7 @@ namespace pugi
 	PUGI_IMPL_FN xml_node* xml_named_node_iterator::operator->() const
 	{
 		assert(_wrap._root);
-		return const_cast<xml_node*>(&_wrap); // BCC5 workaround
+		return &_wrap;
 	}
 
 	PUGI_IMPL_FN xml_named_node_iterator& xml_named_node_iterator::operator++()
@@ -7373,14 +7691,14 @@ namespace pugi
 #endif
 
 #ifndef PUGIXML_NO_STL
-	PUGI_IMPL_FN xml_parse_result xml_document::load(std::basic_istream<char, std::char_traits<char> >& stream, unsigned int options, xml_encoding encoding)
+	PUGI_IMPL_FN xml_parse_result xml_document::load(std::basic_istream<char>& stream, unsigned int options, xml_encoding encoding)
 	{
 		reset();
 
 		return impl::load_stream_impl(static_cast<impl::xml_document_struct*>(_root), stream, options, encoding, &_buffer);
 	}
 
-	PUGI_IMPL_FN xml_parse_result xml_document::load(std::basic_istream<wchar_t, std::char_traits<wchar_t> >& stream, unsigned int options)
+	PUGI_IMPL_FN xml_parse_result xml_document::load(std::basic_istream<wchar_t>& stream, unsigned int options)
 	{
 		reset();
 
@@ -7450,7 +7768,7 @@ namespace pugi
 	{
 		impl::xml_buffered_writer buffered_writer(writer, encoding);
 
-		if ((flags & format_write_bom) && encoding != encoding_latin1)
+		if ((flags & format_write_bom) && buffered_writer.encoding != encoding_latin1)
 		{
 			// BOM always represents the codepoint U+FEFF, so just write it in native encoding
 		#ifdef PUGIXML_WCHAR_MODE
@@ -7464,7 +7782,7 @@ namespace pugi
 		if (!(flags & format_no_declaration) && !impl::has_declaration(_root))
 		{
 			buffered_writer.write_string(PUGIXML_TEXT("<?xml version=\"1.0\""));
-			if (encoding == encoding_latin1) buffered_writer.write_string(PUGIXML_TEXT(" encoding=\"ISO-8859-1\""));
+			if (buffered_writer.encoding == encoding_latin1) buffered_writer.write_string(PUGIXML_TEXT(" encoding=\"ISO-8859-1\""));
 			buffered_writer.write('?', '>');
 			if (!(flags & format_raw)) buffered_writer.write('\n');
 		}
@@ -7475,14 +7793,14 @@ namespace pugi
 	}
 
 #ifndef PUGIXML_NO_STL
-	PUGI_IMPL_FN void xml_document::save(std::basic_ostream<char, std::char_traits<char> >& stream, const char_t* indent, unsigned int flags, xml_encoding encoding) const
+	PUGI_IMPL_FN void xml_document::save(std::basic_ostream<char>& stream, const char_t* indent, unsigned int flags, xml_encoding encoding) const
 	{
 		xml_writer_stream writer(stream);
 
 		save(writer, indent, flags, encoding);
 	}
 
-	PUGI_IMPL_FN void xml_document::save(std::basic_ostream<wchar_t, std::char_traits<wchar_t> >& stream, const char_t* indent, unsigned int flags) const
+	PUGI_IMPL_FN void xml_document::save(std::basic_ostream<wchar_t>& stream, const char_t* indent, unsigned int flags) const
 	{
 		xml_writer_stream writer(stream);
 
@@ -12381,7 +12699,7 @@ namespace pugi
 		assert(_result.error);
 	}
 
-	PUGI_IMPL_FN const char* xpath_exception::what() const throw()
+	PUGI_IMPL_FN const char* xpath_exception::what() const PUGIXML_NOEXCEPT
 	{
 		return _result.error;
 	}
@@ -13210,7 +13528,7 @@ namespace pugi
 #endif
 
 /**
- * Copyright (c) 2006-2023 Arseny Kapoulkine
+ * Copyright (c) 2006-2025 Arseny Kapoulkine
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
