@@ -46,9 +46,9 @@ typedef long long ssize_t;
 #include "alloc.h" /* for allocation wrappers */
 
 #define HIREDIS_MAJOR 1
-#define HIREDIS_MINOR 1
-#define HIREDIS_PATCH 1
-#define HIREDIS_SONAME 1.1.1-dev
+#define HIREDIS_MINOR 3
+#define HIREDIS_PATCH 0
+#define HIREDIS_SONAME 1.3.0
 
 /* Connection type can be blocking or non-blocking and is set in the
  * least significant bit of the flags field in redisContext. */
@@ -323,6 +323,7 @@ redisPushFn *redisSetPushCallback(redisContext *c, redisPushFn *fn);
 int redisSetTimeout(redisContext *c, const struct timeval tv);
 int redisEnableKeepAlive(redisContext *c);
 int redisEnableKeepAliveWithInterval(redisContext *c, int interval);
+int redisSetTcpUserTimeout(redisContext *c, unsigned int timeout);
 void redisFree(redisContext *c);
 redisFD redisFreeKeepFd(redisContext *c);
 int redisBufferRead(redisContext *c);
