@@ -951,8 +951,3 @@ namespace internal {
 }  // namespace protobuf
 }  // namespace google
 
-#ifdef PROTO_BUF_PRAGMA_WARNING  
-       
-	   #include "System/Helper/PragmaWarning/ProtoBuf.inl"  
-   
-#endif  
