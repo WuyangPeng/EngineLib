@@ -2,19 +2,19 @@
 #define GOOGLE_PROTOBUF_RUNTIME_VERSION_H__
 
 #ifdef PROTOBUF_VERSION
-    #error PROTOBUF_VERSION was previously defined
+#error PROTOBUF_VERSION was previously defined
 #endif  // PROTOBUF_VERSION
 
 #ifdef PROTOBUF_VERSION_SUFFIX
-    #error PROTOBUF_VERSION_SUFFIX was previously defined
+#error PROTOBUF_VERSION_SUFFIX was previously defined
 #endif  // PROTOBUF_VERSION_SUFFIX
 
 #ifdef PROTOBUF_OSS_VERSION
-    #error PROTOBUF_OSS_VERSION was previously defined
+#error PROTOBUF_OSS_VERSION was previously defined
 #endif  // PROTOBUF_OSS_VERSION
 
 #ifdef PROTOBUF_OSS_VERSION_SUFFIX
-    #error PROTOBUF_OSS_VERSION_SUFFIX was previously defined
+#error PROTOBUF_OSS_VERSION_SUFFIX was previously defined
 #endif  // PROTOBUF_OSS_VERSION_SUFFIX
 
 // The OSS versions are not stripped to avoid merging conflicts.
@@ -26,7 +26,7 @@
 
 #ifdef PROTO_BUF_PRAGMA_WARNING
 
-    #include "System/Helper/PragmaWarning/ProtoBuf.inl"
+#include "System/Helper/PragmaWarning/ProtoBuf.inl"
 
 #endif
 
